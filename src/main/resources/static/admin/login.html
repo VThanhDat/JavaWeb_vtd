@@ -20,7 +20,7 @@
 
     <section class="login">
       <h2 class="login-title">Login</h2>
-      <form>
+      <form method="post" action="/admin/login">
         <div
           class="flex flex-col items-start p-0 gap-[18px] w-[451px] h-[79px] flex-none order-1 self-stretch flex-grow-0">
           <label
@@ -30,7 +30,7 @@
           <div
             class="box-border flex flex-row items-center p-[8px_16px] w-[451px] h-[42px] bg-white border border-[#CED4DA] rounded-[8px] flex-none order-1 self-stretch flex-grow-0 focus-within:border-[#2eeeef] focus-within:ring-2 focus-within:ring-[#2eeeef] transition">
             <img src="/img/icon/person-icon.svg" alt="">
-            <input type="text" placeholder="Your Account"
+            <input name="username" type="text" placeholder="Your Account"
               class="flex flex-row items-center p-0 gap-[4px] w-[380px] h-[24px] flex-none order-0 flex-grow outline-none bg-transparent">
           </div>
 
@@ -43,9 +43,9 @@
           <div
             class="box-border flex flex-row items-center p-[8px_16px] w-[451px] h-[42px] bg-white border border-[#CED4DA] rounded-[8px] flex-none order-1 self-stretch flex-grow-0 focus-within:border-[#2eeeef] focus-within:ring-2 focus-within:ring-[#2eeeef] transition">
             <img src="/img/icon/key-icon.svg" alt="">
-            <input type="password" placeholder="Your Password"
+            <input id="password" name="password" type="password" placeholder="Your Password"
               class="flex flex-row items-center p-0 gap-[4px] w-[380px] h-[24px] flex-none order-0 flex-grow outline-none bg-transparent">
-            <img
+            <img id="togglePassword"
               class="flex flex-col justify-center items-center p-[1px] w-[18px] h-[18px] bg-[rgba(255,255,255,0.000001)] flex-none order-2 flex-grow-0"
               src="/img/icon/eye-icon.svg" alt="">
           </div>
@@ -56,10 +56,10 @@
               <p class="login-submit-title">Log in</p>
             </button>
           </div>
-
       </form>
     </section>
   </section>
+  <script src="/js/login.js"></script>
 </body>
 
 </html>

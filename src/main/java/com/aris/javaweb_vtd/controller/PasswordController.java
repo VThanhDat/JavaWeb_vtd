@@ -20,28 +20,15 @@ public class PasswordController {
     private AdminService adminService;
 
     @PostMapping("/change")
-    public ResponseEntity<ApiResponseDTO<String>> updatePassword(@RequestParam String currentPassword,
+    public ResponseEntity<ApiResponseDTO<String>> updatePassword(
+            @RequestParam String currentPassword,
             @RequestParam String newPassword,
-            @RequestParam String confirmNewPassword,
             Principal principal) {
-        if (!newPassword.equals(confirmNewPassword)) {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponseDTO<>(false, "error", "New password and confirmation do not match"));
-        }
-        boolean isChanged = false;
         try {
             adminService.updatePassword(principal.getName(), currentPassword, newPassword);
-            isChanged = true;
+            return ResponseEntity.ok(new ApiResponseDTO<>(true, "success", "Password updated successfully"));
         } catch (Exception e) {
-            e.printStackTrace();
-            isChanged = false;
-        }
-
-        if (isChanged) {
-            return ResponseEntity.ok(new ApiResponseDTO<String>(true, "success", "Password updated successfully"));
-        } else {
-            return ResponseEntity.badRequest()
-                    .body(new ApiResponseDTO<String>(false, "error", "Failed to update password"));
+            return ResponseEntity.badRequest().body(new ApiResponseDTO<>(false, "error", "Failed to update password"));
         }
     }
 }

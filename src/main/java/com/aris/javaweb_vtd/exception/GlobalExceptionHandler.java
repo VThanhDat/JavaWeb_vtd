@@ -7,8 +7,10 @@ import org.apache.ibatis.binding.BindingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
 
@@ -59,4 +61,24 @@ public class GlobalExceptionHandler {
 				.body(ApiResponseDTO.error("Internal configuration error", error));
 	}
 
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleNoResourceFound(NoResourceFoundException ex) {
+		Map<String, String> error = new HashMap<>();
+		error.put("error", "Static resource not found");
+		error.put("details", ex.getMessage());
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body(ApiResponseDTO.error("Page not found", error));
+	}
+
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleMissingParams(
+			MissingServletRequestParameterException ex) {
+		Map<String, String> error = new HashMap<>();
+		error.put("missingParameter", ex.getParameterName());
+		error.put("error", "Required parameter is missing");
+
+		return ResponseEntity.badRequest()
+				.body(ApiResponseDTO.error("Missing request parameter", error));
+	}
 }

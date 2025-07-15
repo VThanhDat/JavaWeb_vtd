@@ -37,9 +37,8 @@ public class SecurityConfig {
             .loginProcessingUrl("/admin/login")
             .failureUrl("/admin/login.html?error=true")
             .successHandler((request, response, authentication) -> {
-              response.setStatus(HttpServletResponse.SC_OK);
-              response.setContentType("application/json");
-              response.getWriter().write("{\"message\": \"Login successful\"}");
+              response.sendRedirect("/admin/changepassword.html");
+
             })
             .failureHandler((request, response, exception) -> {
               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -52,7 +51,7 @@ public class SecurityConfig {
             .authenticationEntryPoint((request, response, authException) -> {
               String acceptHeader = request.getHeader("Accept");
               if (acceptHeader != null && acceptHeader.contains("text/html")) {
-                response.sendRedirect("/login.html");
+                response.sendRedirect("/admin/login.html");
               } else {
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

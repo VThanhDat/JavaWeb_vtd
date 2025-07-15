@@ -23,7 +23,6 @@ public class DataInitialConfig {
                 admin.setCreatedAt(LocalDateTime.now());
                 admin.setUpdatedAt(LocalDateTime.now());
                 adminService.insertAdmin(admin);
-                System.out.println("Admin account created: admin / admin123");
             } else {
                 System.out.println("Admin account already exists.");
             }
