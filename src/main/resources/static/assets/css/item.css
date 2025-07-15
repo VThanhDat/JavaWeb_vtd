@@ -1,0 +1,244 @@
+.main_content-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 0px 64px;
+  width: 1200px;
+  margin: auto;
+}
+
+.main_content-menu_food {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+
+  padding: 0px 0px 64px;
+
+  width: 1200px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+
+  justify-content: space-between; /* hoặc space-evenly nếu muốn đều 2 bên */
+}
+
+.menu_food-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: calc(50% - 1rem); /* Trừ đi nửa khoảng cách gap */
+  min-height: 19rem;
+  padding: 2.4rem;
+  border-radius: 1.6rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.menu_food-item:hover {
+  outline: 0.1rem solid #ff6b00;
+  box-shadow: 0.5rem 0 0 #ff6b00, 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu_food-item_img {
+  width: 13rem;
+  flex-shrink: 0;
+}
+
+.menu_food-item_img img {
+  width: 100%;
+  height: 10rem;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.menu_food-item_content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.menu_food-item_content-title {
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: #333;
+}
+
+.menu_food-item_content-describe {
+  font-size: 1.4rem;
+  color: #797979;
+  line-height: 1.4;
+}
+
+.menu_food-item_content-price {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #ff6b00;
+}
+
+.menu_food-item_add {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 100%;
+  font-size: 2rem;
+  color: #ffffff;
+  background-color: #ff6b00;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.menu_food-item_add:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main_content-menu_food {
+    grid-template-columns: 1fr; /* 1 cột trên mobile */
+  }
+
+  .main_content-menu {
+    width: 100%;
+    padding: 0 2rem 64px;
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  gap: 8px;
+
+  width: 1200px;
+  height: 31px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 2;
+  align-self: stretch;
+  flex-grow: 0;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-total p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 400;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-pages button {
+  border: 1px solid #d0d0d0;
+  background: white;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-pages button:hover {
+  background-color: #f8f8f8;
+  border-color: #bbb;
+}
+
+.pagination-pages button.active {
+  background-color: #ff6b35;
+  color: white;
+  font-weight: 500;
+  border-color: #ff6b35;
+}
+
+.pagination-pages button.active:hover {
+  background-color: #e55a2b;
+  border-color: #e55a2b;
+}
+
+.pagination-pages span {
+  color: #999;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.pagination-per-item {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 3px 0px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-per-item select {
+  border: none;
+  padding: 4px 8px;
+  font-size: 14px;
+  background-color: transparent;
+  cursor: pointer;
+  color: #333;
+  min-width: 80px;
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagination {
+    flex-direction: column;
+    gap: 12px;
+    height: auto;
+    padding: 16px;
+  }
+
+  .pagination-pages {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-pages button {
+    padding: 4px 8px;
+    min-width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .pagination-total p,
+  .pagination-per-item select {
+    font-size: 12px;
+  }
+}

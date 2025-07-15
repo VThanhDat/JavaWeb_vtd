@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Application</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="header">
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="heading_nav">
+        <!-- Header Nav Container -->
+        <div class="heading_nav-container">
+          <div class="heading_nav-mid">
+            <!-- Logo and search -->
+            <div class="heading_nav-logo_search">
+              <div class="heading_nav-logo">
+                <img src="./assets/img/logo/logo.svg" alt="logo">
+              </div>
+              <div class="heading_nav-search">
+                <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
+                <input type="text" placeholder="Find your favorite food...">
+              </div>
+            </div>
+            <!-- Cart and order -->
+            <div class="heading_nav-cart-order">
+              <div class="heading_nav-cart">
+                <img src="./assets/img/icon/cart-icon.svg" alt="cart-icon">
+              </div>
+              <div class="heading_nav-order">
+                <img src="./assets/img/icon/order-icon.svg" alt="order-icon">
+                <p>Your Order</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner Title -->
+      <img class="heading_title" src="./assets/img/banner/banner-title.svg" alt="banner-title">
+    </div>
+    <div class="home_heading relative">
+    </div>
+
+    <!-- Search Down-->
+    <div class="main_content-search absolute top-[335px] left-[18.5%] z-[99]">
+      <div class="main_content-search_container">
+        <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
+        <input type="text" placeholder="Find your favorite food...">
+      </div>
+    </div>
+
+
+    <!-- Sort - Filter -->
+    <div class="main_content-filter z-[99]">
+      <div class="main_content-filter_container">
+        <select id="filter-price">
+          <option value="">Price: From low to high</option>
+          <option value="">Price: From high to low</option>
+        </select>
+      </div>
+      <hr>
+      <div class="main_content-filter_foodType">
+        <div class="main_content-filter_foodType-type_food">
+          <a href="">Food</a>
+        </div>
+        <div class="main_content-filter_foodType-type_drink">
+          <a href="">Drink</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Item -->
+  <div class="main_content-menu mt-20">
+    <div class="main_content-menu_food">
+      <!-- List item -->
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+      <div class="menu_food-item">
+        <div class="menu_food-item_img">
+          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
+        </div>
+        <div class="menu_food-item_content">
+          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
+          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
+            + dưa leo + salad + canh</p>
+          <span class="menu_food-item_content-price">40.000 đ</span>
+        </div>
+        <div class="menu_food-item_add">+</div>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="pagination">
+      <!-- Left: Tổng số items -->
+      <div class="pagination-info">
+        <div class="pagination-total">
+          <p>Total 200 items</p>
+        </div>
+      </div>
+
+      <!-- Center: Các nút phân trang -->
+      <div class="pagination-pages">
+        <button>&lt;</button>
+        <button class="active">1</button>
+        <button>...</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+        <button>...</button>
+        <button>20</button>
+        <button>&gt;</button>
+      </div>
+
+      <!-- Right: Chọn số item/trang -->
+      <div class="pagination-per-item">
+        <select>
+          <option value="10">10 / page</option>
+          <option value="20">20 / page</option>
+          <option value="30">30 / page</option>
+          <option value="40">40 / page</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+  <!-- Footer -->
+  <footer class="home_footer">
+    <div class="home_footer-container">
+      <div class="home_footer-logo">
+        <img src="./assets/img/logo/logo.svg" alt="logo">
+      </div>
+
+      <div class="home_footer-content">
+        <div class="home_footer-content_container">
+          <h1 class="home_footer-title font-bold">CONTACT</h1>
+          <div class="home_footer-hotline">
+            <img src="./assets/img/icon/phone-icon.svg" alt="Hotline-icon">
+            <div class="home_footer-hotline_content">
+              <h2 class="font-bold mr-2">Hotline: </h2>
+              <p> 19001080</p>
+            </div>
+          </div>
+
+          <div class="home_footer-address">
+            <img src="./assets/img/icon/address-icon.svg" alt="address-icon">
+            <div class="home_footer-address_content">
+              <h2 class="font-bold mr-2">Address: </h2>
+              <p> 19 Hoang Van Thu str. 2 Ward, Tan Binh District, Ho Chi Minh City.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home_footer-designer">
+      <div class="home-footer-designer-text">Copyright © 2022 Design By Aris</div>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="./assets/js/header.js"></script>
+</body>
+
+</html>

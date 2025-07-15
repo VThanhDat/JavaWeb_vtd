@@ -1,0 +1,56 @@
+.main_content-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* CHỈNH NÀY */
+  padding: 90px 0px 32px;
+  gap: 16px;
+  isolation: isolate;
+  width: 1200px;
+  height: 202px;
+  margin: auto;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  z-index: 2;
+}
+
+.main_content-filter_container {
+  display: flex;
+  justify-content: right;
+}
+
+.main_content-filter_container select {
+  padding: 0.5rem;
+  font-size: var(--font-size-base);
+  border: 0.1rem solid #ececec;
+  background-color: #f9f9f9;
+}
+
+.main_content-filter_foodType {
+  width: 100%;
+  display: flex;
+}
+
+.main_content-filter_foodType-type_food {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+  font-size: var(--font-size-base);
+  border-bottom: 0.2rem solid #ff6b00;
+}
+
+.main_content-filter_foodType-type_drink {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+  font-size: var(--font-size-base);
+}
+
+.main_content-filter_foodType-type_food a,
+.main_content-filter_foodType-type_drink a {
+  text-decoration: none;
+  color: #000000;
+}

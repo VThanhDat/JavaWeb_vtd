@@ -1,0 +1,234 @@
+.header.show {
+  /* Auto layout */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 64px;
+
+  width: 100%;
+  height: auto;
+
+  background: #ffffff;
+  box-shadow: 0px 23px 9px rgba(0, 0, 0, 0.01), 0px 13px 8px rgba(0, 0, 0, 0.03),
+    0px 6px 6px rgba(0, 0, 0, 0.04), 0px 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 0px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  z-index: 2;
+}
+
+.home_heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 64px;
+  gap: 32px;
+  isolation: isolate;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 409px;
+
+  background: url(../img/banner/banner.png), #ececec;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Xóa background ngay khi scroll */
+.home_heading.no-background {
+  background: none;
+  background-color: transparent;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  isolation: isolate;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.heading_nav {
+  display: flex;
+  width: 100%;
+  height: 92px;
+  border-bottom: 0.33px solid #ced4da;
+  z-index: 2;
+}
+
+.heading_nav.scrolled {
+  background: #ffffff;
+}
+
+.heading_nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100%;
+  position: fixed;
+  /* <-- sửa từ relative thành fixed */
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.heading_nav-mid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+  height: 80px;
+  border-radius: 40px;
+  padding: 0 24px;
+  gap: 20px;
+}
+
+.heading_nav-logo_search {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  width: 794.5px;
+  height: 61.19px;
+}
+
+/* Logo */
+.heading_nav-logo img {
+  height: 48px;
+}
+
+/* Search */
+.heading_nav-search.show {
+  display: flex;
+  flex: 1;
+  background-color: #f3f3f3;
+  border-radius: 40px;
+  padding: 10px 20px;
+}
+
+.heading_nav-search {
+  display: none;
+}
+
+.heading_nav-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 16px;
+}
+
+/* Cart + Order */
+.heading_nav-cart-order {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Cart */
+.heading_nav-cart {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background: #fafbfc;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.heading_nav-cart img {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Order */
+.heading_nav-order {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  width: 134px;
+  height: 44px;
+  background: #ffffff;
+  border: 1px solid #ff6b00;
+  border-radius: 4px;
+}
+
+.heading_nav-order p {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  color: #ff6b00;
+}
+
+/* Title Image */
+.heading_title {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.heading_title {
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.heading_title.hiding {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.heading_title.hide {
+  display: none;
+}
+
+/* CSS cho search boxes (nếu chưa có) */
+.heading_nav-search {
+  transition: all 0.3s ease-in-out;
+  display: none;
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.heading_nav-search.show {
+  display: flex !important;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.main_content-search {
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.main_content-search.hide {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Hiệu ứng khi scroll xuống */
+.home_heading.scrolled-style {
+  background: #ffffff !important;
+  box-shadow: 0px 23px 9px rgba(0, 0, 0, 0.01), 0px 13px 8px rgba(0, 0, 0, 0.03),
+    0px 6px 6px rgba(0, 0, 0, 0.04), 0px 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 0px;
+}

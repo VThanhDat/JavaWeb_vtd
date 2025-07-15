@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="/css/login.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
+</head>
+
+<body>
+  <section class="flex justify-center relative min-h-screen">
+    <div class="login-logo absolute top-4 left-4 md:top-10 md:left-10 z-10">
+      <img src="/img/logo/logo.svg" class="w-20 md:w-32">
+    </div>
+    <img src="/img/login/bg_login.jpg" alt="gradient background image" class="w-full h-full object-cover fixed inset-0">
+
+    <section class="login">
+      <h2 class="login-title">Login</h2>
+      <form>
+        <div
+          class="flex flex-col items-start p-0 gap-[18px] w-[451px] h-[79px] flex-none order-1 self-stretch flex-grow-0">
+          <label
+            class="w-[145px] h-[19px] font-inter font-normal text-[16px] leading-[19px] text-[#292929] flex-none order-0 flex-grow-0">
+            Enter your Account
+          </label>
+          <div
+            class="box-border flex flex-row items-center p-[8px_16px] w-[451px] h-[42px] bg-white border border-[#CED4DA] rounded-[8px] flex-none order-1 self-stretch flex-grow-0 focus-within:border-[#2eeeef] focus-within:ring-2 focus-within:ring-[#2eeeef] transition">
+            <img src="/img/icon/person-icon.svg" alt="">
+            <input type="text" placeholder="Your Account"
+              class="flex flex-row items-center p-0 gap-[4px] w-[380px] h-[24px] flex-none order-0 flex-grow outline-none bg-transparent">
+          </div>
+
+        </div>
+        <div
+          class="flex flex-col items-start p-0 gap-[18px] w-[451px] h-[79px] flex-none order-2 self-stretch flex-grow-0 mt-10 mb-10">
+          <label
+            class="w-[145px] h-[19px] font-inter font-normal text-[16px] leading-[19px] text-[#292929] flex-none order-0 flex-grow-0">
+            Enter your Password</label>
+          <div
+            class="box-border flex flex-row items-center p-[8px_16px] w-[451px] h-[42px] bg-white border border-[#CED4DA] rounded-[8px] flex-none order-1 self-stretch flex-grow-0 focus-within:border-[#2eeeef] focus-within:ring-2 focus-within:ring-[#2eeeef] transition">
+            <img src="/img/icon/key-icon.svg" alt="">
+            <input type="password" placeholder="Your Password"
+              class="flex flex-row items-center p-0 gap-[4px] w-[380px] h-[24px] flex-none order-0 flex-grow outline-none bg-transparent">
+            <img
+              class="flex flex-col justify-center items-center p-[1px] w-[18px] h-[18px] bg-[rgba(255,255,255,0.000001)] flex-none order-2 flex-grow-0"
+              src="/img/icon/eye-icon.svg" alt="">
+          </div>
+          <div
+            class="flex flex-col items-end justify-center p-0 gap-[4px] w-[451px] h-[39px] flex-none order-3 self-stretch flex-grow-0">
+            <button type="submit"
+              class="box-border flex flex-row justify-center items-center px-4 py-4 gap-2 w-[230px] h-full bg-[#FF6B00] border rounded-[4px] text-white font-medium hover:bg-[#18008e] transition-colors duration-200">
+              <p class="login-submit-title">Log in</p>
+            </button>
+          </div>
+
+      </form>
+    </section>
+  </section>
+</body>
+
+</html>

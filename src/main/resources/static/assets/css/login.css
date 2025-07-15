@@ -1,0 +1,55 @@
+.login {
+    /* Frame 62 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 44px;
+    gap: 46px;
+
+    position: absolute;
+    width: 539px;
+    height: 506px;
+    left: 1088px;
+    top: calc(50% - 700px/2);
+
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px);
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 24px;
+
+}
+
+
+.login-title {
+    width: 148px;
+    height: 83px;
+
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 55px;
+    line-height: 82px;
+    /* identical to box height */
+
+    color: #292929;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+}
+
+.login-submit-title {
+    width: 41px;
+    height: 21px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 150%;
+    color: #FFFFFF;
+}
