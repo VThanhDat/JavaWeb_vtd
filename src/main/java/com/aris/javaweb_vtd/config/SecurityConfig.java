@@ -31,7 +31,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/login", "/js/**", "/css/**", "/img/**").permitAll()
             .requestMatchers("/admin/**").authenticated()
-            .anyRequest().authenticated())
+            .anyRequest().permitAll())
         .formLogin(form -> form
             .loginPage("/admin/login.html")
             .loginProcessingUrl("/admin/login")

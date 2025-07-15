@@ -21,6 +21,11 @@
   margin: 4.6rem 4.3rem;
 }
 
+.main_content-search_container:focus-within {
+  box-shadow: 0 0 0 2px #000000fa;
+  transition: all 0.3s ease;
+}
+
 .main_content-search_container input {
   width: 100%;
   padding: 1.6rem 4.3rem;

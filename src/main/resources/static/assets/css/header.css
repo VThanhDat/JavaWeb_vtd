@@ -1,5 +1,4 @@
 .header.show {
-  /* Auto layout */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,7 +13,6 @@
     0px 6px 6px rgba(0, 0, 0, 0.04), 0px 1px 3px rgba(0, 0, 0, 0.05);
   border-radius: 0px;
 
-  /* Inside auto layout */
   flex: none;
   order: 0;
   align-self: stretch;
@@ -79,7 +77,6 @@
   height: 100px;
   width: 100%;
   position: fixed;
-  /* <-- sửa từ relative thành fixed */
   top: 0;
   left: 0;
   z-index: 999;
@@ -123,9 +120,15 @@
   display: none;
 }
 
+.heading_nav-search:focus-within {
+  box-shadow: 0 0 0 2px #000000fa;
+  transition: all 0.3s ease;
+}
+
 .heading_nav-search input {
   border: none;
   outline: none;
+  margin-left: 10px;
   background: transparent;
   flex: 1;
   font-size: 16px;
@@ -168,6 +171,11 @@
   background: #ffffff;
   border: 1px solid #ff6b00;
   border-radius: 4px;
+}
+
+.heading_nav-order:hover {
+  background: #fafbfc;
+  cursor: pointer;
 }
 
 .heading_nav-order p {
