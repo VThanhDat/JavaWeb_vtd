@@ -18,3 +18,47 @@ setupPasswordToggle(
   "currentEyeIcon"
 );
 setupPasswordToggle("newPassword", "toggleNewPassword", "newEyeIcon");
+
+function handleChangePasswordSubmit() {
+  const form = document.getElementById("changePasswordForm");
+
+  if (!form) {
+    console.error("Form changePasswordForm no exists in DOM.");
+    return;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    changePasswordAPI(data);
+  });
+}
+
+function showToast(message, type = "info") {
+  alert(`${message}`);
+}
+
+function changePasswordAPI(data) {
+  $.ajax({
+    url: "http://localhost:8080/admin/password/change",
+    method: "PUT",
+    contentType: "application/json",
+    data: JSON.stringify(data),
+    xhrFields: { withCredentials: true },
+    success: function (response) {
+      showToast(response?.data, "success");
+      document.getElementById("changePasswordForm").reset();
+    },
+    error: function (xhr) {
+      const msg = xhr.responseJSON?.data;
+      showToast(msg, "error");
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  handleChangePasswordSubmit();
+});

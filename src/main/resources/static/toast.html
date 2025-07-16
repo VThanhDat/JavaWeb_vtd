@@ -2,67 +2,63 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toast Notification</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes slideIn {
-            from {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast Notification</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes slideIn {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
 
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
 
-        @keyframes slideOut {
-            from {
-                transform: translateY(0);
-                opacity: 1;
-            }
+    @keyframes slideOut {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
 
-            to {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-        }
+      to {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+    }
 
-        .toast-enter {
-            animation: slideIn 0.3s ease-out forwards;
-        }
+    .toast-enter {
+      animation: slideIn 0.3s ease-out forwards;
+    }
 
-        .toast-exit {
-            animation: slideOut 0.3s ease-in forwards;
-        }
-    </style>
+    .toast-exit {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
-    <!-- Demo Button -->
-    <button id="showToast" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Add Item to Cart
-    </button>
+  <button id="showToast" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Add Item to Cart
+  </button>
 
-    <!-- Toast Container -->
-    <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-        <!-- Toast will be inserted here -->
-    </div>
+  <div id="toastContainer" class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+  </div>
 
-    <script>
-        function createToast() {
-            const toastContainer = document.getElementById('toastContainer');
+  <script>
+    function createToast() {
+      const toastContainer = document.getElementById('toastContainer');
 
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.className = 'flex flex-col items-start p-0 toast-enter';
-            toast.style.cssText = 'width: 424px; height: 83px; background: #17AE30; border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15); border-radius: 4px; overflow: hidden; margin-top: 4px;';
+      const toast = document.createElement('div');
+      toast.className = 'flex flex-col items-start p-0 toast-enter';
+      toast.style.cssText = 'width: 424px; height: 83px; background: #17AE30; border: 1px solid rgba(0, 0, 0, 0.1); box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15); border-radius: 4px; overflow: hidden; margin-top: 4px;';
 
-            toast.innerHTML = `
+      toast.innerHTML = `
                 <!-- Header -->
                 <div class="flex items-center justify-between px-3 py-2 gap-2 h-10 border-b border-black border-opacity-5" style="background: rgba(255, 255, 255, 0.85); width: 424px;">
                     <div class="flex items-center space-x-2">
@@ -84,35 +80,31 @@
                 </div>
             `;
 
-            // Add to container
-            toastContainer.appendChild(toast);
+      toastContainer.appendChild(toast);
 
-            // Auto remove after 3 seconds
-            setTimeout(() => {
-                if (toast.parentElement) {
-                    closeToast(toast);
-                }
-            }, 3000);
+      setTimeout(() => {
+        if (toast.parentElement) {
+          closeToast(toast);
         }
+      }, 3000);
+    }
 
-        function closeToast(element) {
-            const toast = element.closest('.flex.flex-col') || element.parentElement.parentElement;
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-exit');
+    function closeToast(element) {
+      const toast = element.closest('.flex.flex-col') || element.parentElement.parentElement;
+      toast.classList.remove('toast-enter');
+      toast.classList.add('toast-exit');
 
-            setTimeout(() => {
-                if (toast.parentElement) {
-                    toast.remove();
-                }
-            }, 300);
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.remove();
         }
+      }, 300);
+    }
 
-        // Event listener for demo button
-        document.getElementById('showToast').addEventListener('click', createToast);
+    document.getElementById('showToast').addEventListener('click', createToast);
 
-        // Show initial toast
-        createToast();
-    </script>
+    createToast();
+  </script>
 </body>
 
 </html>

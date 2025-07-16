@@ -71,7 +71,7 @@ function syncSearchValues() {
 
 function triggerSearchEvent(value) {
   clearTimeout(window.searchTimeout);
-  window.searchTimeout = setTimeout(() => {}, 300);
+  window.searchTimeout = setTimeout(() => { }, 300);
 }
 
 function performSearch(value) {

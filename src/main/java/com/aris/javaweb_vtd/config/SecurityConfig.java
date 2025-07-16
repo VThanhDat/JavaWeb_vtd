@@ -7,7 +7,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -35,15 +38,20 @@ public class SecurityConfig {
         .formLogin(form -> form
             .loginPage("/admin/login.html")
             .loginProcessingUrl("/admin/login")
-            .failureUrl("/admin/login.html?error=true")
+            .failureUrl("/admin/login.html")
             .successHandler((request, response, authentication) -> {
-              response.sendRedirect("/admin/changepassword.html");
-
+              response.setStatus(HttpServletResponse.SC_OK);
+              response.setContentType("application/json");
+              response.getWriter().write(
+                  new ObjectMapper().writeValueAsString(
+                      new ApiResponseDTO<>(true, "success", "Successfully")));
             })
             .failureHandler((request, response, exception) -> {
               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               response.setContentType("application/json");
-              response.getWriter().write("{\"error\": \"Wrong user name or password\"}");
+              response.getWriter().write(
+                  new ObjectMapper().writeValueAsString(
+                      new ApiResponseDTO<>(false, "error", "Your password or account is incorrectly")));
             })
             .permitAll())
         .userDetailsService(userDetailsService)
@@ -63,10 +71,11 @@ public class SecurityConfig {
 
   @Bean
   AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-    return http.getSharedObject(AuthenticationManagerBuilder.class)
+    AuthenticationManagerBuilder authenticationManagerBuilder = http
+        .getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder
         .userDetailsService(userDetailsService)
-        .passwordEncoder(passwordEncoder)
-        .and()
-        .build();
+        .passwordEncoder(passwordEncoder);
+    return authenticationManagerBuilder.build();
   }
 }

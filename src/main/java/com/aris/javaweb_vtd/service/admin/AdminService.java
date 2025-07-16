@@ -1,6 +1,7 @@
 package com.aris.javaweb_vtd.service.admin;
 
 import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
+import com.aris.javaweb_vtd.dto.request.ChangePasswordRequestDTO;
 import com.aris.javaweb_vtd.mapper.AdminMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class AdminService implements UserDetailsService {
     }
 
     @Transactional
-    public void updatePassword(String username, String currentPassword, String newPassword)
+    public void updatePassword(String username, ChangePasswordRequestDTO dto)
             throws UsernameNotFoundException {
         Optional<AdminRequestDTO> adminOpt = adminMapper.findByUsername(username);
         if (adminOpt.isEmpty()) {
@@ -53,10 +54,14 @@ public class AdminService implements UserDetailsService {
 
         AdminRequestDTO admin = adminOpt.get();
 
-        if (!passwordEncoder.matches(currentPassword, admin.getPassword())) {
-            throw new UsernameNotFoundException("Current password is incorrect");
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), admin.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect");
         }
-        admin.setPassword(passwordEncoder.encode(newPassword));
+
+        if (passwordEncoder.matches(dto.getNewPassword(), admin.getPassword())) {
+            throw new IllegalArgumentException("New password must be different from current password");
+        }
+        admin.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         admin.setUpdatedAt(LocalDateTime.now());
         adminMapper.updatePassword(admin);
     }
