@@ -1,3 +1,5 @@
+import { showToast, showSuccessLogout } from "./toast.js";
+
 function showHidePassword() {
   const passwordInput = document.getElementById("password");
   const togglePasswordIcon = document.getElementById("togglePassword");
@@ -56,7 +58,7 @@ function handleLogin() {
 
     const data = {
       username: username,
-      password: password
+      password: password,
     };
 
     loginAPI(data);
@@ -74,7 +76,7 @@ function loginAPI(data) {
     method: "POST",
     data: {
       username: data.username,
-      password: data.password
+      password: data.password,
     },
     xhrFields: { withCredentials: true },
     success: function (response) {
@@ -82,17 +84,14 @@ function loginAPI(data) {
       window.location.href = "/admin/dashboard.html";
     },
     error: function (xhr) {
-      const msg = xhr.responseJSON?.data || "Đăng nhập thất bại";
+      const msg = xhr.responseJSON?.data;
       showToast(msg, "error");
-    }
+    },
   });
-}
-
-function showToast(message, type = "info") {
-  alert(`${message}`);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   showHidePassword();
   handleLogin();
+  showSuccessLogout();
 });

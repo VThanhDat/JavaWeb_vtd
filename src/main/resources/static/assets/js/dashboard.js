@@ -1,11 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const loginData = localStorage.getItem("loginData");
-    if (loginData == "Successfully") {
-        showToast(loginData, "success");
-        localStorage.removeItem("loginData");
-    }
-});
+import { showSuccessLogin } from "./toast.js";
 
-function showToast(message, type = "info") {
-    alert(`[${type.toUpperCase()}] ${message}`);
-}
+document.addEventListener("DOMContentLoaded", function () {
+  showSuccessLogin();
+});

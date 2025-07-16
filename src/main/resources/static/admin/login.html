@@ -7,11 +7,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Admin</title>
   <link rel="stylesheet" href="/css/login.css" />
+  <link rel="stylesheet" href="/css/toast.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
 </head>
 
 <body>
+  <div id="toastContainer" class="fixed top-4 right-4 z-50"
+    style="position: fixed !important; top: 1rem !important; right: 1rem !important; z-index: 9999 !important;">
+  </div>
+
   <section class="flex justify-center relative min-h-screen">
     <div class="login-logo absolute top-4 left-4 md:top-10 md:left-10 z-10">
       <img src="/img/logo/logo.svg" class="w-20 md:w-32">
@@ -60,7 +65,7 @@
       </div>
     </section>
   </section>
-  <script src="/js/login.js"></script>
+  <script type="module" src="/js/login.js"></script>
   <script src="/js/jquery-3.7.1.min.js"></script>
 </body>
 

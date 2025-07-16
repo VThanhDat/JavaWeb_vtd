@@ -54,6 +54,18 @@ public class SecurityConfig {
                       new ApiResponseDTO<>(false, "error", "Your password or account is incorrectly")));
             })
             .permitAll())
+        .logout(logout -> logout
+            .logoutUrl("/admin/logout")
+            .logoutSuccessHandler((request, response, authentication) -> {
+              response.setStatus(HttpServletResponse.SC_OK);
+              response.setContentType("application/json");
+              response.getWriter().write(
+                  new ObjectMapper().writeValueAsString(
+                      new ApiResponseDTO<>(true, "success", "Logout successful")));
+            })
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+            .permitAll())
         .userDetailsService(userDetailsService)
         .exceptionHandling(handling -> handling
             .authenticationEntryPoint((request, response, authException) -> {
