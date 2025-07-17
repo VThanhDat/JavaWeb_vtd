@@ -1,0 +1,24 @@
+package com.aris.javaweb_vtd.util;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class FileUploadUtil {
+    public static String saveImage(MultipartFile file, String uploadDir) throws IOException {
+        if (file == null || file.isEmpty())
+            return null;
+
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path path = Paths.get(uploadDir, filename);
+        Files.createDirectories(path.getParent());
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+        return filename;
+    }
+}

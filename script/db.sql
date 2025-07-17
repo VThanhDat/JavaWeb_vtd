@@ -8,3 +8,15 @@ CREATE TABLE IF NOT EXISTS admin (
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS items(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    image VARCHAR(255),
+    description TEXT,
+    price DOUBLE NOT NULL,
+    status TINYINT(1) NOT NULL DEFAULT 1 COMMENT '0 = inactive, 1 = active',
+    type VARCHAR(20) NOT NULL COMMENT 'Enum values: FOOD, DRINK',
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL
+)

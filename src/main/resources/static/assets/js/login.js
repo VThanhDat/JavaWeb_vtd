@@ -26,11 +26,11 @@ function handleLogin() {
   const errorEl = document.getElementById("loginError");
 
   if (!container || !loginButton) {
-    console.error("Login form container hoặc button không tồn tại.");
+    console.error("Login form container or button does not exist.");
     return;
   }
 
-  loginButton.addEventListener("click", function (e) {
+  loginButton.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const username = usernameInput.value.trim();

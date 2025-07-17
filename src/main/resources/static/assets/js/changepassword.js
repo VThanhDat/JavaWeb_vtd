@@ -2,27 +2,55 @@ import { showToast } from "./toast.js";
 
 function handleChangePasswordSubmit() {
   const form = document.getElementById("changePasswordForm");
+  const currentPasswordInput = form.querySelector("input[name='currentPassword']");
+  const newPasswordInput = form.querySelector("input[name='newPassword']");
+  const changePasswordButton = form.querySelector("button[type='submit']");
+  const errorEl = document.getElementById("changePasswordError");
 
-  if (!form) {
-    console.error("Form changePasswordForm no exists in DOM.");
+  if (!form || !changePasswordButton) {
+    console.error("Change password form or button does not exist.");
     return;
   }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    const newPassword = newPasswordInput.value.trim();
+    const currentPassword = currentPasswordInput.value.trim();
 
-    const newPassword = data.newPassword?.trim();
+    errorEl.innerText = "";
 
-    if (!newPassword || newPassword.length < 6 || newPassword.length > 100) {
-      showToast("New password must be between 6 and 100 characters.", "error");
+    if (!newPassword && !currentPassword) {
+      errorEl.innerText = "Please input current password - please input new password";
+      clearInputs();
       return;
     }
 
+    if (!newPassword) {
+      errorEl.innerText = "Please input new password";
+      clearInputs();
+      return;
+    }
+
+    if (!currentPassword) {
+      errorEl.innerText = "Please input current password";
+      clearInputs();
+      return;
+    }
+
+    const data = {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    };
+
     changePasswordAPI(data);
   });
+
+
+  function clearInputs() {
+    currentPasswordInput.value = "";
+    newPasswordInput.value = "";
+  }
 }
 
 function changePasswordAPI(data) {
@@ -30,7 +58,10 @@ function changePasswordAPI(data) {
     url: "http://localhost:8080/admin/password/change",
     method: "PUT",
     contentType: "application/json",
-    data: JSON.stringify(data),
+    data: JSON.stringify({
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+    }),
     xhrFields: { withCredentials: true },
     success: function (response) {
       showToast(response?.data, "success");

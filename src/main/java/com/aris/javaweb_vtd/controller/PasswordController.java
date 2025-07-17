@@ -22,6 +22,7 @@ import com.aris.javaweb_vtd.service.admin.AdminService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/admin/password")
@@ -35,7 +36,7 @@ public class PasswordController {
 
   @PutMapping("/change")
   public ResponseEntity<ApiResponseDTO<String>> updatePassword(
-      @RequestBody ChangePasswordRequestDTO dto,
+      @RequestBody @Valid ChangePasswordRequestDTO dto,
       Principal principal,
       HttpServletRequest request) {
     try {
@@ -59,8 +60,7 @@ public class PasswordController {
       return ResponseEntity
           .ok(new ApiResponseDTO<String>(true, "success", "Updated password successfully"));
     } catch (IllegalArgumentException | UsernameNotFoundException e) {
-      return ResponseEntity.badRequest()
-          .body(new ApiResponseDTO<String>(false, "error", e.getMessage()));
+      return ResponseEntity.badRequest().body(new ApiResponseDTO<String>(false, "error", e.getMessage()));
     }
   }
 }
