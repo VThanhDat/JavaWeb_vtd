@@ -5,26 +5,34 @@
         parameterType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO"
         useGeneratedKeys="true"
         keyProperty="id">
-        INSERT INTO admin (username, password, created_at, updated_at)
-        VALUES (#{username}, #{password}, #{createdAt}, #{updatedAt})
+      INSERT INTO admin 
+        (username
+        ,password
+        ,created_at
+        ,updated_at)
+      VALUES 
+        (#{username}
+        ,#{password}
+        ,#{createdAt}
+        ,#{updatedAt})
     </insert>
-    <update id="updatePassword"
-        parameterType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO">
-        UPDATE admin
-        SET 
+    
+    <update id="updatePassword" parameterType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO">
+      UPDATE admin
+      SET 
         password = #{password}, 
         updated_at = #{updatedAt}
         WHERE id = #{id}
     </update>
 
     <select id="findByUsername" resultType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO">
-         SELECT 
-              a.id, 
-              a.username, 
-              a.password
-         FROM admin a
-         WHERE a.username = #{username}
-         LIMIT 1
+      SELECT 
+        a.id, 
+        a.username, 
+        a.password
+      FROM admin a
+      WHERE a.username = #{username}
+      LIMIT 1
     </select>
 
 </mapper>

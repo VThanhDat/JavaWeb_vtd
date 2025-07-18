@@ -10,15 +10,27 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileUploadUtil {
-    public static String saveImage(MultipartFile file, String uploadDir) throws IOException {
-        if (file == null || file.isEmpty())
-            return null;
+  public static String saveImage(MultipartFile file, String uploadDir) throws IOException {
+    if (file == null || file.isEmpty())
+      return null;
 
-        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(uploadDir, filename);
-        Files.createDirectories(path.getParent());
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+    Path path = Paths.get(uploadDir, filename);
+    Files.createDirectories(path.getParent());
+    Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return filename;
+    return filename;
+  }
+
+  public static void deleteImage(String uploadDir, String filename) {
+    if (filename == null || filename.trim().isEmpty())
+      return;
+
+    Path path = Paths.get(uploadDir, filename);
+    try {
+      Files.deleteIfExists(path);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 }

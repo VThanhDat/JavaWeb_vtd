@@ -1,11 +1,8 @@
 package com.aris.javaweb_vtd.config;
 
-import java.time.LocalDateTime;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
@@ -14,14 +11,12 @@ import com.aris.javaweb_vtd.service.admin.AdminService;
 public class DataInitialConfig {
 
     @Bean
-    CommandLineRunner initAdmin(AdminService adminService, PasswordEncoder passwordEncoder) {
+    CommandLineRunner initAdmin(AdminService adminService) {
         return args -> {
             if (!adminService.existsByUsername("admin")) {
                 AdminRequestDTO admin = new AdminRequestDTO();
                 admin.setUsername("admin");
-                admin.setPassword(passwordEncoder.encode("admin123"));
-                admin.setCreatedAt(LocalDateTime.now());
-                admin.setUpdatedAt(LocalDateTime.now());
+                admin.setPassword("admin123");
                 adminService.insertAdmin(admin);
             } else {
                 System.out.println("Admin account already exists.");

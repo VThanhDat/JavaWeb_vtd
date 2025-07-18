@@ -1,11 +1,101 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aris.javaweb_vtd.mapper.ItemMapper">
-    <insert id="insertItem" parameterType="com.aris.javaweb_vtd.entity.Item">
-        INSERT INTO items (name, image, description, price, type, 
-        <if test="status != null">status,</if> created_at, updated_at)
-        VALUES
-        (#{name}, #{image}, #{description}, #{price}, #{type}, 
-        <if test="status != null">#{status},</if> #{createdAt}, #{updatedAt})
+    <insert id="insertItem" parameterType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      INSERT INTO items 
+        (name
+        ,image
+        ,description
+        ,price
+        ,type
+        ,<if test="status != null">status
+        ,</if> created_at, updated_at)
+      VALUES
+        (#{name}
+        ,#{image}
+        ,#{description}
+        ,#{price}
+        ,#{type}
+        ,<if test="status != null">#{status}
+        ,</if> #{createdAt}
+        ,#{updatedAt})
     </insert>
+
+    <select id="existsByNameAndType" resultType="boolean">
+      SELECT COUNT(1) > 0
+      FROM items
+      WHERE
+        name = #{name}
+        AND type = #{type}
+    </select>
+
+    <select id="getAllItemByType" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      SELECT 
+        i.id
+        ,i.name
+        ,i.image
+        ,i.description
+        ,i.price
+        ,i.type
+        ,i.status
+        ,i.created_at as createdAt
+        ,i.updated_at as updatedAt
+      FROM items i
+      WHERE
+        i.type = #{type}
+    </select>
+
+    <select id="getItemById" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      SELECT 
+        i.id
+        ,i.name
+        ,i.image
+        ,i.description
+        ,i.price
+        ,i.type
+        ,i.status
+        ,i.created_at as createdAt
+        ,i.updated_at as updatedAt
+      FROM items i
+      WHERE
+        i.id = #{id}
+    </select>
+
+    <update id="updateItem" parameterType="map">
+      UPDATE items i
+      SET
+        i.name = #{name}
+        ,i.description = #{description}
+        ,i.price = #{price}
+        ,i.type = #{type}
+        ,i.image = #{image}
+        ,<if test="status != null">status = #{status}
+        ,</if>i.updated_at = #{updatedAt}
+      WHERE i.id = #{id}
+    </update>
+
+    <update id="updateStatusById" parameterType="map">
+      UPDATE items i
+      SET
+        i.status = #{status}
+      WHERE i.id = #{id}
+    </update>
+
+    <select id="getAllItemByTypeAndStatus" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      SELECT 
+        i.id
+        ,i.name
+        ,i.image
+        ,i.description
+        ,i.price
+        ,i.type
+        ,i.status
+        ,i.created_at as createdAt
+        ,i.updated_at as updatedAt
+      FROM items i
+      WHERE
+        i.type = #{type}
+        AND i.status = #{status}
+    </select>
+
 </mapper>

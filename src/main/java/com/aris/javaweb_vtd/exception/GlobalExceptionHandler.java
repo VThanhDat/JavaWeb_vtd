@@ -17,10 +17,8 @@ import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleIllegalArgument(IllegalArgumentException e) {
-    Map<String, String> error = new HashMap<>();
-    error.put("error", e.getMessage());
-    return ResponseEntity.badRequest().body(ApiResponseDTO.error("Invalid argument", error));
+  public ResponseEntity<ApiResponseDTO<String>> handleIllegalArgument(IllegalArgumentException ex) {
+    return ResponseEntity.badRequest().body(ApiResponseDTO.error(ex.getMessage()));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler {
         .orElse("Validation failed");
 
     return ResponseEntity.badRequest()
-        .body(new ApiResponseDTO<>(false, "Validation failed", errorMessage));
+        .body(ApiResponseDTO.error(errorMessage));
   }
 
   @ExceptionHandler(BindingException.class)
@@ -44,13 +42,13 @@ public class GlobalExceptionHandler {
       error.put("error", "Mapper method not found");
       error.put("details", ex.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(ApiResponseDTO.error("Mapper not implemented or not declared in XML", error));
+          .body(ApiResponseDTO.error(error));
     }
 
     error.put("error", "MyBatis Binding Error");
     error.put("details", ex.getMessage());
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ApiResponseDTO.error("Database mapping error", error));
+        .body(ApiResponseDTO.error(error));
   }
 
   @ExceptionHandler(IllegalStateException.class)
@@ -60,17 +58,17 @@ public class GlobalExceptionHandler {
     error.put("details", ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ApiResponseDTO.error("Internal configuration error", error));
+        .body(ApiResponseDTO.error(error));
   }
 
   @ExceptionHandler(NoResourceFoundException.class)
   public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleNoResourceFound(NoResourceFoundException ex) {
     Map<String, String> error = new HashMap<>();
-    error.put("error", "Static resource not found");
+    error.put("error", "Page not found");
     error.put("details", ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(ApiResponseDTO.error("Page not found", error));
+        .body(ApiResponseDTO.error(error));
   }
 
   @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -81,7 +79,7 @@ public class GlobalExceptionHandler {
     error.put("error", "Required parameter is missing");
 
     return ResponseEntity.badRequest()
-        .body(ApiResponseDTO.error("Missing request parameter", error));
+        .body(ApiResponseDTO.error(error));
   }
 
   @ExceptionHandler(RuntimeException.class)
@@ -91,6 +89,6 @@ public class GlobalExceptionHandler {
     error.put("details", ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ApiResponseDTO.error("Runtime exception", error));
+        .body(ApiResponseDTO.error(error));
   }
 }
