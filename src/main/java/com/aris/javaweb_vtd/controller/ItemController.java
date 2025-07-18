@@ -25,7 +25,7 @@ public class ItemController {
       if (dto.getImage() == null || dto.getImage().isEmpty()) {
         return ResponseEntity.badRequest().body(new ApiResponseDTO<>(false, "error", "Select one image"));
       }
-      itemService.createItem(dto); // DTO hợp lệ rồi mới gọi
+      itemService.createItem(dto);
       return ResponseEntity.ok(new ApiResponseDTO<>(true, "success", "Successfully"));
     } catch (Exception e) {
       return ResponseEntity.badRequest()

@@ -6,5 +6,5 @@ import com.aris.javaweb_vtd.entity.Item;
 
 @Mapper
 public interface ItemMapper {
-    void insertItem(Item item);
+  void insertItem(Item item);
 }

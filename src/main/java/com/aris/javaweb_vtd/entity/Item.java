@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Item {
-    private Long id;
-    private String name;
-    private String image;
-    private String description;
-    private Double price;
-    private String type;
-    private Integer status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  private Long id;
+  private String name;
+  private String image;
+  private String description;
+  private Double price;
+  private String type;
+  private Integer status;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

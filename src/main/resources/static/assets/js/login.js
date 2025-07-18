@@ -30,7 +30,7 @@ function handleLogin() {
     return;
   }
 
-  loginButton.addEventListener("submit", function (e) {
+  loginButton.addEventListener("click", function (e) {
     e.preventDefault();
 
     const username = usernameInput.value.trim();

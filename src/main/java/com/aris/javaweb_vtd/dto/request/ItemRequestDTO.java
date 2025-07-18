@@ -15,25 +15,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemRequestDTO {
+  private Long id;
 
-    private Long id;
+  @Size(max = 30, message = "Item name must not exceed 30 characters")
+  private String name;
 
-    @Size(max = 30, message = "Item name must not exceed 30 characters")
-    private String name;
+  @Size(max = 60, message = "Description max 60 characters")
+  private String description;
 
-    @Size(max = 60, message = "Description max 60 characters")
-    private String description;
+  @Digits(integer = 10, fraction = 0, message = "Price must be a number")
+  private Double price;
 
-    @Digits(integer = 10, fraction = 0, message = "Price must be a number")
-    private Double price;
+  @Pattern(regexp = "^(food|drink)$", message = "Type must be 'food' or 'drink'")
+  private String type;
 
-    @Pattern(regexp = "^(food|drink)$", message = "Type must be 'food' or 'drink'")
-    private String type;
+  private Integer status;
 
-    private Integer status;
+  private MultipartFile image;
 
-    private MultipartFile image;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

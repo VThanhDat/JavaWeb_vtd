@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Admin {
-    private Long id;
-    private String username;
-    private String password;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  private Long id;
+  private String username;
+  private String password;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }

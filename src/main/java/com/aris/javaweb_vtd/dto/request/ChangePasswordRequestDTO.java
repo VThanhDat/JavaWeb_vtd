@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePasswordRequestDTO {
-    private String currentPassword;
-    @Size(min = 6, max = 100, message = "Password must be between 6 and 100 characters")
-    private String newPassword;
+  private String currentPassword;
+
+  @Size(min = 6, max = 100, message = "New password must be between 6 and 100 characters")
+  private String newPassword;
 }

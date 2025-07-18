@@ -8,9 +8,9 @@ import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
 
 @Mapper
 public interface AdminMapper {
-    void insertAdmin(AdminRequestDTO adminRequestDTO);
+  void insertAdmin(AdminRequestDTO adminRequestDTO);
 
-    Optional<AdminRequestDTO> findByUsername(String username);
+  Optional<AdminRequestDTO> findByUsername(String username);
 
-    void updatePassword(AdminRequestDTO adminRequestDTO);
+  void updatePassword(AdminRequestDTO adminRequestDTO);
 }

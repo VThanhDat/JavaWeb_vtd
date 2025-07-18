@@ -24,13 +24,16 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleValidationExceptions(
-      MethodArgumentNotValidException ex) {
-    Map<String, String> errors = new HashMap<>();
-    ex.getBindingResult().getFieldErrors()
-        .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+  public ResponseEntity<ApiResponseDTO<String>> handleValidationException(MethodArgumentNotValidException ex) {
+    String errorMessage = ex.getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .findFirst()
+        .map(error -> error.getDefaultMessage())
+        .orElse("Validation failed");
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseDTO.error("Validation failed", errors));
+    return ResponseEntity.badRequest()
+        .body(new ApiResponseDTO<>(false, "Validation failed", errorMessage));
   }
 
   @ExceptionHandler(BindingException.class)
@@ -44,7 +47,6 @@ public class GlobalExceptionHandler {
           .body(ApiResponseDTO.error("Mapper not implemented or not declared in XML", error));
     }
 
-    // fallback cho các BindingException khác
     error.put("error", "MyBatis Binding Error");
     error.put("details", ex.getMessage());
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -80,5 +82,15 @@ public class GlobalExceptionHandler {
 
     return ResponseEntity.badRequest()
         .body(ApiResponseDTO.error("Missing request parameter", error));
+  }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleRuntimeException(RuntimeException ex) {
+    Map<String, String> error = new HashMap<>();
+    error.put("error", "Unexpected error occurred");
+    error.put("details", ex.getMessage());
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ApiResponseDTO.error("Runtime exception", error));
   }
 }
