@@ -22,19 +22,23 @@ public class ItemServiceImpl implements ItemService {
 
   public void createItem(ItemRequestDTO dto) {
     String filename = null;
-
+    String folder = null;
     boolean isDuplicate = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
     if (isDuplicate) {
       throw new IllegalArgumentException("A item already exists with this name and type.");
     }
 
     try {
-      filename = FileUploadUtil.saveImage(dto.getImage(), "uploads");
+      folder = dto.getType().equalsIgnoreCase("food") ? "uploads/food" : "uploads/drink";
+      String saveName = FileUploadUtil.saveImage(dto.getImage(), folder);
+      filename = folder + "/" + saveName;
+
       ItemResponseDTO item = itemConverter.toResponseDTO(dto, filename);
       itemMapper.insertItem(item);
     } catch (Exception e) {
-      if (filename != null) {
-        FileUploadUtil.deleteImage("uploads", filename);
+      if (filename != null && folder != null) {
+        String savedName = filename.substring(filename.lastIndexOf('/') + 1);
+        FileUploadUtil.deleteImage(folder, savedName);
       }
       throw new RuntimeException("Create is failed", e);
     }
@@ -77,29 +81,35 @@ public class ItemServiceImpl implements ItemService {
 
     String newFilename = currentItem.getImage();
     boolean isNewImageUploaded = false;
+    String folder = null;
 
     try {
       if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-        newFilename = FileUploadUtil.saveImage(dto.getImage(), "uploads");
+        folder = dto.getType().equalsIgnoreCase("food") ? "uploads/food" : "uploads/drink";
+        String savedName = FileUploadUtil.saveImage(dto.getImage(), folder);
+        newFilename = folder + "/" + savedName;
         isNewImageUploaded = true;
       }
 
       ItemResponseDTO item = itemConverter.toResponseDTO(dto, newFilename);
-
       int updateItem = itemMapper.updateItem(item);
+
       if (updateItem == 0) {
         throw new IllegalArgumentException("Update failed. No item found with ID is " + dto.getId());
       }
 
       if (isNewImageUploaded && !newFilename.equals(currentItem.getImage())) {
-        FileUploadUtil.deleteImage("uploads", currentItem.getImage());
+        String oldFolder = currentItem.getImage().substring(0, currentItem.getImage().lastIndexOf('/'));
+        String oldFilename = currentItem.getImage().substring(currentItem.getImage().lastIndexOf('/') + 1);
+        FileUploadUtil.deleteImage(oldFolder, oldFilename);
       }
 
       return itemMapper.getItemById(dto.getId());
 
     } catch (Exception e) {
       if (isNewImageUploaded && !newFilename.equals(currentItem.getImage())) {
-        FileUploadUtil.deleteImage("uploads", newFilename);
+        String savedName = newFilename.substring(newFilename.lastIndexOf('/') + 1);
+        FileUploadUtil.deleteImage(folder, savedName);
       }
       throw new RuntimeException("Update failed", e);
     }

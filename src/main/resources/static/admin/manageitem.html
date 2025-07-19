@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/baseadmin.css" />
   <link rel="stylesheet" href="/css/toast.css" />
+  <link rel="stylesheet" href="/css/table.css">
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
 </head>
 
@@ -119,22 +120,99 @@
         </svg>
 
         <input type="text" placeholder="Search..." class="w-full h-14 pl-12 pr-4 bg-[#F3F3F3] rounded-full text-sm text-gray-700 placeholder-gray-400
-         transition-all duration-300 focus:outline-none focus:shadow-[0_0_0_2px_#000000fa]" />
+          transition-all duration-300 focus:outline-none focus:shadow-[0_0_0_2px_#000000fa]" />
       </div>
     </header>
 
     <!-- Content Area -->
-    <div class="flex-1 p-8">
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4">Main Content Area</h2>
-        <p class="text-gray-600">Đây là khu vực nội dung chính. Header chiếm toàn bộ chiều rộng, sidebar nằm bên
-          trái dưới header.</p>
+    <div class="flex flex-col items-start p-6 gap-1 w-[1620px] h-[885px] flex-none order-1 self-stretch grow">
+      <div
+        class="flex flex-row justify-between items-center py-2 gap-1 w-[1572px] h-[64.54px] flex-none order-0 self-stretch grow-0">
+        <!-- Container tab -->
+        <div
+          class="flex flex-row items-start p-[5.77px] mx-auto w-[127.54px] h-[48.54px] bg-[#EFEFEF] rounded-[11.537px] flex-none order-0 grow-0">
+          <!-- Food tab -->
+          <div
+            class="tab-button food-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[57px] h-[37px] rounded-[5.76848px] flex-none order-0 grow-0 cursor-pointer">
+            <span class="tab-food text-[17.3054px] leading-[21px] font-normal">
+              Food
+            </span>
+          </div>
+          <!-- Drink tab -->
+          <div
+            class="tab-button drink-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[59px] h-[37px] rounded-[5.76848px] flex-none order-1 grow-0 cursor-pointer">
+            <span class="tab-drink text-[17.3054px] leading-[21px] font-normal">
+              Drink
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="box-border flex flex-row justify-center items-center px-4 py-6 gap-2 mx-auto w-[189px] h-[39px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] flex-none order-1 grow-0">
+          <p class="w-[109px] h-[21px] text-white text-[14px] leading-[150%] font-normal flex-none order-0 grow-0">
+            Create new item
+          </p>
+        </button>
+      </div>
+      <div
+        class="flex flex-col items-start p-4 w-[1572px] h-[768.46px] bg-white rounded-[16px] flex-none order-1 self-stretch grow">
+        <table class="item-table">
+          <thead>
+            <tr>
+              <th>NO.</th>
+              <th>Item</th>
+              <th>Item Name</th>
+              <th>Description</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="item-table-body">
+            <!-- <tr>
+              <td>001</td>
+              <td><img src="/uploads/b0ee252c-01d0-49fd-a2a0-a926db0fec5d_caphesua.jpg" width="40" height="40"
+                  style="border-radius:6px;"></td>
+              <td>Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</td>
+              <td>Đùi gà góc tư sốt mắm tỏi + cơm + dưa leo + salad + canh</td>
+              <td>40.000 đ</td>
+              <td>
+                <label class="switch">
+                  <input type="checkbox" checked disabled>
+                  <span class="slider"></span>
+                </label>
+              </td>
+              <td>
+                <div class="flex flex-row items-center p-0 gap-2 w-[95px] h-[24px] flex-none order-1 grow-0">
+
+                  <div
+                    class="flex flex-col justify-center items-start p-0 w-[49px] h-[24px] bg-[rgba(255,255,255,0.000001)] flex-none order-0 grow-0">
+                    <span
+                      class="w-[49px] h-[24px] text-[16px] leading-[150%] text-[#658280] font-normal flex-none order-0 grow-0">
+                      Delete</span>
+                  </div>
+                  |
+                  <div
+                    class="flex flex-col justify-center items-start p-0 w-[49px] h-[24px] bg-[rgba(255,255,255,0.000001)] flex-none order-0 grow-0">
+
+                    <span
+                      class="w-[30px] h-[24px] text-[16px] leading-[150%] text-[#0D6EFD] font-normal flex-none order-0 grow-0">
+                      Edit
+                    </span>
+                  </div>
+                </div>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
       </div>
     </div>
   </main>
 
+
   <!-- JS Toggle Eye -->
   <script type="module" src="/js/logout.js"></script>
+  <script type="module" src="/js/manageitem.js"></script>
   <script src="/js/jquery-3.7.1.min.js"></script>
 </body>
 
