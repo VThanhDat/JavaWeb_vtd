@@ -2,7 +2,9 @@ import { showToast } from "./toast.js";
 
 function handleChangePasswordSubmit() {
   const form = document.getElementById("changePasswordForm");
-  const currentPasswordInput = form.querySelector("input[name='currentPassword']");
+  const currentPasswordInput = form.querySelector(
+    "input[name='currentPassword']"
+  );
   const newPasswordInput = form.querySelector("input[name='newPassword']");
   const changePasswordButton = form.querySelector("button[type='submit']");
   const errorEl = document.getElementById("changePasswordError");
@@ -21,7 +23,8 @@ function handleChangePasswordSubmit() {
     errorEl.innerText = "";
 
     if (!newPassword && !currentPassword) {
-      errorEl.innerText = "Please input current password - please input new password";
+      errorEl.innerText =
+        "Please input current password - please input new password";
       clearInputs();
       return;
     }
@@ -45,7 +48,6 @@ function handleChangePasswordSubmit() {
 
     changePasswordAPI(data);
   });
-
 
   function clearInputs() {
     currentPasswordInput.value = "";

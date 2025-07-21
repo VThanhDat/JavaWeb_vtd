@@ -16,6 +16,14 @@ public class ApiResponseDTO<T> {
 		return new ApiResponseDTO<>(true, "success", data);
 	}
 
+	public static <T> ApiResponseDTO<T> success(String message, T data) {
+		ApiResponseDTO<T> res = new ApiResponseDTO<>();
+		res.success = true;
+		res.message = message;
+		res.data = data;
+		return res;
+	}
+
 	public static <T> ApiResponseDTO<T> error(T data) {
 		return new ApiResponseDTO<>(false, "error", data);
 	}

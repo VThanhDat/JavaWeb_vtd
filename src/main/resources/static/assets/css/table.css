@@ -3,15 +3,108 @@
   border-collapse: collapse;
   background-color: #fff;
   margin-top: 20px;
-  border-radius: 10px;
-  overflow: hidden;
+  table-layout: fixed;
 }
 
-.item-table th,
+/* Cột số thứ tự */
+.item-table th:first-child, 
+.item-table td:first-child {
+  width: 60px;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+/* Cột hình ảnh - chỉ đủ chứa ảnh 64px */
+.item-table th:nth-child(2) {
+  width: 80px;
+  padding: 8px;
+  text-align: center;
+}
+
+.item-table td:nth-child(2) {
+  width: 80px;
+  padding: 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Style cho ảnh bên trong cell */
+.item-table td:nth-child(2) img {
+  width: 64px !important;
+  height: 64px !important;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* Các cột còn lại - QUAN TRỌNG: text-align: left cho tất cả */
+.item-table th:nth-child(3), 
+.item-table td:nth-child(3) {
+  width: 20%;
+  word-wrap: break-word;
+  text-align: left !important; /* Force căn trái */
+}
+
+.item-table th:nth-child(4), 
+.item-table td:nth-child(4) {
+  width: 60%;
+  word-wrap: break-word;
+  text-align: left !important; /* Force căn trái */
+}
+
+.item-table th:nth-child(5), 
+.item-table td:nth-child(5) {
+  width: 5%;
+  text-align: left !important; /* Force căn trái */
+}
+
+.item-table th:nth-child(6), 
+.item-table td:nth-child(6) {
+  width: 5%;
+  text-align: left !important; /* Force căn trái */
+}
+
+.item-table th:nth-child(7), 
+.item-table td:nth-child(7) {
+  width: 10%;
+  text-align: left !important; /* Force căn trái */
+}
+
+/* Hoặc áp dụng chung cho tất cả th và td (trừ cột đầu và cột ảnh) */
+.item-table th, 
 .item-table td {
   padding: 12px 10px;
-  text-align: left;
+  text-align: left; /* Default căn trái */
   border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .item-table td:nth-child(2) img {
+    width: 64px !important;
+    height: 64px !important;
+  }
+  
+  .item-table th:nth-child(4), 
+  .item-table td:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .item-table th:first-child, 
+  .item-table td:first-child {
+    display: none;
+  }
+  
+  .item-table {
+    font-size: 12px;
+  }
+}
+
+.item-table th:last-child, 
+.item-table td:last-child {
+  border-right: none;
 }
 
 .item-table th {
@@ -23,6 +116,11 @@
   border-bottom: none;
 }
 
+.item-table tbody tr:nth-child(even) {
+  background-color: #b7b7b71a;
+}
+
+/* CSS cho switch giữ nguyên */
 .switch {
   position: relative;
   display: inline-block;

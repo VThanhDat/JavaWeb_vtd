@@ -98,4 +98,18 @@
         AND i.status = #{status}
     </select>
 
+    <select id="searchItems" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
+        resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      SELECT * FROM items
+      WHERE 1=1
+      <if test="name != null and name != ''">
+        AND name LIKE CONCAT('%', #{name}, '%')
+      </if>
+      <if test="type != null and type != ''">
+        AND type = #{type}
+      </if>
+      <if test="status != null">
+        AND status = #{status}
+      </if>
+    </select>
 </mapper>

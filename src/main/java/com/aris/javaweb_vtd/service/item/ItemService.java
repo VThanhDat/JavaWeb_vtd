@@ -3,6 +3,7 @@ package com.aris.javaweb_vtd.service.item;
 import java.util.List;
 
 import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
 
 public interface ItemService {
@@ -17,4 +18,6 @@ public interface ItemService {
   void deleteItem(Long id);
 
   List<ItemResponseDTO> getItemsByTypeAndStatus(String type);
+
+  List<ItemResponseDTO> searchItems(ItemSearchDTO search);
 }

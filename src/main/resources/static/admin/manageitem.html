@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/css/baseadmin.css" />
   <link rel="stylesheet" href="/css/toast.css" />
   <link rel="stylesheet" href="/css/table.css">
+  <link rel="stylesheet" href="/css/modalmanageitem.css">
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
 </head>
 
@@ -119,48 +120,47 @@
           </defs>
         </svg>
 
-        <input type="text" placeholder="Search..." class="w-full h-14 pl-12 pr-4 bg-[#F3F3F3] rounded-full text-sm text-gray-700 placeholder-gray-400
+        <input type="text" id="searchInput" placeholder="Search..." class="w-full h-14 pl-12 pr-4 bg-[#F3F3F3] rounded-full text-sm text-gray-700 placeholder-gray-400
           transition-all duration-300 focus:outline-none focus:shadow-[0_0_0_2px_#000000fa]" />
       </div>
     </header>
 
     <!-- Content Area -->
-    <div class="flex flex-col items-start p-6 gap-1 w-[1620px] h-[885px] flex-none order-1 self-stretch grow">
-      <div
-        class="flex flex-row justify-between items-center py-2 gap-1 w-[1572px] h-[64.54px] flex-none order-0 self-stretch grow-0">
+    <div class="flex flex-col items-start p-6 gap-1 w-full h-auto">
+      <div class="flex flex-row justify-between items-center py-2 gap-1 w-full h-auto">
         <!-- Container tab -->
-        <div
-          class="flex flex-row items-start p-[5.77px] mx-auto w-[127.54px] h-[48.54px] bg-[#EFEFEF] rounded-[11.537px] flex-none order-0 grow-0">
+        <div id="outerTabContainer"
+          class="outer-tab-container flex flex-row items-start p-[5.77px] mx-auto w-[127.54px] h-[48.54px] bg-[#EFEFEF] rounded-[11.537px]">
           <!-- Food tab -->
           <div
-            class="tab-button food-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[57px] h-[37px] rounded-[5.76848px] flex-none order-0 grow-0 cursor-pointer">
+            class="tab-button outer-tab food-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[57px] h-[37px] rounded-[5.76848px] flex-none order-0 grow-0 cursor-pointer">
             <span class="tab-food text-[17.3054px] leading-[21px] font-normal">
               Food
             </span>
           </div>
           <!-- Drink tab -->
           <div
-            class="tab-button drink-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[59px] h-[37px] rounded-[5.76848px] flex-none order-1 grow-0 cursor-pointer">
+            class="tab-button outer-tab drink-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[59px] h-[37px] rounded-[5.76848px] flex-none order-1 grow-0 cursor-pointer">
             <span class="tab-drink text-[17.3054px] leading-[21px] font-normal">
               Drink
             </span>
           </div>
         </div>
 
-        <button
-          class="box-border flex flex-row justify-center items-center px-4 py-6 gap-2 mx-auto w-[189px] h-[39px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] flex-none order-1 grow-0">
+        <button id="openModalBtn"
+          class="box-border flex flex-row justify-center items-center px-4 py-6 gap-2 mx-auto w-[189px] h-[39px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] flex-none order-1 grow-0 hover:bg-[#e55a00] transition-colors">
           <p class="w-[109px] h-[21px] text-white text-[14px] leading-[150%] font-normal flex-none order-0 grow-0">
             Create new item
           </p>
         </button>
       </div>
       <div
-        class="flex flex-col items-start p-4 w-[1572px] h-[768.46px] bg-white rounded-[16px] flex-none order-1 self-stretch grow">
+        class="flex flex-col items-start p-4 w-full h-auto bg-white rounded-[16px] flex-none order-1 self-stretch grow">
         <table class="item-table">
           <thead>
             <tr>
               <th>NO.</th>
-              <th>Item</th>
+              <th></th>
               <th>Item Name</th>
               <th>Description</th>
               <th>Price</th>
@@ -169,46 +169,172 @@
             </tr>
           </thead>
           <tbody id="item-table-body">
-            <!-- <tr>
-              <td>001</td>
-              <td><img src="/uploads/b0ee252c-01d0-49fd-a2a0-a926db0fec5d_caphesua.jpg" width="40" height="40"
-                  style="border-radius:6px;"></td>
-              <td>Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</td>
-              <td>Đùi gà góc tư sốt mắm tỏi + cơm + dưa leo + salad + canh</td>
-              <td>40.000 đ</td>
-              <td>
-                <label class="switch">
-                  <input type="checkbox" checked disabled>
-                  <span class="slider"></span>
-                </label>
-              </td>
-              <td>
-                <div class="flex flex-row items-center p-0 gap-2 w-[95px] h-[24px] flex-none order-1 grow-0">
-
-                  <div
-                    class="flex flex-col justify-center items-start p-0 w-[49px] h-[24px] bg-[rgba(255,255,255,0.000001)] flex-none order-0 grow-0">
-                    <span
-                      class="w-[49px] h-[24px] text-[16px] leading-[150%] text-[#658280] font-normal flex-none order-0 grow-0">
-                      Delete</span>
-                  </div>
-                  |
-                  <div
-                    class="flex flex-col justify-center items-start p-0 w-[49px] h-[24px] bg-[rgba(255,255,255,0.000001)] flex-none order-0 grow-0">
-
-                    <span
-                      class="w-[30px] h-[24px] text-[16px] leading-[150%] text-[#0D6EFD] font-normal flex-none order-0 grow-0">
-                      Edit
-                    </span>
-                  </div>
-                </div>
-              </td>
-            </tr> -->
           </tbody>
         </table>
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div
+      class="flex flex-row justify-center items-center p-0 gap-2 w-full max-w-6xl mx-auto h-auto flex-none order-2 self-stretch flex-grow-0 md:flex-row md:gap-3 md:h-auto md:p-4">
+
+      <!-- Left: Tổng số items -->
+      <div class="flex items-center">
+        <div class="pagination-total">
+          <p class="text-sm text-gray-600 m-0 font-normal">Total 200 items</p>
+        </div>
+      </div>
+
+      <!-- Center: Các nút phân trang -->
+      <div
+        class="flex items-center bg-white border border-gray-300 rounded-md shadow-sm md:flex-wrap md:justify-center">
+        <!-- Previous button -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&lt;</button>
+
+        <!-- Active page -->
+        <button
+          class="border border-orange-500 bg-orange-500 text-white font-medium px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out min-w-8 h-8 flex items-center justify-center hover:bg-orange-600 hover:border-orange-600">1</button>
+
+        <!-- Dots -->
+        <span
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
+
+        <!-- Regular pages -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">4</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">5</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">6</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">7</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">8</button>
+
+        <!-- Dots -->
+        <span
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
+
+        <!-- Last page -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">20</button>
+
+        <!-- Next button -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&gt;</button>
+      </div>
+
+      <!-- Right: Chọn số item/trang -->
+      <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
+        <select
+          class="border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select">
+          <option value="10">10 / page</option>
+          <option value="20">20 / page</option>
+          <option value="30">30 / page</option>
+          <option value="40">40 / page</option>
+        </select>
+      </div>
+    </div>
   </main>
 
+  <!-- Form Add Modal -->
+  <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div
+      class="addModal flex flex-col items-start p-6 gap-6 absolute w-[900px] h-[655px] left-1/2 top-[52%] translate-x-[-50%] translate-y-[-50%] bg-white rounded-[16px] shadow-lg">
+      <div class="flex flex-row items-center py-2 gap-6 w-[852px] h-[50px] flex-none order-0 self-stretch grow-0">
+        <div class="flex flex-row items-center p-0 w-[228px] h-[34px] flex-none order-0 grow-0">
+          <h1
+            class="w-[228px] h-[34px] font-inter font-bold text-[28px] leading-[120%] text-[#292929] flex-none order-0 grow-0">
+            Create New Item
+          </h1>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="w-[852px] h-0 border border-[#EFEFEF] flex-none order-0 self-stretch grow-0"></div>
+
+      <!-- Form Info -->
+      <form id="itemForm" class="flex flex-col gap-6 w-full" novalidate>
+        <div class="flex flex-row items-start p-0 gap-6 w-[852px] h-[130px] flex-none order-2 self-stretch grow-0">
+          <!-- Image Item -->
+          <div class="flex flex-row items-center p-0 gap-4 w-[700.46px] h-[130px] flex-none order-0 grow">
+            <div class="w-[130px] h-[130px] flex-none order-0 grow-0">
+              <img id="imagePreview" src="/img/form/landscape-placeholder.svg" alt="Placeholder"
+                class="w-[130px] h-[130px] flex-none order-0 grow-0 object-cover rounded-md" />
+            </div>
+            <div
+              class="flex flex-col items-start pt-2 gap-[10px] w-[554.46px] h-[130px] flex-none order-1 self-stretch grow">
+              <p
+                class="w-[554.46px] h-[73px] font-inter italic font-light text-[14px] leading-[22px] text-black flex-none order-0 self-stretch grow">
+                Please upload square image size less than 5MB
+              </p>
+              <div
+                class="flex flex-row items-center p-0 gap-[30px] w-[554.46px] h-[39px] rounded-[5px] flex-none order-1 self-stretch grow-0">
+                <!-- Hidden file input -->
+                <input id="imageInput" name="image" type="file" accept="image/*" class="hidden" required />
+                <button type="button" id="chooseFileBtn"
+                  class="box-border flex flex-row justify-center items-center px-4 py-2 gap-2 w-[128px] h-[39px] border border-[#FF6B00] rounded-[4px] flex-none order-0 grow-0 text-[#FF6B00] hover:bg-[#FF6B00] hover:text-white transition-colors">
+                  Choose file
+                </button>
+                <span id="fileName" class="text-sm text-gray-600"></span>
+              </div>
+            </div>
+          </div>
+          <!-- Type  -->
+          <div
+            class="flex flex-row items-start p-[5.76848px] w-[127.54px] h-[48.54px] bg-[#EFEFEF] rounded-[11.537px] flex-none order-1 grow-0">
+            <input type="hidden" id="itemType" name="type" value="food" />
+            <div
+              class="tab-button modal-tab food-tab active flex flex-row justify-center items-center p-2 gap-[5.77px] w-[57px] h-[37px] bg-white rounded-[5.76848px] flex-none order-0 grow-0 cursor-pointer">
+              <span class="tab-food text-[17.3054px] leading-[21px] font-normal text-[#FF6B00]">Food</span>
+            </div>
+            <div
+              class="tab-button modal-tab drink-tab flex flex-row justify-center items-center p-2 gap-[5.77px] w-[59px] h-[37px] rounded-[5.76848px] flex-none order-1 grow-0 cursor-pointer">
+              <span class="tab-drink text-[17.3054px] leading-[21px] font-normal text-gray-600">Drink</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col items-start p-0 gap-4 w-[852px] h-[200px] flex-none order-3 self-stretch grow-0">
+          <!-- Name Item -->
+          <div class="input-container w-full">
+            <label for="itemName" class="input-label">Item Name</label>
+            <input id="itemName" name="name" type="text" class="input-field" maxlength="100"
+              placeholder="Enter item name..." required />
+          </div>
+          <!-- Description Item -->
+          <div class="input-container w-full">
+            <label for="itemDesc" class="input-label">Description</label>
+            <input id="itemDesc" name="description" type="text" class="input-field" maxlength="500"
+              placeholder="Enter description..." required />
+          </div>
+          <!-- Price Item -->
+          <div class="input-container w-full">
+            <label for="itemPrice" class="input-label">Price (VNĐ)</label>
+            <input id="itemPrice" name="price" type="number" class="input-field" min="0" step="1000"
+              placeholder="Enter price..." required />
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-[852px] h-0 border border-[#EFEFEF] flex-none order-4 self-stretch grow-0"></div>
+
+        <p id="manageItemError" class="text-red-500 text-sm order-6"></p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-row items-start p-0 gap-6 w-[852px] h-[61px] flex-none order-7 self-stretch grow-0">
+          <button type="button" id="cancelBtn"
+            class="flex flex-row justify-center items-center p-4 gap-2 w-[414px] h-[59px] bg-[#EFEFEF] rounded-[4px] flex-none order-0 grow text-gray-700 font-medium">
+            Cancel
+          </button>
+          <button type="submit" id="createBtn"
+            class="box-border flex flex-row justify-center items-center p-4 gap-2 w-[414px] h-[61px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] flex-none order-1 grow text-white font-medium">
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- JS Toggle Eye -->
   <script type="module" src="/js/logout.js"></script>

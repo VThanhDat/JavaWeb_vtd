@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
 
 @Mapper
@@ -22,4 +23,6 @@ public interface ItemMapper {
   int updateStatusById(Long id, int status);
 
   List<ItemResponseDTO> getAllItemByTypeAndStatus(String type, Integer status);
+
+  List<ItemResponseDTO> searchItems(ItemSearchDTO search);
 }

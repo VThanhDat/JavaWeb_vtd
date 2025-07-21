@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.aris.javaweb_vtd.converter.ItemConverter;
 import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.mapper.ItemMapper;
 import com.aris.javaweb_vtd.util.FileUploadUtil;
@@ -26,6 +27,10 @@ public class ItemServiceImpl implements ItemService {
     boolean isDuplicate = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
     if (isDuplicate) {
       throw new IllegalArgumentException("A item already exists with this name and type.");
+    }
+
+    if (dto.getImage() == null || dto.getImage().isEmpty()) {
+      throw new IllegalArgumentException("Select one image");
     }
 
     try {
@@ -136,4 +141,14 @@ public class ItemServiceImpl implements ItemService {
     }
     return items;
   }
+
+  @Override
+  public List<ItemResponseDTO> searchItems(ItemSearchDTO searchDTO) {
+     if (searchDTO.getStatus() == null) {
+        searchDTO.setStatus(1);
+    }
+    return itemMapper.searchItems(searchDTO);
+  }
+
+ 
 }

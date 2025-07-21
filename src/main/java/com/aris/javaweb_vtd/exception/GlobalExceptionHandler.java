@@ -83,12 +83,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ApiResponseDTO<Map<String, String>>> handleRuntimeException(RuntimeException ex) {
-    Map<String, String> error = new HashMap<>();
-    error.put("error", "Unexpected error occurred");
-    error.put("details", ex.getMessage());
+  public ResponseEntity<ApiResponseDTO<String>> handleRuntimeException(RuntimeException e) {
+    return ResponseEntity.status(500).body(ApiResponseDTO.error("Internal error: " + e.getMessage()));
+  }
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(ApiResponseDTO.error(error));
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiResponseDTO<String>> handleGenericException(Exception e) {
+    return ResponseEntity.status(500).body(ApiResponseDTO.error("Unexpected error"));
   }
 }
