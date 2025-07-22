@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aris.javaweb_vtd.mapper.ItemMapper">
-    <insert id="insertItem" parameterType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+    <insert id="insertItem" parameterType="map">
       INSERT INTO items 
         (name
         ,image
@@ -98,7 +98,19 @@
         AND i.status = #{status}
     </select>
 
-    <select id="searchItems" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
+    <select id="searchItemsForAdmin" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
+        resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+      SELECT * FROM items
+      WHERE 1=1
+        <if test="name != null and name != ''">
+          AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="type != null and type != ''">
+          AND type = #{type}
+        </if>
+    </select>
+
+    <select id="searchItemsForClient" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
         resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
       SELECT * FROM items
       WHERE 1=1

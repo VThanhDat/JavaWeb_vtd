@@ -23,6 +23,17 @@ function renderItems() {
 
   tbody.innerHTML = "";
 
+  if (items.length === 0) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td colspan="7" style="text-align:center; padding: 20px; font-style: bold; color: #888;">
+        Item not found
+      </td>
+    `;
+    tbody.appendChild(tr);
+    return;
+  }
+
   items.forEach((item, index) => {
     const tr = document.createElement("tr");
 
@@ -40,11 +51,9 @@ function renderItems() {
       </td>
       <td>
      <div class="flex flex-row items-center gap-2">
-      <span class="text-[#658280] cursor-pointer btn-delete" data-id="${
-        item.id
+      <span class="text-[#658280] cursor-pointer btn-delete" data-id="${item.id
       }">Delete</span> |
-      <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${
-        item.id
+      <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${item.id
       }">Edit</span>
     </div>
       </td>
@@ -415,7 +424,7 @@ function getCurrentActiveType() {
 
 function callApiSearch(query, type) {
   $.ajax({
-    url: "/api/item/search",
+    url: "/api/item/searchAdmin",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify({

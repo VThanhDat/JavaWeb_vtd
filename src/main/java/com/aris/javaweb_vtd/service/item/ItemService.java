@@ -19,5 +19,7 @@ public interface ItemService {
 
   List<ItemResponseDTO> getItemsByTypeAndStatus(String type);
 
-  List<ItemResponseDTO> searchItems(ItemSearchDTO searchDTO);
+  List<ItemResponseDTO> searchItemsForClient(ItemSearchDTO searchDTO);
+
+  List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO searchDTO);
 }

@@ -9,6 +9,7 @@ import com.aris.javaweb_vtd.converter.ItemConverter;
 import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
 import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
+import com.aris.javaweb_vtd.entity.Item;
 import com.aris.javaweb_vtd.mapper.ItemMapper;
 import com.aris.javaweb_vtd.util.FileUploadUtil;
 
@@ -38,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
       String saveName = FileUploadUtil.saveImage(dto.getImage(), folder);
       filename = folder + "/" + saveName;
 
-      ItemResponseDTO item = itemConverter.toResponseDTO(dto, filename);
+      Item item = itemConverter.toEntity(dto, filename);
       itemMapper.insertItem(item);
     } catch (Exception e) {
       if (filename != null && folder != null) {
@@ -96,7 +97,7 @@ public class ItemServiceImpl implements ItemService {
         isNewImageUploaded = true;
       }
 
-      ItemResponseDTO item = itemConverter.toResponseDTO(dto, newFilename);
+      Item item = itemConverter.toEntity(dto, newFilename);
       int updateItem = itemMapper.updateItem(item);
 
       if (updateItem == 0) {
@@ -143,12 +144,16 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
-  public List<ItemResponseDTO> searchItems(ItemSearchDTO searchDTO) {
-     if (searchDTO.getStatus() == null) {
-        searchDTO.setStatus(1);
+  public List<ItemResponseDTO> searchItemsForClient(ItemSearchDTO searchDTO) {
+    if (searchDTO.getStatus() == null) {
+      searchDTO.setStatus(1);
     }
-    return itemMapper.searchItems(searchDTO);
+    return itemMapper.searchItemsForClient(searchDTO);
   }
 
- 
+  @Override
+  public List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO searchDTO) {
+    return itemMapper.searchItemsForClient(searchDTO);
+  }
+
 }

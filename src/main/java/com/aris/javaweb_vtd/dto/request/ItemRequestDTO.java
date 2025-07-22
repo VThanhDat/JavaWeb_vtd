@@ -1,7 +1,5 @@
 package com.aris.javaweb_vtd.dto.request;
 
-import java.time.LocalDateTime;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.Pattern;
@@ -38,7 +36,4 @@ public class ItemRequestDTO {
   private Integer status;
 
   private MultipartFile image;
-
-  private LocalDateTime createdAt;
-  private LocalDateTime updatedAt;
 }

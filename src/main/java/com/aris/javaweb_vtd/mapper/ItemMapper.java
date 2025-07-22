@@ -6,11 +6,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
+import com.aris.javaweb_vtd.entity.Item;
 
 @Mapper
 public interface ItemMapper {
 
-  void insertItem(ItemResponseDTO item);
+  void insertItem(Item item);
 
   boolean existsByNameAndType(String name, String type);
 
@@ -18,11 +19,13 @@ public interface ItemMapper {
 
   ItemResponseDTO getItemById(Long id);
 
-  int updateItem(ItemResponseDTO item);
+  int updateItem(Item item);
 
   int updateStatusById(Long id, int status);
 
   List<ItemResponseDTO> getAllItemByTypeAndStatus(String type, Integer status);
 
-  List<ItemResponseDTO> searchItems(ItemSearchDTO search);
+  List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO search);
+
+  List<ItemResponseDTO> searchItemsForClient(ItemSearchDTO search);
 }

@@ -70,8 +70,15 @@ public class ItemController {
     return ResponseEntity.ok(ApiResponseDTO.success(itemService.getItemsByTypeAndStatus(type)));
   }
 
-  @PostMapping("/search")
-  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> searchItems(@RequestBody ItemSearchDTO searchDTO) {
-    return ResponseEntity.ok(ApiResponseDTO.success("Successfull", itemService.searchItems(searchDTO)));
+  @PostMapping("/searchClient")
+  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> searchItemsForClient(
+      @RequestBody ItemSearchDTO searchDTO) {
+    return ResponseEntity.ok(ApiResponseDTO.success("Successfull", itemService.searchItemsForClient(searchDTO)));
+  }
+
+  @PostMapping("/searchAdmin")
+  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> searchItemsForAdmin(
+      @RequestBody ItemSearchDTO searchDTO) {
+    return ResponseEntity.ok(ApiResponseDTO.success("Successfull", itemService.searchItemsForAdmin(searchDTO)));
   }
 }

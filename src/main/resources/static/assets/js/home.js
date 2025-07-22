@@ -225,7 +225,6 @@ function callApiGetItemByType(type) {
     url: `http://localhost:8080/api/item/status?type=${type}`,
     method: "GET",
     success: function (response) {
-      console.log("API Response:", response);
       const items = response.data;
       renderItems(items);
     },
@@ -239,6 +238,16 @@ function callApiGetItemByType(type) {
 function renderItems(items) {
   const menuContainer = document.querySelector(".main_content-menu_food");
   menuContainer.innerHTML = "";
+
+  if (!items || items.length === 0) {
+    menuContainer.innerHTML = `
+      <div class="text-center text-gray-500 text-2xl bold py-10">
+        Item not found
+      </div>
+    `;
+    return;
+  }
+
   items.forEach(function (item) {
     const itemHtml = `
       <div class="menu_food-item">
@@ -279,7 +288,7 @@ function setupSearchInput() {
         mainInput.value = query;
         callApiSearch(query, type);
       } else {
-        showToast("Vui lòng nhập từ khoá để tìm kiếm", "info");
+        callApiGetItemByType(type);
       }
     }
   }
@@ -320,7 +329,7 @@ function callApiSearch(query, type, sortOrder = null) {
   }
 
   $.ajax({
-    url: "/api/item/search",
+    url: "/api/item/searchClient",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(requestData),
@@ -338,7 +347,7 @@ function callApiSearch(query, type, sortOrder = null) {
 
 function callApiGetItemSorted(type, sortOrder) {
   $.ajax({
-    url: "/api/item/search",
+    url: "/api/item/searchClient",
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify({
