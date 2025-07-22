@@ -11,4 +11,6 @@ public class ItemSearchDTO {
   private String name;
   private String type;
   private Integer status;
+  private String sortBy;
+  private String sortOrder;
 }

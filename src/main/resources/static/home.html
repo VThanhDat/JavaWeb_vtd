@@ -12,6 +12,11 @@
 </head>
 
 <body>
+  <!-- Toast -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50"
+    style="position: fixed !important; top: 1rem !important; right: 1rem !important; z-index: 9999 !important;">
+  </div>
+
   <!-- Header -->
   <div class="header">
     <!-- Navbar -->
@@ -58,24 +63,23 @@
       </div>
     </div>
 
-
     <!-- Sort - Filter -->
     <div class="main_content-filter z-[99]">
-      <div class="main_content-filter_container">
-        <select id="filter-price">
-          <option value="">Price: From low to high</option>
-          <option value="">Price: From high to low</option>
-        </select>
-      </div>
-      <hr>
-      <div class="main_content-filter_foodType">
-        <div class="main_content-filter_foodType-type_food">
-          <a href="">Food</a>
+        <div class="main_content-filter_container">
+            <select id="filter-price">
+                <option value="asc">Price: From low to high</option>
+                <option value="desc">Price: From high to low</option>
+            </select>
         </div>
-        <div class="main_content-filter_foodType-type_drink">
-          <a href="">Drink</a>
+        <hr>
+        <div class="main_content-filter_foodType">
+            <div class="main_content-filter_foodType-type_food active" id="food-tab">
+                <a href="#">Food</a>
+            </div>
+            <div class="main_content-filter_foodType-type_drink" id="drink-tab">
+                <a href="#">Drink</a>
+            </div>
         </div>
-      </div>
     </div>
   </div>
 
@@ -83,126 +87,6 @@
   <div class="main_content-menu mt-20">
     <div class="main_content-menu_food">
       <!-- List item -->
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="/uploads/03339c20-4558-4919-8243-bd5c5d75c781_caphesua.jpg" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
-      <div class="menu_food-item">
-        <div class="menu_food-item_img">
-          <img src="./assets/img/menu/menu-item1.crdownload" alt="">
-        </div>
-        <div class="menu_food-item_content">
-          <p class="menu_food-item_content-title">Cơm Gà Đùi Góc Tư Sốt Mắm Tỏi</p>
-          <p class="menu_food-item_content-describe">Đùi gà tươi góc 4 xối mỡ + sốt mắm tỏi + Cơm
-            + dưa leo + salad + canh</p>
-          <span class="menu_food-item_content-price">40.000 đ</span>
-        </div>
-        <div class="menu_food-item_add">+</div>
-      </div>
     </div>
     <!-- Pagination -->
     <div class="pagination">
@@ -238,7 +122,6 @@
         </select>
       </div>
     </div>
-
   </div>
   <!-- Footer -->
   <footer class="home_footer">
@@ -275,7 +158,7 @@
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="./assets/js/header.js"></script>
+  <script type="module" src="/js/home.js"></script>
 </body>
 
 </html>
