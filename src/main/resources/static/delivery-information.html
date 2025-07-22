@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delivery Information</title>
+
+    <link rel="stylesheet" href="/css/deliveryinfo/delivery-info.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <img src="/img/logo/logo.svg" alt="logo" />
+        </header>
+        <main>
+            <div class="page-title">
+                <h1>Delivery Infomation</h1>
+            </div>
+            <div class="delivery-info-input">
+                <div class="row">
+                    <div class="full-name-input relative-container">
+                        <label for="fullname">Your full name</label>
+                        <input type="text" id="fullname" name="fullname" autocomplete="off" />
+                    </div>
+                    <div class="tel-input relative-container">
+                        <label for="tel">Your Phone Number</label>
+                        <input type="number" id="tel" name="tel" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="city-select relative-container">
+                        <label for="city">City</label>
+                        <select name="city" id="city">
+                            <option>Ho Chi Minh City</option>
+                        </select>
+                    </div>
+                    <div class="ward-select relative-container">
+                        <label for="ward">Ward</label>
+                        <select name="ward" id="ward">
+                            <option>Sai Gon Ward</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="address-input relative-container">
+                        <label for="address">Street Name, Building, House No.</label>
+                        <input type="text" name="address" id="address" autocomplete="off" />
+                    </div>
+                </div>
+                <div class="row-map">
+                    <div id="map"></div>
+                </div>
+                <div class="row">
+                    <div class="message-input">
+                        <label for="message">Message</label>
+                        <textarea type="text" id="message" name="message" placeholder="Your message..." rows="4"
+                            autocomplete="off"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="hr"></div>
+            <div class="order-product-info">
+                <div class="order-code">
+                    <h1>Order code:</h1>
+                    <span>#231234</span>
+                </div>
+                <div class="order-product-list">
+                    <div class="order-product-card">
+                        <div class="order-product-img">
+                            <img src="uploads/com-ga-goc-tu.png" alt="product" />
+                        </div>
+                        <div class="order-product-info">
+                            <span class="order-product-name">Cơm Gà Xối Mỡ Nhỏ (Đùi Tỏi Hoặc Má Đùi Ngẫu Nhiên)</span>
+                            <span class="order-product-description">Cơm + gà tươi xối mỡ + salad + dưa leo +
+                                canh.</span>
+                        </div>
+                        <div class="order-product-price-quantity">
+                            <span class="order-product-price">60.000 đ</span>
+                            <div class="order-product-quantity">
+                                <span class="quantity-label">Quantity: </span>
+                                <span class="quantity-count">3</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-product-card">
+                        <div class="order-product-img">
+                            <img src="uploads/com-ga-goc-tu.png" alt="product" />
+                        </div>
+                        <div class="order-product-info">
+                            <span class="order-product-name">Cơm Gà Xối Mỡ Nhỏ (Đùi Tỏi Hoặc Má Đùi Ngẫu Nhiên)</span>
+                            <span class="order-product-description">Cơm + gà tươi xối mỡ + salad + dưa leo +
+                                canh.</span>
+                        </div>
+                        <div class="order-product-price-quantity">
+                            <span class="order-product-price">60.000 đ</span>
+                            <div class="order-product-quantity">
+                                <span class="quantity-label">Quantity: </span>
+                                <span class="quantity-count">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-price">
+                    <div class="order-total-product-price">
+                        <span>Total</span>
+                        <span>180.000</span>
+                    </div>
+                    <div class="order-shipping-fee">
+                        <span>Shipping fee</span>
+                        <span>35.000</span>
+                    </div>
+                </div>
+                <div class="order-total-bill">
+                    <span>Total bill</span>
+                    <span>240.000 đ</span>
+                </div>
+
+                <div class="order-button-block">
+                    <button class="cancel-button">Cancel</button>
+                    <button class="place-order-button">Place Order</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="js/deliveryinfo.js"></script>
+</body>
+
+</html>

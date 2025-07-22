@@ -1,15 +1,21 @@
-CREATE DATABASE IF NOT EXISTS appfood;
+-- Create database and use charset to support Vietnamese
+CREATE DATABASE IF NOT EXISTS appfood
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 USE appfood;
 
+-- Admin Table
 CREATE TABLE IF NOT EXISTS admin (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS items(
+-- Food / Drink Table
+CREATE TABLE IF NOT EXISTS items (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     image VARCHAR(255),
@@ -19,4 +25,42 @@ CREATE TABLE IF NOT EXISTS items(
     type VARCHAR(20) NOT NULL COMMENT 'Enum values: FOOD, DRINK',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Customer Table
+CREATE TABLE IF NOT EXISTS customers (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    full_name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    city VARCHAR(100),
+    ward VARCHAR(100),
+    address VARCHAR(255),
+    message TEXT
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Order table
+CREATE TABLE IF NOT EXISTS orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    total_price DOUBLE NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'new' COMMENT 'new, completed, cancelled',
+    customer_id BIGINT,
+    FOREIGN KEY (customer_id) REFERENCES customers(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Order detail table
+CREATE TABLE IF NOT EXISTS order_details (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    quantity INT NOT NULL,
+    price DOUBLE NOT NULL,
+    order_id BIGINT NOT NULL,
+    item_id BIGINT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

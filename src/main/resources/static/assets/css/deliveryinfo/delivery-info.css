@@ -1,0 +1,337 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --font-size-base: 1.4rem;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+body,
+html {
+    font-size: 62.5%;
+    width: 100%;
+    height: 180vh;
+    background-color: #ecebeb;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background-color: #ecebeb;
+    padding-bottom: 5%;
+}
+
+header {
+    width: 100%;
+    padding: 0.5%;
+    border-bottom: 1px solid rgb(212, 210, 210);
+    background-color: white;
+}
+
+header img {
+    width: 7%;
+    height: 7%;
+    margin-left: 3%;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 3% auto;
+    background-color: white;
+    border-radius: 30px;
+    padding: 2% 0;
+    width: 58%;
+    height: 90%;
+}
+
+.page-title h1 {
+    font-weight: bold;
+    font-size: 4.6rem;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 2% auto;
+}
+
+.row div {
+    width: 50%;
+    height: 20%;
+}
+
+.relative-container {
+    padding: 0;
+    position: relative;
+}
+
+.relative-container label {
+    position: absolute;
+    top: -100%;
+    left: 5%;
+    background-color: white;
+    padding: 0 1.2%;
+    color: gray;
+    font-size: 1.4rem;
+}
+
+.delivery-info-input {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+}
+
+.row .address-input {
+    width: 100%;
+    height: 20%;
+}
+
+.full-name-input,
+.tel-input,
+.city-select,
+.ward-select,
+.address-input {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+.full-name-input input,
+.tel-input input,
+.city-select select,
+.ward-select select,
+.address-input input {
+    width: 100%;
+    padding: 4%;
+    border-radius: 5px;
+    border: 1px solid gray;
+    font-size: 1.6rem;
+}
+
+.city-select select:hover,
+.ward-select select:hover {
+    background-color: white;
+    border: 1.5px solid black;
+}
+
+.address-input input {
+    padding: 2%;
+}
+
+.address-input.relative-container label {
+    top: -100%;
+    left: 2%;
+}
+
+select,
+::picker(select) {
+    appearance: base-select;
+}
+
+.row-map {
+    width: 98%;
+}
+
+#map {
+    width: 100%;
+    height: 30vh;
+    border-radius: 5px;
+}
+
+.row .message-input {
+    width: 100%;
+    height: 80%;
+    margin-top: 2%;
+}
+
+.message-input {
+    width: 100%;
+    height: 100;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-input label {
+    color: gray;
+    font-size: 1.4rem;
+    margin: 0.5%;
+}
+
+.message-input textarea {
+    width: 100%;
+    height: 100%;
+    padding: 1%;
+    border-radius: 5px;
+    border: 1px solid gray;
+    font-size: 1.6rem;
+    resize: none;
+}
+
+.hr {
+    width: 100%;
+    height: 1%;
+    border-bottom: 2px dashed rgb(235, 233, 233);
+    margin-bottom: 3%;
+}
+
+.order-product-info {
+    width: 73%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2%;
+}
+
+.order-code {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.order-code h1 {
+    color: gray;
+}
+
+.order-code span {
+    margin-left: 2%;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.order-product-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4%;
+}
+
+.order-product-card {
+    display: flex;
+    flex-direction: row;
+    background-color: #ecebeb;
+    border-radius: 10px;
+    padding: 2%;
+    gap: 2%;
+    width: 100%;
+}
+
+.order-product-img {
+    width: 15%;
+}
+
+.order-product-img img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.order-product-info {
+    width: 70%;
+}
+
+.order-product-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.order-product-description {
+    font-size: 1.5rem;
+    color: rgb(88, 88, 88);
+}
+
+.order-product-price-quantity {
+    display: flex;
+    flex-direction: column;
+    gap: 40%;
+    width: 15%;
+}
+
+.order-product-price {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.quantity-label {
+    font-size: 1.6rem;
+}
+
+.quantity-count {
+    align-self: center;
+    font-size: 1.6rem;
+    background-color: #ff6b00;
+    color: white;
+    padding: 6% 12%;
+    border-radius: 50%;
+    margin-left: 2%;
+}
+
+.order-price {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1%;
+    border-bottom: 1px solid rgb(209, 207, 207);
+    padding-bottom: 2%;
+}
+
+.order-total-product-price,
+.order-shipping-fee {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.order-total-product-price span:first-child,
+.order-shipping-fee span:first-child {
+    color: gray;
+}
+
+.order-total-bill {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 2.7rem;
+    font-weight: bold;
+    color: #ff6b00;
+}
+
+.order-total-bill span:first-child {
+    color: rgb(48, 47, 47);
+}
+
+.order-button-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.order-button-block button {
+    width: 49%;
+    border: none;
+    background-color: #ff6b00;
+    color: white;
+    padding: 3.5%;
+    border-radius: 5px;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.order-button-block button:first-child {
+    background-color: #ebe8e8;
+    color: rgb(141, 139, 139);
+}
