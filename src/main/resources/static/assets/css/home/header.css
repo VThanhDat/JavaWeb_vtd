@@ -33,7 +33,7 @@
   width: 100%;
   height: 409px;
 
-  background: url(../img/banner/banner.png), #ececec;
+  background: url(../../img/banner/banner.png), #ececec;
   background-size: cover;
   background-position: center;
 }
