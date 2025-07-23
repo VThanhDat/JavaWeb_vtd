@@ -126,132 +126,196 @@
       </div>
     </header>
     <!-- Content Area -->
-    <div class="flex-1 p-8">
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="main-content">
-          <section class="dashboard-summary">
-            <div class="summary1">
-              <div class="today-sales">
-                <i class="fa-solid fa-money-bill-1-wave"></i>
+    <div class="flex-1 p-6">
+      <div class="main-content">
+        <section class="dashboard-summary">
+          <div class="summary1">
+            <div class="today-sales">
+              <div
+                class="flex flex-row justify-center items-center p-2 w-[64px] h-[64px] bg-[#5654D4] rounded-[31px] flex-none order-0 grow-0">
+                <img src="/img/icon/today-sale-icon.svg" alt="">
+              </div>
+              <div class="content-sales">
+                <p class="total-sales" id="today-sales-amount">3.000.000 đ</p>
+                <p class="title-sales">Today's Sales</p>
+              </div>
+            </div>
+            <div class="sales">
+              <div class="total-sales">
+                <div
+                  class="flex flex-row justify-center items-center p-2 w-[64px] h-[64px] bg-[#2478DA] rounded-[31px] flex-none order-0 grow-0">
+                  <img src="/img/icon/today-sale-icon.svg" alt="">
+                </div>
                 <div class="content-sales">
-                  <p class="total-sales" id="today-sales-amount">0 đ</p>
-                  <p class="title-sales">Today's Sales</p>
+                  <p class="total-sales" id="total-orders">60</p>
+                  <p class="title-sales">Total</p>
                 </div>
               </div>
-              <div class="sales">
-                <div class="total-sales">
-                  <i class="fa-solid fa-chart-simple"></i>
-                  <div class="content-sales">
-                    <p class="total-sales" id="total-orders">0</p>
-                    <p class="title-sales">Total Orders</p>
-                  </div>
+              <div class="shipping-sales">
+                <div
+                  class="flex flex-row justify-center items-center p-2 w-[64px] h-[64px] bg-[#FF6039] rounded-[31px] flex-none order-0 grow-0">
+                  <img src="/img/icon/shipper-icon.svg" alt="">
                 </div>
-                <div class="shipping-sales">
-                  <i class="fa-solid fa-truck"></i>
-                  <div class="content-sales">
-                    <p class="total-sales" id="shipping-orders">0</p>
-                    <p class="title-sales">Shipping Orders</p>
-                  </div>
+                <div class="content-sales">
+                  <p class="total-sales" id="shipping-orders">1</p>
+                  <p class="title-sales">Shipping</p>
                 </div>
-                <div class="complete-sales">
-                  <i class="fa-solid fa-check"></i>
-                  <div class="content-sales">
-                    <p class="total-sales" id="complete-orders">0</p>
-                    <p class="title-sales">Complete Orders</p>
-                  </div>
+              </div>
+              <div class="complete-sales">
+                <div
+                  class="flex flex-row justify-center items-center p-2 w-[64px] h-[64px] bg-[#17AE30] rounded-[31px] flex-none order-0 grow-0">
+                  <img src="/img/icon/complete-icon.svg" alt="">
                 </div>
-                <div class="cancel-sales">
-                  <i class="fa-solid fa-xmark"></i>
-                  <div class="content-sales">
-                    <p class="total-sales" id="cancel-orders">0</p>
-                    <p class="title-sales">Cancel Orders</p>
-                  </div>
+                <div class="content-sales">
+                  <p class="total-sales" id="complete-orders">50</p>
+                  <p class="title-sales">Complete</p>
+                </div>
+              </div>
+              <div class="cancel-sales">
+                <div
+                  class="flex flex-row justify-center items-center p-2 w-[64px] h-[64px] bg-[#FA5A7D] rounded-[31px] flex-none order-0 grow-0">
+                  <img src="/img/icon/cancel-icon.svg" alt="">
+                </div>
+                <div class="content-sales">
+                  <p class="total-sales" id="cancel-orders">9</p>
+                  <p class="title-sales">Cancel</p>
                 </div>
               </div>
             </div>
-            <div class="summary2">
-              <section class="dashboard-chart">
-                <div class="chart-controls">
-                  <button class="active">Day</button>
-                  <button>Week</button>
-                  <button>Month</button>
+          </div>
+          <div class="summary2">
+            <section class="dashboard-chart mt-[5px]">
+              <div
+                class="flex flex-row justify-end items-center p-0 gap-2 w-[988px] h-[31px] flex-none order-0 self-stretch grow-0">
+                <div id="outerTabContainer"
+                  class="flex flex-row items-start p-1 w-[147px] h-[31px] bg-[#EFEFEF] rounded-[8px] flex-none order-2 grow-0">
+                  <!-- Day tab -->
+                  <div
+                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[38px] h-[23px] bg-white rounded-[4px] flex-none order-0 grow-0">
+                    <span
+                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
+                      Day
+                    </span>
+                  </div>
+                  <!-- Week tab -->
+                  <div
+                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] flex-none order-1 grow-0">
+                    <span
+                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
+                      Week
+                    </span>
+                  </div>
+                  <!-- Month tab -->
+                  <div
+                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] flex-none order-1 grow-0">
+                    <span
+                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
+                      Month
+                    </span>
+                  </div>
                 </div>
-                <canvas id="salesChart"></canvas>
-              </section>
-            </div>
-          </section>
+              </div>
+              <canvas id="salesChart"></canvas>
+            </section>
+          </div>
+        </section>
 
-          <section class="dashboard-order-list">
-            <div class="filter">
-              <div class="shipping-status">
-                <div class="filter-status">
-                  <button class="filter-button" id="filterBtn">
-                    Filter <i class="fa-solid fa-caret-down"></i>
-                    <div class="filter-dropdown" id="filterDropdown">
-                      <label>
-                        <input type="checkbox" value="New" checked> New
-                      </label>
-                      <label>
-                        <input type="checkbox" value="Completed" checked> Completed
-                      </label>
-                      <label>
-                        <input type="checkbox" value="Cancelled" checked> Cancel
-                      </label>
-                      <label>
-                        <input type="checkbox" value="Shipping" checked> Shipping
-                      </label>
-                    </div>
-                  </button>
-                </div>
-                <div class="list-filter-status">
+        <section class="dashboard-order-list">
+          <div class="filter">
+            <div class="shipping-status">
+              <div class="filter-status">
+                <button class="filter-button" id="filterBtn">
+                  Filter <img src="/img/icon/select-icon.svg">
+                </button>
+
+                <div class="filter-dropdown hidden" id="filterDropdown">
+                  <label><input type="checkbox" value="New" checked> New</label>
+                  <label><input type="checkbox" value="Completed" checked> Completed</label>
+                  <label><input type="checkbox" value="Cancelled" checked> Cancelled</label>
+                  <label><input type="checkbox" value="Shipping" checked> Shipping</label>
                 </div>
               </div>
-
-              <div class="date-status">
-                <select class="filter-button" id="order-status-filter">
-                  <option value="all">All</option>
-                  <option value="today">Today</option>
-                  <option value="week">This Week</option>
-                  <option value="month">This Month</option>
-                </select>
+              <div class="list-filter-status">
               </div>
             </div>
 
-            <div id="orderListContainer" class="order-list grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+            <div class="date-status">
+              <select class="filter-button" id="order-status-filter">
+                <option value="all">All</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
             </div>
-          </section>
+          </div>
+
+          <div id="orderListContainer" class="grid grid-cols-4 gap-4 mt-8">
+          </div>
+        </section>
+      </div>
+    </div>
+    <div
+      class="flex flex-row justify-center items-center p-0 gap-2 w-full max-w-6xl mx-auto h-auto flex-none order-2 self-stretch flex-grow-0 md:flex-row md:gap-3 md:h-auto md:p-4">
+
+      <!-- Left: Tổng số items -->
+      <div class="flex items-center">
+        <div class="pagination-total">
+          <p class="text-sm text-gray-600 m-0 font-normal">Total 200 items</p>
         </div>
+      </div>
+
+      <!-- Center: Các nút phân trang -->
+      <div
+        class="flex items-center bg-white border border-gray-300 rounded-md shadow-sm md:flex-wrap md:justify-center">
+        <!-- Previous button -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&lt;</button>
+
+        <!-- Active page -->
+        <button
+          class="border border-orange-500 bg-orange-500 text-white font-medium px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out min-w-8 h-8 flex items-center justify-center hover:bg-orange-600 hover:border-orange-600">1</button>
+
+        <!-- Dots -->
+        <span
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
+
+        <!-- Regular pages -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">4</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">5</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">6</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">7</button>
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">8</button>
+
+        <!-- Dots -->
+        <span
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
+
+        <!-- Last page -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">20</button>
+
+        <!-- Next button -->
+        <button
+          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&gt;</button>
+      </div>
+
+      <!-- Right: Chọn số item/trang -->
+      <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
+        <select
+          class="border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select">
+          <option value="10">10 / page</option>
+          <option value="20">20 / page</option>
+          <option value="30">30 / page</option>
+          <option value="40">40 / page</option>
+        </select>
       </div>
     </div>
   </main>
-
-  <!-- =============================MODAL============================= -->
-  <div class="modal hidden" id="order-detail-modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="order-detail-id">Order#<span id="modal-order-id"></span> <span class="order-detail-items-count"></span>
-        </h2>
-        <span class="close-modal-btn" data-modal="order-detail-modal">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div class="delivery-address">
-          <p><strong>Delivery Address</strong></p>
-          <p id="delivery-name">Loading...</p>
-          <p id="delivery-phone">Loading...</p>
-          <p id="delivery-address-full">Loading...</p>
-        </div>
-        <div class="order-detail-items" id="order-detail-items">
-        </div>
-        <div class="order-detail-summary">
-          <p>Total: <span id="order-detail-subtotal">0 đ</span></p>
-          <p>Shipping fee: <span id="order-detail-shipping">0 đ</span></p>
-          <h3>Total bill: <span id="order-detail-total-bill">0 đ</span></h3>
-        </div>
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
 
   <script src="/js/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

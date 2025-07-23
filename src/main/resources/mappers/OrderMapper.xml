@@ -17,4 +17,72 @@
         ,#{createdAt}
         ,#{updatedAt})
     </insert>
+
+    <!-- Map field belongs to OrderDetail - Item object -->
+    <resultMap id="OrderItemMap" type="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO">
+      <id property="id" column="item_id" />
+      <result property="name" column="item_name"/>
+      <result property="description" column="item_description"/>
+      <result property="img" column="item_image"/>
+      <result property="type" column="item_type"/>
+      <result property="price" column="order_detail_price"/>
+      <result property="quantity" column="order_detail_quantity"/>
+    </resultMap>
+
+    <!-- Map field belongs to Customer object -->
+    <resultMap id="CustomerMap" type="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO">
+      <id property="id" column="customer_id"/>
+      <result property="fullName" column="full_name"/>
+      <result property="phone" column="phone"/>
+      <result property="city" column="city"/>
+      <result property="ward" column="ward"/>
+      <result property="address" column="address"/>
+      <result property="message" column="message"/>
+    </resultMap>
+
+    <!-- Map field belongs to Order object -->
+    <resultMap id="OrderResponseMap" type="com.aris.javaweb_vtd.dto.response.OrderResponseDTO">
+      <id property="id" column="order_id"/>
+      <result property="status" column="status"/>
+      <result property="shippingFee" column="shipping_fee"/>
+      <result property="totalPrice" column="total_price"/>
+      <result property="createAt" column="created_at"/>
+
+      <association property="customer" javaType="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO" resultMap="CustomerMap"/>
+      <collection property="items" ofType="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO" resultMap="OrderItemMap"/>
+    </resultMap>
+
+    <select id="getOrders" resultMap="OrderResponseMap">
+      SELECT
+        o.id AS order_id,
+        o.status,
+        o.total_price,
+        o.shipping_fee,
+        o.created_at,
+
+        c.id AS customer_id,
+        c.full_name,
+        c.phone,
+        c.city,
+        c.ward,
+        c.address,
+        c.message,
+
+        od.quantity AS order_detail_quantity,
+        od.price AS order_detail_price,
+
+        i.id AS item_id,
+        i.name AS item_name,
+        i.description AS item_description,
+        i.image AS item_image,
+        i.type AS item_type
+
+      FROM orders o
+      JOIN customers c ON o.customer_id = c.id
+      LEFT JOIN order_details od ON od.order_id = o.id
+      LEFT JOIN items i ON od.item_id = i.id
+
+      ORDER BY o.id DESC
+    </select>
+
 </mapper>

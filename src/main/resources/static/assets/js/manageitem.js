@@ -119,7 +119,7 @@ function resetImage() {
   const imageInput = document.getElementById('imageInput');
   const fileName = document.getElementById('fileName');
   const placeholderImage = "/img/form/landscape-placeholder.svg";
-  
+
   if (imagePreview) imagePreview.src = placeholderImage;
   if (imageInput) imageInput.value = '';
   if (fileName) fileName.innerText = '';
@@ -132,10 +132,10 @@ function resetModal() {
 
   document.getElementById("itemForm").reset();
   document.getElementById("itemType").value = "food";
-  
+
   // Reset image với function mới
   resetImage();
-  
+
   document.getElementById("manageItemError").innerText = "";
 
   document.querySelector(".addModal h1").innerText = "Create New Item";
@@ -147,11 +147,9 @@ function resetModal() {
   const drinkText = drinkTab.querySelector(".tab-drink");
 
   foodTab.classList.add("bg-white");
-  foodText.classList.add("text-[#FF6B00]");
   foodText.classList.remove("text-gray-600");
 
   drinkTab.classList.remove("bg-white");
-  drinkText.classList.remove("text-[#FF6B00]");
   drinkText.classList.add("text-gray-600");
 }
 
@@ -186,12 +184,10 @@ function openModalAdd() {
     tab.addEventListener("click", () => {
       tabs.forEach((t) => {
         t.classList.remove("bg-white");
-        t.querySelector("span").classList.remove("text-[#FF6B00]");
         t.querySelector("span").classList.add("text-gray-600");
       });
       tab.classList.add("bg-white");
       tab.querySelector("span").classList.remove("text-gray-600");
-      tab.querySelector("span").classList.add("text-[#FF6B00]");
     });
   });
 }
@@ -224,11 +220,9 @@ function handleItemFormSubmit() {
     itemTypeInput.value = "food";
 
     foodTab.classList.add("bg-white");
-    foodText.classList.add("text-[#FF6B00]");
     foodText.classList.remove("text-gray-600");
 
     drinkTab.classList.remove("bg-white");
-    drinkText.classList.remove("text-[#FF6B00]");
     drinkText.classList.add("text-gray-600");
   });
 
@@ -236,16 +230,14 @@ function handleItemFormSubmit() {
     itemTypeInput.value = "drink";
 
     drinkTab.classList.add("bg-white");
-    drinkText.classList.add("text-[#FF6B00]");
     drinkText.classList.remove("text-gray-600");
 
     foodTab.classList.remove("bg-white");
-    foodText.classList.remove("text-[#FF6B00]");
     foodText.classList.add("text-gray-600");
   });
 
   chooseFileBtn.addEventListener("click", () => imageInput.click());
-  
+
   // Updated image input handler
   imageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
@@ -380,19 +372,15 @@ function renderEditItem(item) {
 
   if (item.type === "drink") {
     foodTab.classList.remove("bg-white");
-    foodText.classList.remove("text-[#FF6B00]");
     foodText.classList.add("text-gray-600");
 
     drinkTab.classList.add("bg-white");
-    drinkText.classList.add("text-[#FF6B00]");
     drinkText.classList.remove("text-gray-600");
   } else {
     drinkTab.classList.remove("bg-white");
-    drinkText.classList.remove("text-[#FF6B00]");
     drinkText.classList.add("text-gray-600");
 
     foodTab.classList.add("bg-white");
-    foodText.classList.add("text-[#FF6B00]");
     foodText.classList.remove("text-gray-600");
   }
 }

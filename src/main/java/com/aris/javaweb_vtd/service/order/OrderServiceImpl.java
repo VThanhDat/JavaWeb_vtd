@@ -1,5 +1,7 @@
 package com.aris.javaweb_vtd.service.order;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,8 @@ import com.aris.javaweb_vtd.converter.OrderConverter;
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.request.OrderItemRequestDTO;
+import com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO;
+import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
 import com.aris.javaweb_vtd.entity.OrderDetail;
@@ -61,5 +65,29 @@ public class OrderServiceImpl implements OrderService {
       detail.setOrderId(orderId);
       orderDetailMapper.insertOrderDetail(detail);
     }
+  }
+
+  @Override
+  public List<OrderResponseDTO> getOrders() {
+    List<OrderResponseDTO> orders = orderMapper.getOrders();
+    for (OrderResponseDTO order : orders) {
+      int totalItems = 0;
+      int subTotal = 0;
+
+      List<OrderItemResponseDTO> items = order.getItems();
+      if (items != null) {
+        for (OrderItemResponseDTO item : items) {
+          int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
+          int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
+
+          totalItems += quantity;
+          subTotal += quantity * price;
+        }
+      }
+      order.setTotalItems(totalItems);
+      order.setSubTotal(subTotal);
+    }
+
+    return orders;
   }
 }
