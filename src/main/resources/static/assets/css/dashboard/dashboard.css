@@ -1,0 +1,258 @@
+.dashboard-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    max-width: 2000px;
+}
+
+.dashboard-order-list {
+    max-width: 2000px;
+    margin: 30px 0;
+    padding-bottom: 20px;
+}
+
+.summary1 {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.today-sales {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.today-sales i {
+    font-size: 2.5em;
+    color: #6a5acd;
+    background-color: #e6e0ff;
+    padding: 15px;
+    border-radius: 50%;
+}
+
+.content-sales {
+    display: flex;
+    flex-direction: column;
+}
+
+.content-sales .total-sales {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.content-sales .title-sales {
+    font-size: 0.9em;
+    color: #888;
+    margin: 0;
+}
+
+.sales {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.sales>div {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sales i {
+    font-size: 1.8em;
+    padding: 12px;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.total-sales i {
+    background-color: #007bff;
+}
+
+.shipping-sales i {
+    background-color: #ff8000;
+}
+
+.complete-sales i {
+    background-color: #1bc47d;
+}
+
+.cancel-sales i {
+    background-color: #ff4d4f;
+}
+
+.summary2 {
+    flex: 2;
+    min-width: 600px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-chart {
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.chart-controls button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #555;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.chart-controls button.active {
+    background-color: #6a5acd;
+    color: #fff;
+}
+
+.chart-controls button:hover:not(.active) {
+    background-color: #e0e0e0;
+}
+
+#salesChart {
+    width: 100% !important;
+    height: 220px !important;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.shipping-status {
+    display: flex;
+    gap: 15px;
+}
+
+.filter-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-button {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1em;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    z-index: 10;
+}
+
+.filter-button:hover {
+    border-color: #c0c0c0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.filter-button i {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    padding: 10px 0;
+    display: none;
+}
+
+.filter-dropdown.show {
+    display: block;
+}
+
+.filter-dropdown label {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 0.95em;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.filter-dropdown label:hover {
+    background-color: #f0f0f0;
+}
+
+.filter-dropdown input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+
+.list-filter-status {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1em;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.tag-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.9em;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.tag-close:hover {
+    color: #555;
+}

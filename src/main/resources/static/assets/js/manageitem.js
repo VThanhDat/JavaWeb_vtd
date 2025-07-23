@@ -99,15 +99,43 @@ function setupTabToggle() {
   activateTab("food");
 }
 
+// Image management functions
+function showRemoveButton() {
+  const removeImageBtn = document.getElementById('removeImageBtn');
+  if (removeImageBtn) {
+    removeImageBtn.classList.remove('hidden');
+  }
+}
+
+function hideRemoveButton() {
+  const removeImageBtn = document.getElementById('removeImageBtn');
+  if (removeImageBtn) {
+    removeImageBtn.classList.add('hidden');
+  }
+}
+
+function resetImage() {
+  const imagePreview = document.getElementById('imagePreview');
+  const imageInput = document.getElementById('imageInput');
+  const fileName = document.getElementById('fileName');
+  const placeholderImage = "/img/form/landscape-placeholder.svg";
+  
+  if (imagePreview) imagePreview.src = placeholderImage;
+  if (imageInput) imageInput.value = '';
+  if (fileName) fileName.innerText = '';
+  hideRemoveButton(); // Ẩn button xóa khi reset
+}
+
 function resetModal() {
   isEditMode = false;
   editingItemId = null;
 
   document.getElementById("itemForm").reset();
   document.getElementById("itemType").value = "food";
-  document.getElementById("imagePreview").src =
-    "/img/form/landscape-placeholder.svg";
-  document.getElementById("fileName").innerText = "";
+  
+  // Reset image với function mới
+  resetImage();
+  
   document.getElementById("manageItemError").innerText = "";
 
   document.querySelector(".addModal h1").innerText = "Create New Item";
@@ -185,6 +213,7 @@ function handleItemFormSubmit() {
   const chooseFileBtn = document.getElementById("chooseFileBtn");
   const fileNameEl = document.getElementById("fileName");
   const imagePreview = document.getElementById("imagePreview");
+  const removeImageBtn = document.getElementById("removeImageBtn");
 
   const foodTab = document.querySelector(".modal-tab.food-tab");
   const drinkTab = document.querySelector(".modal-tab.drink-tab");
@@ -216,15 +245,41 @@ function handleItemFormSubmit() {
   });
 
   chooseFileBtn.addEventListener("click", () => imageInput.click());
-  imageInput.addEventListener("change", () => {
-    const file = imageInput.files[0];
+  
+  // Updated image input handler
+  imageInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
     if (file) {
+      // Kiểm tra kích thước file (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        resetImage();
+        return;
+      }
+
+      // Kiểm tra định dạng file
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        resetImage();
+        return;
+      }
+
       fileNameEl.innerText = file.name;
       const imageURL = URL.createObjectURL(file);
       imagePreview.src = imageURL;
       imagePreview.onload = () => URL.revokeObjectURL(imageURL);
+      showRemoveButton(); // Hiển thị button xóa khi có ảnh
+    } else {
+      resetImage();
     }
   });
+
+  // Add event listener for remove button
+  if (removeImageBtn) {
+    removeImageBtn.addEventListener("click", () => {
+      resetImage();
+    });
+  }
 
   createBtn.addEventListener("click", function (e) {
     e.preventDefault();
@@ -311,6 +366,9 @@ function renderEditItem(item) {
   document.getElementById("itemType").value = item.type;
   document.getElementById("fileName").innerText = item.image || "";
   document.getElementById("imagePreview").src = "/" + item.image;
+
+  // Hiển thị button xóa khi edit (vì đã có ảnh)
+  showRemoveButton();
 
   document.querySelector(".addModal h1").innerText = "Edit Item";
   document.getElementById("createBtn").innerText = "Update";

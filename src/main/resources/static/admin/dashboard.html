@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/css/base/baseadmin.css" />
   <link rel="stylesheet" href="/css/base/toast.css" />
+  <link rel="stylesheet" href="/css/dashboard/dashboard.css" />
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
 </head>
 
@@ -127,14 +128,133 @@
     <!-- Content Area -->
     <div class="flex-1 p-8">
       <div class="bg-white rounded-lg shadow-sm p-6">
-        <h2 class="text-lg font-semibold mb-4">Main Content Area</h2>
-        <p class="text-gray-600">Đây là khu vực nội dung chính. Header chiếm toàn bộ chiều rộng, sidebar nằm bên
-          trái dưới header.</p>
+        <div class="main-content">
+          <section class="dashboard-summary">
+            <div class="summary1">
+              <div class="today-sales">
+                <i class="fa-solid fa-money-bill-1-wave"></i>
+                <div class="content-sales">
+                  <p class="total-sales" id="today-sales-amount">0 đ</p>
+                  <p class="title-sales">Today's Sales</p>
+                </div>
+              </div>
+              <div class="sales">
+                <div class="total-sales">
+                  <i class="fa-solid fa-chart-simple"></i>
+                  <div class="content-sales">
+                    <p class="total-sales" id="total-orders">0</p>
+                    <p class="title-sales">Total Orders</p>
+                  </div>
+                </div>
+                <div class="shipping-sales">
+                  <i class="fa-solid fa-truck"></i>
+                  <div class="content-sales">
+                    <p class="total-sales" id="shipping-orders">0</p>
+                    <p class="title-sales">Shipping Orders</p>
+                  </div>
+                </div>
+                <div class="complete-sales">
+                  <i class="fa-solid fa-check"></i>
+                  <div class="content-sales">
+                    <p class="total-sales" id="complete-orders">0</p>
+                    <p class="title-sales">Complete Orders</p>
+                  </div>
+                </div>
+                <div class="cancel-sales">
+                  <i class="fa-solid fa-xmark"></i>
+                  <div class="content-sales">
+                    <p class="total-sales" id="cancel-orders">0</p>
+                    <p class="title-sales">Cancel Orders</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="summary2">
+              <section class="dashboard-chart">
+                <div class="chart-controls">
+                  <button class="active">Day</button>
+                  <button>Week</button>
+                  <button>Month</button>
+                </div>
+                <canvas id="salesChart"></canvas>
+              </section>
+            </div>
+          </section>
+
+          <section class="dashboard-order-list">
+            <div class="filter">
+              <div class="shipping-status">
+                <div class="filter-status">
+                  <button class="filter-button" id="filterBtn">
+                    Filter <i class="fa-solid fa-caret-down"></i>
+                    <div class="filter-dropdown" id="filterDropdown">
+                      <label>
+                        <input type="checkbox" value="New" checked> New
+                      </label>
+                      <label>
+                        <input type="checkbox" value="Completed" checked> Completed
+                      </label>
+                      <label>
+                        <input type="checkbox" value="Cancelled" checked> Cancel
+                      </label>
+                      <label>
+                        <input type="checkbox" value="Shipping" checked> Shipping
+                      </label>
+                    </div>
+                  </button>
+                </div>
+                <div class="list-filter-status">
+                </div>
+              </div>
+
+              <div class="date-status">
+                <select class="filter-button" id="order-status-filter">
+                  <option value="all">All</option>
+                  <option value="today">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="orderListContainer" class="order-list grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </main>
 
+  <!-- =============================MODAL============================= -->
+  <div class="modal hidden" id="order-detail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="order-detail-id">Order#<span id="modal-order-id"></span> <span class="order-detail-items-count"></span>
+        </h2>
+        <span class="close-modal-btn" data-modal="order-detail-modal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="delivery-address">
+          <p><strong>Delivery Address</strong></p>
+          <p id="delivery-name">Loading...</p>
+          <p id="delivery-phone">Loading...</p>
+          <p id="delivery-address-full">Loading...</p>
+        </div>
+        <div class="order-detail-items" id="order-detail-items">
+        </div>
+        <div class="order-detail-summary">
+          <p>Total: <span id="order-detail-subtotal">0 đ</span></p>
+          <p>Shipping fee: <span id="order-detail-shipping">0 đ</span></p>
+          <h3>Total bill: <span id="order-detail-total-bill">0 đ</span></h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+
   <script src="/js/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="/js/logout.js"></script>
   <script type="module" src="/js/dashboard.js"></script>
 </body>
