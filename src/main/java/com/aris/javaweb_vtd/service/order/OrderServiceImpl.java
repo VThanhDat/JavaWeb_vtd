@@ -7,12 +7,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.request.OrderItemRequestDTO;
+import com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO;
+import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
@@ -39,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
   @Autowired
   private CustommerMapper customerMapper;
 
+  @Transactional
   public void createOrder(CreateOrderRequestDTO request) {
     CustomerRequestDTO customerDTO = request.getCustomer();
     Customer customer = customerConverter.toEntity(customerDTO);
@@ -71,29 +75,55 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public List<OrderSummaryDTO> getOrders(List<String> statusList, String dateFilter) {
-      LocalDateTime fromDate = null;
-      LocalDateTime toDate = null;
-      LocalDate today = LocalDate.now();
+    LocalDateTime fromDate = null;
+    LocalDateTime toDate = null;
+    LocalDate today = LocalDate.now();
 
-      switch (dateFilter) {
-          case "today":
-              fromDate = today.atStartOfDay();
-              toDate = fromDate.plusDays(1).minusNanos(1);
-              break;
-          case "this_week":
-              fromDate = today.with(DayOfWeek.MONDAY).atStartOfDay();
-              toDate = fromDate.plusDays(7).minusNanos(1);
-              break;
-          case "this_month":
-              fromDate = today.withDayOfMonth(1).atStartOfDay();
-              toDate = fromDate.plusMonths(1).withDayOfMonth(1).minusNanos(1);
-              break;
-          default:
-              break;
+    switch (dateFilter) {
+      case "today":
+        fromDate = today.atStartOfDay();
+        toDate = fromDate.plusDays(1).minusNanos(1);
+        break;
+      case "this_week":
+        fromDate = today.with(DayOfWeek.MONDAY).atStartOfDay();
+        toDate = fromDate.plusDays(7).minusNanos(1);
+        break;
+      case "this_month":
+        fromDate = today.withDayOfMonth(1).atStartOfDay();
+        toDate = fromDate.plusMonths(1).withDayOfMonth(1).minusNanos(1);
+        break;
+      default:
+        break;
+    }
+
+    List<OrderSummaryDTO> orders = orderMapper.getOrdersByFilters(statusList, fromDate, toDate);
+    return orders;
+  }
+
+  @Override
+  public OrderResponseDTO getOrderById(Long id) {
+    OrderResponseDTO order = orderMapper.getOrderById(id);
+    if (order == null) {
+      throw new IllegalArgumentException("No order found with ID is " + id);
+    }
+
+    int totalItems = 0;
+    int subTotal = 0;
+
+    List<OrderItemResponseDTO> items = order.getItems();
+    if (items != null) {
+      for (OrderItemResponseDTO item : items) {
+        int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
+        int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
+
+        totalItems += quantity;
+        subTotal += quantity * price;
       }
+    }
+    order.setTotalItems(totalItems);
+    order.setSubTotal(subTotal);
 
-      List<OrderSummaryDTO> orders = orderMapper.getOrdersByFilters(statusList, fromDate, toDate);
-      return orders;
+    return order;
   }
 
 }

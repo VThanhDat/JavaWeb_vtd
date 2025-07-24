@@ -70,6 +70,7 @@ public class AdminService implements UserDetailsService {
     return adminMapper.findByUsername(username).isPresent();
   }
 
+  @Transactional
   public void insertAdmin(AdminRequestDTO adminRequestDTO) {
     adminRequestDTO.setPassword(passwordEncoder.encode(adminRequestDTO.getPassword()));
     adminRequestDTO.setCreatedAt(LocalDateTime.now());

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.ItemConverter;
 import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
@@ -22,6 +23,7 @@ public class ItemServiceImpl implements ItemService {
   @Autowired
   private ItemConverter itemConverter;
 
+  @Transactional
   public void createItem(ItemRequestDTO dto) {
     String filename = null;
     String folder = null;

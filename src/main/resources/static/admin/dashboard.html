@@ -318,8 +318,124 @@
   </main>
 
   <!-- Modal -->
-  <div id="orderModal" class="hidden"> ... </div>
+  <div id="orderModal" class="detailOrder-popup-modal hidden">
+    <div class="detailOrder-popup-content">
+      <div class="detailOrder-popup-header">
+        <div class="right-header">
+          <div id="closeModalBtn"
+            class="flex flex-col justify-center items-center p-0 absolute w-6 h-6 right-4 top-4 z-[10]">
+            <img class="cursor-pointer" src="/img/icon/cancel-dashboard-icon.svg" alt="">
+          </div>
+          <div class="detailOrder-popup-code">
+            <span>Order#</span>
+            <span> 001</span>
+          </div>
+          <div class="detailOrder-popup-date">
+            <span> 05 May 2024</span>
+          </div>
+          <div class="detailOrder-popup-total-items">4 Items</div>
+        </div>
+        <div class="left-header">
+          <span class="detailOrder-popup-close">
+            <i class="fa-solid fa-x"></i>
+          </span>
+        </div>
+      </div>
+      <div class="detailOrder-popup-body">
+        <div class="detailOrder-popup-address">
+          <div class="address-label">
+            <img src="/img/icon/marker-icon.svg" />
+            <span>Delivery Address</span>
+          </div>
+          <div class="address-content">
+            <div class="fullname">
+              <span></span>
+            </div>
+            <div class="tel">
+              <span></span>
+            </div>
+            <div class="detail-address">
+              <span></span>
+            </div>
+            <div class="detail-message">
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div class="detailOrder-popup-product-list-container">
+          <div class="detailOrder-popup-product-list">
+          </div>
+        </div>
+        <div class="detailOrder-popup-total-n-shippingFee">
+          <div class="detailOrder-popup-total">
+            <span>Total</span>
+            <span></span>
+          </div>
+          <div class="detailOrder-popup-shippingFee">
+            <span>Shipping fee</span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+      <div class="detailOrder-popup-footer">
+        <div class="detailOrder-popup-footer-total-bill">
+          <span>Total bill</span>
+          <span></span>
+        </div>
+        <div class="detailOrder-popup-footer-status">
+          <div id="statusDropdownBtn"
+            class="inline-flex items-center px-5 py-2 border border-green-500 bg-green-100 rounded-md cursor-pointer">
+            <div class="flex flex-col justify-center items-center p-0 w-[22px] h-[22px]">
+              <img src="/img/icon/completed-status-icon.svg" alt="" class="w-8 h-8 mr-2">
+            </div>
+            <span class="w-[98px] h-[27px] flex items-center font-inter font-bold text-[18px] leading-[27px]">
+              Completed
+            </span>
+            <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_3259_4042)">
+                <path
+                  d="M7.24664 11.639L2.45064 6.15702C1.88464 5.51202 2.34464 4.49902 3.20364 4.49902H12.7956C12.9879 4.49886 13.1761 4.55411 13.3378 4.65816C13.4994 4.76222 13.6276 4.91066 13.7071 5.08572C13.7866 5.26077 13.8139 5.45502 13.7858 5.6452C13.7577 5.83538 13.6753 6.01343 13.5486 6.15802L8.75265 11.638C8.65878 11.7454 8.54303 11.8315 8.41315 11.8905C8.28328 11.9495 8.14229 11.98 7.99964 11.98C7.857 11.98 7.71601 11.9495 7.58614 11.8905C7.45626 11.8315 7.34051 11.7454 7.24664 11.638V11.639Z"
+                  fill="currentColor" />
+              </g>
+              <defs>
+                <clipPath id="clip0_3259_4042">
+                  <rect width="16" height="16" fill="white" transform="translate(0 0.5)" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
 
+          <div id="statusDropdownMenu"
+            class="absolute top-[84%] left-[97%] mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg hidden z-50">
+            <div class="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer" data-value="new">
+              <img src="/img/icon/new-status-icon.svg" class="w-4 h-4 mr-2" alt="">
+              <span class="text-[#4079ED]">
+                New
+              </span>
+            </div>
+            <div class="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer" data-value="shipping">
+              <img src="/img/icon/shipping-status-icon.svg" class="w-4 h-4 mr-2" alt="">
+              <span class="text-[#F04438]">
+                Shipping
+              </span>
+            </div>
+            <div class="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer" data-value="completed">
+              <img src="/img/icon/completed-status-icon.svg" class="w-4 h-4 mr-2" alt="">
+              <span class="text-[#17AE30]">
+                Completed
+              </span>
+            </div>
+            <div class="px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer" data-value="cancelled">
+              <img src="/img/icon/cancelled-status-icon.svg" class="w-4 h-4 mr-2" alt="">
+              <span class="text-[#E31844]">
+                Cancelled
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="/js/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="/js/logout.js"></script>

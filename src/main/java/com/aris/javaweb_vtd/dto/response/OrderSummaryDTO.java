@@ -12,7 +12,6 @@ public class OrderSummaryDTO {
     private String status;
     private String createAt;
     private Integer totalItems;
-    private Integer subTotal;
     private Integer totalPrice;
 
     private Long itemId;

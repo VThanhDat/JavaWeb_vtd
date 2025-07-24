@@ -256,3 +256,244 @@
 .tag-close:hover {
     color: #555;
 }
+
+/* Modal Detail */
+.detailOrder-popup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.detailOrder-popup-content {
+    background: white;
+    width: 45%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80%;
+    border-radius: 1rem;
+    padding: 5px;
+}
+
+.detailOrder-popup-close {
+    color: gray;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.detailOrder-popup-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 94%;
+    padding: 1%;
+}
+
+.right-header {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.detailOrder-popup-code {
+    font-weight: bold;
+}
+
+.detailOrder-popup-date {
+    color: #838282;
+}
+
+.detailOrder-popup-total-items {
+    background-color: #ffe9d9;
+    color: #ff6039;
+    padding: 0.1rem 0.6rem;
+    border-radius: 1rem;
+}
+
+.address-label {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.address-label>img {
+    display: inline-block;
+}
+
+.address-content {
+    padding: 0 1.3rem;
+    color: #838282;
+}
+
+.detail-message span {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.detailOrder-popup-body {
+    width: 94%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.detailOrder-popup-address {
+    display: flex;
+    flex-direction: column;
+    background-color: #e9e7e7;
+    width: 100%;
+    height: 10rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.detailOrder-popup-product-list-container {
+    width: 100%;
+    height: 20rem;
+    display: flex;
+    flex-direction: row;
+    border: 0.1rem solid #a2a2a2;
+    border-radius: 0.8rem;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: #e9e7e7;
+    margin: 10px 0px;
+}
+
+.detailOrder-popup-product-list {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    scrollbar-color: #838282 transparent;
+}
+
+.detailOrder-popup-product-card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 8rem;
+    gap: 0.1rem;
+}
+
+.detailOrder-popup-product-card-img {
+    width: 12%;
+    height: 7rem;
+}
+
+.detailOrder-popup-product-card-img img {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 1rem;
+}
+
+.detailOrder-popup-product-card-info {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    height: 10rem;
+}
+
+.detailOrder-popup-card-name-n-descript {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    height: 5rem;
+}
+
+.detailOrder-popup-card-name-n-descript h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.detailOrder-popup-card-name-n-descript span {
+    font-size: 0.8rem;
+    color: #5e5c5c;
+}
+
+.detailOrder-popup-product-price-n-quantity {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 3rem;
+}
+
+.detailOrder-popup-product-price {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.detailOrder-popup-product-quantity span:first-child {
+    font-size: 0.8rem;
+}
+
+.detailOrder-popup-product-quantity span:last-child {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.detailOrder-popup-total-n-shippingFee {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.detailOrder-popup-total,
+.detailOrder-popup-shippingFee {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.detailOrder-popup-total span:first-child,
+.detailOrder-popup-shippingFee span:first-child {
+    color: #5e5c5c;
+}
+
+.detailOrder-popup-footer {
+    width: 94%;
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #eeecec;
+    gap: 3%;
+}
+
+.detailOrder-popup-footer-total-bill {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-weight: 500;
+    font-size: 1.5rem;
+}
+
+.detailOrder-popup-footer-status {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}

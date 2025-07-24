@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/order")
@@ -37,10 +39,14 @@ public class OrderController {
 
   @GetMapping
   public ResponseEntity<ApiResponseDTO<List<OrderSummaryDTO>>> getOrders(
-    @RequestParam(required = false) List<String> status,
-    @RequestParam(required = false, defaultValue = "all") String date
-  ) {
-      List<OrderSummaryDTO> data = orderService.getOrders(status, date);
-      return ResponseEntity.ok(ApiResponseDTO.success(data));
+      @RequestParam(required = false) List<String> status,
+      @RequestParam(required = false, defaultValue = "all") String date) {
+    List<OrderSummaryDTO> data = orderService.getOrders(status, date);
+    return ResponseEntity.ok(ApiResponseDTO.success(data));
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemById(@PathVariable Long id) {
+    return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderById(id)));
   }
 }

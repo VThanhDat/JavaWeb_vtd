@@ -359,7 +359,6 @@ function renderEditItem(item) {
   document.getElementById("fileName").innerText = item.image || "";
   document.getElementById("imagePreview").src = "/" + item.image;
 
-  // Hiển thị button xóa khi edit (vì đã có ảnh)
   showRemoveButton();
 
   document.querySelector(".addModal h1").innerText = "Edit Item";
