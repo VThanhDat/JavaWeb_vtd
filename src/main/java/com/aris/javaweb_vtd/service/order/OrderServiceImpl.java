@@ -1,5 +1,8 @@
 package com.aris.javaweb_vtd.service.order;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,7 @@ import com.aris.javaweb_vtd.converter.OrderConverter;
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.request.OrderItemRequestDTO;
-import com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
 import com.aris.javaweb_vtd.entity.OrderDetail;
@@ -68,26 +70,30 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public List<OrderResponseDTO> getOrders() {
-    List<OrderResponseDTO> orders = orderMapper.getOrders();
-    for (OrderResponseDTO order : orders) {
-      int totalItems = 0;
-      int subTotal = 0;
+  public List<OrderSummaryDTO> getOrders(List<String> statusList, String dateFilter) {
+      LocalDateTime fromDate = null;
+      LocalDateTime toDate = null;
+      LocalDate today = LocalDate.now();
 
-      List<OrderItemResponseDTO> items = order.getItems();
-      if (items != null) {
-        for (OrderItemResponseDTO item : items) {
-          int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
-          int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
-
-          totalItems += quantity;
-          subTotal += quantity * price;
-        }
+      switch (dateFilter) {
+          case "today":
+              fromDate = today.atStartOfDay();
+              toDate = fromDate.plusDays(1).minusNanos(1);
+              break;
+          case "this_week":
+              fromDate = today.with(DayOfWeek.MONDAY).atStartOfDay();
+              toDate = fromDate.plusDays(7).minusNanos(1);
+              break;
+          case "this_month":
+              fromDate = today.withDayOfMonth(1).atStartOfDay();
+              toDate = fromDate.plusMonths(1).withDayOfMonth(1).minusNanos(1);
+              break;
+          default:
+              break;
       }
-      order.setTotalItems(totalItems);
-      order.setSubTotal(subTotal);
-    }
 
-    return orders;
+      List<OrderSummaryDTO> orders = orderMapper.getOrdersByFilters(statusList, fromDate, toDate);
+      return orders;
   }
+
 }

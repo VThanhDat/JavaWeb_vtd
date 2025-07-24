@@ -18,6 +18,49 @@
         ,#{updatedAt})
     </insert>
 
+    <select id="getOrdersByFilters" parameterType="map" resultType="com.aris.javaweb_vtd.dto.response.OrderSummaryDTO">
+      SELECT
+        o.id AS id
+        ,o.status AS status
+        ,o.total_price AS totalPrice
+        ,o.created_at AS createAt
+
+        ,MIN(i.id) AS itemId
+        ,MIN(i.name) AS itemName
+        ,MIN(i.description) AS itemDescription
+        ,MIN(i.image) AS itemImage
+        ,MIN(i.type) AS itemType
+        ,MIN(od.quantity) AS quantity
+        ,MIN(od.price) AS price
+        
+
+        ,SUM(od.quantity) AS totalItems
+        ,SUM(od.quantity * od.price) AS subTotal
+
+      FROM orders o
+      LEFT JOIN order_details od ON od.order_id = o.id
+      LEFT JOIN items i ON od.item_id = i.id
+
+      <where>
+        <if test="statusList != null and statusList.size > 0">
+          o.status IN
+          <foreach collection="statusList" item="status" open="(" separator="," close=")">
+            #{status}
+          </foreach>
+        </if>
+
+        <if test="fromDate != null">
+          AND o.created_at &gt;= #{fromDate}
+        </if>
+        <if test="toDate != null">
+          AND o.created_at &lt;= #{toDate}
+        </if>
+      </where>
+
+      GROUP BY o.id, o.status, o.total_price, o.created_at
+      ORDER BY o.id DESC
+    </select>
+
     <!-- Map field belongs to OrderDetail - Item object -->
     <resultMap id="OrderItemMap" type="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO">
       <id property="id" column="item_id" />
@@ -27,6 +70,18 @@
       <result property="type" column="item_type"/>
       <result property="price" column="order_detail_price"/>
       <result property="quantity" column="order_detail_quantity"/>
+    </resultMap>
+
+    <!-- Map field belongs to Order object -->
+    <resultMap id="OrderResponseDTO" type="com.aris.javaweb_vtd.dto.response.OrderResponseDTO">
+      <id property="id" column="order_id"/>
+      <result property="status" column="status"/>
+      <result property="totalPrice" column="total_price"/>
+      <result property="createAt" column="created_at"/>
+      <result property="totalItems" column="total_items"/>
+      <result property="subTotal" column="sub_total"/>
+      <association property="customer" javaType="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO" resultMap="CustomerMap"/>
+      <collection property="items" ofType="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO" resultMap="OrderItemMap"/>
     </resultMap>
 
     <!-- Map field belongs to Customer object -->
@@ -39,50 +94,5 @@
       <result property="address" column="address"/>
       <result property="message" column="message"/>
     </resultMap>
-
-    <!-- Map field belongs to Order object -->
-    <resultMap id="OrderResponseMap" type="com.aris.javaweb_vtd.dto.response.OrderResponseDTO">
-      <id property="id" column="order_id"/>
-      <result property="status" column="status"/>
-      <result property="shippingFee" column="shipping_fee"/>
-      <result property="totalPrice" column="total_price"/>
-      <result property="createAt" column="created_at"/>
-
-      <association property="customer" javaType="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO" resultMap="CustomerMap"/>
-      <collection property="items" ofType="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO" resultMap="OrderItemMap"/>
-    </resultMap>
-
-    <select id="getOrders" resultMap="OrderResponseMap">
-      SELECT
-        o.id AS order_id,
-        o.status,
-        o.total_price,
-        o.shipping_fee,
-        o.created_at,
-
-        c.id AS customer_id,
-        c.full_name,
-        c.phone,
-        c.city,
-        c.ward,
-        c.address,
-        c.message,
-
-        od.quantity AS order_detail_quantity,
-        od.price AS order_detail_price,
-
-        i.id AS item_id,
-        i.name AS item_name,
-        i.description AS item_description,
-        i.image AS item_image,
-        i.type AS item_type
-
-      FROM orders o
-      JOIN customers c ON o.customer_id = c.id
-      LEFT JOIN order_details od ON od.order_id = o.id
-      LEFT JOIN items i ON od.item_id = i.id
-
-      ORDER BY o.id DESC
-    </select>
 
 </mapper>

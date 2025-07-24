@@ -7,11 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
 
 import jakarta.validation.Valid;
@@ -35,7 +36,11 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponseDTO<List<OrderResponseDTO>>> getOrders() {
-    return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrders()));
+  public ResponseEntity<ApiResponseDTO<List<OrderSummaryDTO>>> getOrders(
+    @RequestParam(required = false) List<String> status,
+    @RequestParam(required = false, defaultValue = "all") String date
+  ) {
+      List<OrderSummaryDTO> data = orderService.getOrders(status, date);
+      return ResponseEntity.ok(ApiResponseDTO.success(data));
   }
 }
