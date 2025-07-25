@@ -18,7 +18,7 @@
         ,#{updatedAt})
     </insert>
 
-    <select id="getOrdersByFilters" parameterType="map" resultType="com.aris.javaweb_vtd.dto.response.OrderSummaryDTO">
+    <select id="getOrdersByFilters" parameterType="map" resultType="com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO">
       SELECT
         o.id AS id
         ,o.status AS status
@@ -69,7 +69,7 @@
     </select>
 
     <!-- Map field belongs to OrderDetail - Item object -->
-    <resultMap id="OrderItemMap" type="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO">
+    <resultMap id="OrderItemMap" type="com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO">
       <id property="id" column="item_id" />
       <result property="name" column="item_name"/>
       <result property="description" column="item_description"/>
@@ -80,7 +80,7 @@
     </resultMap>
 
     <!-- Map field belongs to Customer object -->
-    <resultMap id="CustomerMap" type="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO">
+    <resultMap id="CustomerMap" type="com.aris.javaweb_vtd.dto.order.response.CustomerResponseDTO">
       <id property="id" column="customer_id"/>
       <result property="fullName" column="full_name"/>
       <result property="phone" column="phone"/>
@@ -91,7 +91,7 @@
     </resultMap>
 
     <!-- Map field belongs to Order object -->
-    <resultMap id="OrderResponseMap" type="com.aris.javaweb_vtd.dto.response.OrderResponseDTO">
+    <resultMap id="OrderResponseMap" type="com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO">
       <id property="id" column="order_id"/>
       <result property="status" column="status"/>
       <result property="shippingFee" column="shipping_fee"/>
@@ -99,8 +99,8 @@
       <result property="createAt" column="created_at"/>
       <result property="totalItems" column="total_items"/>
       <result property="subTotal" column="sub_total"/>
-      <association property="customer" javaType="com.aris.javaweb_vtd.dto.response.CustomerResponseDTO" resultMap="CustomerMap"/>
-      <collection property="items" ofType="com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO" resultMap="OrderItemMap"/>
+      <association property="customer" javaType="com.aris.javaweb_vtd.dto.order.response.CustomerResponseDTO" resultMap="CustomerMap"/>
+      <collection property="items" ofType="com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO" resultMap="OrderItemMap"/>
     </resultMap>
 
     <select id="getOrderById" resultMap="OrderResponseMap">

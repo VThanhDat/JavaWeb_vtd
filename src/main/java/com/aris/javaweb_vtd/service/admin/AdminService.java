@@ -1,7 +1,7 @@
 package com.aris.javaweb_vtd.service.admin;
 
-import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
-import com.aris.javaweb_vtd.dto.request.ChangePasswordRequestDTO;
+import com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO;
+import com.aris.javaweb_vtd.dto.admin.request.ChangePasswordRequestDTO;
 import com.aris.javaweb_vtd.mapper.AdminMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;

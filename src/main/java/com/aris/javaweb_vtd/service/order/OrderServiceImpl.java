@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
-import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
-import com.aris.javaweb_vtd.dto.request.CustomerRequestDTO;
-import com.aris.javaweb_vtd.dto.request.OrderItemRequestDTO;
-import com.aris.javaweb_vtd.dto.response.OrderItemResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
+import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.CustomerRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
 import com.aris.javaweb_vtd.entity.OrderDetail;
@@ -142,7 +142,4 @@ public class OrderServiceImpl implements OrderService {
 
     orderMapper.updateOrderStatus(orderId, newStatus.toLowerCase());
   }
-
-  
-
 }

@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
-import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
-import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.service.item.ItemService;
 
 import jakarta.validation.Valid;

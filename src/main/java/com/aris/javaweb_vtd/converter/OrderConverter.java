@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
-import com.aris.javaweb_vtd.dto.request.OrderItemRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
 import com.aris.javaweb_vtd.entity.Order;
 import com.aris.javaweb_vtd.entity.OrderDetail;
 

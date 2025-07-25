@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

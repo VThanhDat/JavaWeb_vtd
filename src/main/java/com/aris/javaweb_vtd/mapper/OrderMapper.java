@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Order;
 
 @Mapper

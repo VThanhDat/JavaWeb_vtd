@@ -2,9 +2,9 @@ package com.aris.javaweb_vtd.service.item;
 
 import java.util.List;
 
-import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
-import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 
 public interface ItemService {
   void createItem(ItemRequestDTO itemRequestDTO);

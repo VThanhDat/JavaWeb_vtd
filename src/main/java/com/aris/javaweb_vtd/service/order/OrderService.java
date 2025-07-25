@@ -2,9 +2,9 @@ package com.aris.javaweb_vtd.service.order;
 
 import java.util.List;
 
-import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
+import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 
 public interface OrderService {
     void createOrder(CreateOrderRequestDTO request);

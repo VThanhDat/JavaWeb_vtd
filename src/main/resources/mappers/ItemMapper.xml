@@ -29,7 +29,7 @@
         AND type = #{type}
     </select>
 
-    <select id="getAllItemByType" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+    <select id="getAllItemByType" resultType="com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO">
       SELECT 
         i.id
         ,i.name
@@ -45,7 +45,7 @@
         i.type = #{type}
     </select>
 
-    <select id="getItemById" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+    <select id="getItemById" resultType="com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO">
       SELECT 
         i.id
         ,i.name
@@ -81,7 +81,8 @@
       WHERE i.id = #{id}
     </update>
 
-    <select id="getAllItemByTypeAndStatus" resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
+    <select id="getItemsWithFilters" parameterType="com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO"
+          resultType="com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO">
       SELECT 
         i.id
         ,i.name
@@ -90,45 +91,27 @@
         ,i.price
         ,i.type
         ,i.status
-        ,i.created_at as createdAt
-        ,i.updated_at as updatedAt
+        ,i.created_at AS createdAt
+        ,i.updated_at AS updatedAt
       FROM items i
-      WHERE
-        i.type = #{type}
-        AND i.status = #{status}
-    </select>
-
-    <select id="searchItemsForAdmin" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
-        resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
-      SELECT * FROM items
-      WHERE 1=1
+      <where>
         <if test="name != null and name != ''">
-          AND name LIKE CONCAT('%', #{name}, '%')
+          AND i.name LIKE CONCAT('%', #{name}, '%')
         </if>
         <if test="type != null and type != ''">
-          AND type = #{type}
-        </if>
-    </select>
-
-    <select id="searchItemsForClient" parameterType="com.aris.javaweb_vtd.dto.request.ItemSearchDTO"
-        resultType="com.aris.javaweb_vtd.dto.response.ItemResponseDTO">
-      SELECT * FROM items
-      WHERE 1=1
-        <if test="name != null and name != ''">
-          AND name LIKE CONCAT('%', #{name}, '%')
-        </if>
-        <if test="type != null and type != ''">
-          AND type = #{type}
+          AND i.type = #{type}
         </if>
         <if test="status != null">
-          AND status = #{status}
+          AND i.status = #{status}
         </if>
+      </where>
 
       <if test="sortBy != null and sortOrder != null">
         ORDER BY
         <choose>
-          <when test="sortBy == 'price'">price</when>
-          <otherwise>id</otherwise>
+          <when test="sortBy == 'price'">i.price</when>
+          <when test="sortBy == 'createdAt'">i.created_at</when>
+          <otherwise>i.id</otherwise>
         </choose>
         <choose>
           <when test="sortOrder == 'asc'">ASC</when>

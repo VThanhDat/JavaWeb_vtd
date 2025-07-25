@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
 import com.aris.javaweb_vtd.entity.Item;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)

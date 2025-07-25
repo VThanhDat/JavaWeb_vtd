@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

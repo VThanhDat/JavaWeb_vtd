@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
-import com.aris.javaweb_vtd.dto.request.StatusRequestDTO;
-import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.StatusRequestDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
 
 import jakarta.validation.Valid;

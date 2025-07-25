@@ -53,6 +53,7 @@ function renderOrderCards() {
     orderCard.className =
       "flex flex-col items-start p-6 gap-2 w-[375px] h-[305px] bg-white rounded-[16px] shadow-sm border border-[#f3f3f3] text-[14px] cursor-pointer hover:shadow-md transition";
     orderCard.setAttribute("data-order-id", order.id);
+    orderCard.setAttribute("data-display-id", displayId);
 
     const statusStyles = getStatusStyles(order.status.toLowerCase());
 
@@ -124,7 +125,8 @@ function renderOrderCards() {
 
     orderCard.addEventListener("click", () => {
       const orderId = orderCard.getAttribute("data-order-id");
-      callApiGetOrderById(orderId);
+      const displayId = orderCard.getAttribute("data-display-id");
+      callApiGetOrderById(orderId, displayId);
     });
 
     orderListContainer.appendChild(orderCard);
@@ -389,7 +391,7 @@ function renderOrderDetail(order) {
 
   document.querySelector(
     ".detailOrder-popup-code span:nth-child(2)"
-  ).innerText = " " + order.displayId || order.id;
+  ).innerText = " " + (order.displayId);
   document.querySelector(".detailOrder-popup-date span").innerText =
     formatDateDisplay(order.createAt);
   document.querySelector(
@@ -445,13 +447,16 @@ function renderOrderDetail(order) {
   setOrderStatusUI(order.status.toLowerCase());
 }
 
-function callApiGetOrderById(id) {
+function callApiGetOrderById(id, displayId = null) {
   $.ajax({
     url: `/api/order/${id}`,
     method: "GET",
     xhrFields: { withCredentials: true },
     success: function (response) {
       const order = response.data;
+      if (displayId) {
+        order.displayId = displayId;
+      }
       renderOrderDetail(order);
     },
     error: function (xhr) {
@@ -530,6 +535,8 @@ function setOrderStatusUI(currentStatus) {
     item.addEventListener("click", (e) => {
       e.stopPropagation();
       menu.style.display = "none";
+      console.log(status);
+      
       callUpdateStatus(currentOrderId, status);
     });
 
@@ -545,11 +552,11 @@ function handleDropdownClick(event) {
 
   const menu = document.getElementById("statusDropdownMenu");
 
-    if (menu.style.display === "none" || menu.style.display === "") {
-      menu.style.display = "block";
-    } else {
-      menu.style.display = "none";
-    }
+  if (menu.style.display === "none" || menu.style.display === "") {
+    menu.style.display = "block";
+  } else {
+    menu.style.display = "none";
+  }
 }
 
 document.addEventListener("click", function (event) {
@@ -627,16 +634,16 @@ function getValueDropdownOrder() {
 }
 
 // Update
-function callUpdateStatus(orderId) {
+function callUpdateStatus(orderId, status) {
   $.ajax({
     url: `/api/order/${orderId}/status`,
     method: "PUT",
     contentType: "application/json",
-    data: JSON.stringify({ status: selectedStatus }),
+    data: JSON.stringify({ status: status }),
     success: function (response) {
       showToast(response.data, "success");
-
       callApiGetOrderById(orderId);
+      renderOrderCards();
     },
     error: function (xhr) {
       const msg = xhr.responseJSON?.data;

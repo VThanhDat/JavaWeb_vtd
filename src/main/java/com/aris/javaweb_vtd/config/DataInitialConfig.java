@@ -4,7 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
+import com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
 
 @Configuration

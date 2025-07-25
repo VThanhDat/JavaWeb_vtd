@@ -1,4 +1,4 @@
-package com.aris.javaweb_vtd.dto.response;
+package com.aris.javaweb_vtd.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

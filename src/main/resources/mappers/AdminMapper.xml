@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aris.javaweb_vtd.mapper.AdminMapper">
     <insert id="insertAdmin"
-        parameterType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO"
+        parameterType="com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO"
         useGeneratedKeys="true"
         keyProperty="id">
       INSERT INTO admin 
@@ -17,7 +17,7 @@
         ,#{updatedAt})
     </insert>
     
-    <update id="updatePassword" parameterType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO">
+    <update id="updatePassword" parameterType="com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO">
       UPDATE admin
       SET 
         password = #{password}, 
@@ -25,7 +25,7 @@
         WHERE id = #{id}
     </update>
 
-    <select id="findByUsername" resultType="com.aris.javaweb_vtd.dto.request.AdminRequestDTO">
+    <select id="findByUsername" resultType="com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO">
       SELECT 
         a.id, 
         a.username, 

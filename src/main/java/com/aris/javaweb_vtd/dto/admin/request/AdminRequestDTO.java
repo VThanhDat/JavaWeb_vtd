@@ -1,4 +1,4 @@
-package com.aris.javaweb_vtd.dto.request;
+package com.aris.javaweb_vtd.dto.admin.request;
 
 import java.time.LocalDateTime;
 

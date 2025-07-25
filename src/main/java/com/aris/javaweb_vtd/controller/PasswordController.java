@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aris.javaweb_vtd.dto.request.ChangePasswordRequestDTO;
-import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.admin.request.ChangePasswordRequestDTO;
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
 
 import jakarta.servlet.http.HttpServletRequest;

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.ItemConverter;
-import com.aris.javaweb_vtd.dto.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.request.ItemSearchDTO;
-import com.aris.javaweb_vtd.dto.response.ItemResponseDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.entity.Item;
 import com.aris.javaweb_vtd.mapper.ItemMapper;
 import com.aris.javaweb_vtd.util.FileUploadUtil;
@@ -50,15 +50,6 @@ public class ItemServiceImpl implements ItemService {
       }
       throw new RuntimeException("Create is failed", e);
     }
-  }
-
-  @Override
-  public List<ItemResponseDTO> getItemsByType(String type) {
-    List<ItemResponseDTO> items = itemMapper.getAllItemByType(type);
-    if (items == null || items.isEmpty()) {
-      throw new IllegalArgumentException("No items found with type is " + type);
-    }
-    return items;
   }
 
   @Override
@@ -137,12 +128,28 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
+  public List<ItemResponseDTO> getItemsByType(String type) {
+      ItemSearchDTO searchDTO = new ItemSearchDTO();
+      searchDTO.setType(type);
+      
+      List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(searchDTO);
+      if (items == null || items.isEmpty()) {
+          throw new IllegalArgumentException("No items found with type is " + type);
+      }
+      return items;
+  }
+
+  @Override
   public List<ItemResponseDTO> getItemsByTypeAndStatus(String type) {
-    List<ItemResponseDTO> items = itemMapper.getAllItemByTypeAndStatus(type, 1);
-    if (items == null || items.isEmpty()) {
-      throw new IllegalArgumentException("No items found with type is " + type);
-    }
-    return items;
+      ItemSearchDTO searchDTO = new ItemSearchDTO();
+      searchDTO.setType(type);
+      searchDTO.setStatus(1);
+      
+      List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(searchDTO);
+      if (items == null || items.isEmpty()) {
+          throw new IllegalArgumentException("No items found with type is " + type + " and status = 1");
+      }
+      return items;
   }
 
   @Override
@@ -150,12 +157,12 @@ public class ItemServiceImpl implements ItemService {
     if (searchDTO.getStatus() == null) {
       searchDTO.setStatus(1);
     }
-    return itemMapper.searchItemsForClient(searchDTO);
+    return itemMapper.getItemsWithFilters(searchDTO);
   }
 
   @Override
   public List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO searchDTO) {
-    return itemMapper.searchItemsForClient(searchDTO);
+    return itemMapper.getItemsWithFilters(searchDTO);
   }
 
 }

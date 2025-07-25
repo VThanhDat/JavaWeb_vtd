@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.aris.javaweb_vtd.dto.request.AdminRequestDTO;
+import com.aris.javaweb_vtd.dto.admin.request.AdminRequestDTO;
 
 @Mapper
 public interface AdminMapper {

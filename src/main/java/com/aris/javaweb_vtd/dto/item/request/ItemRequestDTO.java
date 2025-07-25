@@ -1,4 +1,4 @@
-package com.aris.javaweb_vtd.dto.request;
+package com.aris.javaweb_vtd.dto.item.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
