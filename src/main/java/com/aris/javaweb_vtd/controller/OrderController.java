@@ -52,10 +52,11 @@ public class OrderController {
   @PutMapping("/{id}/status")
   public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId, @RequestBody StatusRequestDTO request) {
     try {
-      String newStatus = request.getNewStatus();
+      String newStatus = request.getStatus();
       orderService.updateOrderStatus(orderId, newStatus);
       return ResponseEntity.ok(ApiResponseDTO.success("Successfull"));
     } catch (Exception e) {
+      e.printStackTrace();
       return ResponseEntity.badRequest().body(ApiResponseDTO.error(e.getMessage()));
     }
   }

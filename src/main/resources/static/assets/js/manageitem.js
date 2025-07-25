@@ -14,7 +14,7 @@ function callApiSearchWithPaging({
   size = 10, 
 }) {
   $.ajax({
-    url: "/api/item/filter",
+    url: "/api/item",
     method: "GET",
     data: { name, type, page, size},
     xhrFields: { withCredentials: true },

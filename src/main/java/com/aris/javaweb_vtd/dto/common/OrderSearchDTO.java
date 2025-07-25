@@ -14,8 +14,8 @@ public class OrderSearchDTO {
     private List<String> statusList;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
-    private String dateFilter;
-    private String searchName;
+    private String date;
+    private String name;
     
     private Integer page;
     private Integer size;

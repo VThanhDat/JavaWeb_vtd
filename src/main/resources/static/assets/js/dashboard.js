@@ -1,8 +1,12 @@
 import { showToast, showSuccessLogin } from "./toast.js";
+import { renderPaginationControls, setupPageSizeSelector } from "./pagination.js";
 
 let orders = [];
 let currentOrderId = null;
 let currentStatusCheckboxes = ["New", "Completed", "Cancelled", "Shipping"];
+let currentPage = 1;
+let pageSize = 10;
+let lastSearchQuery = ""; // Add search query tracking
 
 const statusStyles = {
   new: {
@@ -53,7 +57,13 @@ const statusClasses = [
   "border-[#E31844]", "text-[#E31844]", "bg-[#FDE8EC]"
 ];
 
-function callApiGetOrders() {
+function callApiGetOrders({
+  name = lastSearchQuery, // Add name parameter
+  status = currentStatusCheckboxes.join(","),
+  date = getCurrentDateFilter(),
+  page = 1,
+  size = 10,
+}) {
   if (currentStatusCheckboxes.length === 0) {
     orders = [];
     renderOrderCards();
@@ -61,22 +71,47 @@ function callApiGetOrders() {
     return;
   }
 
-  const statusParam = currentStatusCheckboxes.join(",");
-  const dateParam = getCurrentDateFilter();
-  const queryString = `status=${encodeURIComponent(statusParam)}&date=${encodeURIComponent(dateParam)}`;
+  // Build data object, only include name if it's not empty
+  const requestData = { status, date, page, size };
+  if (name && name.trim() !== "") {
+    requestData.name = name.trim();
+  }
 
   $.ajax({
-    url: `/api/order?${queryString}`,
+    url: "/api/order",
     method: "GET",
+    data: requestData,
     xhrFields: { withCredentials: true },
     success: function (response) {
-      orders = response.data;
+      const result = response?.data || {};
+      orders = result.orders || result.items || response.data || [];
+      currentPage = result.currentPage || page;
+      pageSize = size;
+      lastSearchQuery = name; // Update last search query
+      
       renderOrderCards();
       renderDashboardSummary();
+      
+      // Render pagination if result has pagination info
+      if (result.totalPages && result.currentPage !== undefined) {
+        renderPaginationControls(result.totalPages, result.currentPage, result.totalItems, fetchOrdersPage);
+      }
     },
     error: function (xhr) {
-      showToast(xhr.responseJSON?.data, "error");
+      const msg = xhr.responseJSON?.data || "Lỗi không xác định";
+      showToast(msg, "error");
     },
+  });
+}
+
+// Function to handle page changes
+function fetchOrdersPage(page) {
+  callApiGetOrders({
+    name: lastSearchQuery,
+    status: currentStatusCheckboxes.join(","),
+    date: getCurrentDateFilter(),
+    page: page,
+    size: pageSize,
   });
 }
 
@@ -135,7 +170,8 @@ function renderOrderCards() {
   }
 
   orders.forEach((order, index) => {
-    const displayId = (index + 1).toString().padStart(3, "0");
+    // Calculate display ID based on current page and page size
+    const displayId = ((currentPage - 1) * pageSize + index + 1).toString().padStart(3, "0");
     const orderCard = document.createElement("div");
     orderCard.className = "flex flex-col items-start p-6 gap-2 w-[375px] h-[305px] bg-white rounded-[16px] shadow-sm border border-[#f3f3f3] text-[14px] cursor-pointer hover:shadow-md transition";
     orderCard.setAttribute("data-order-id", order.id);
@@ -358,7 +394,7 @@ function renderStatusTags() {
 
       currentStatusCheckboxes = currentStatusCheckboxes.filter(s => s !== status);
       renderStatusTags();
-      callApiGetOrders();
+      callApiGetOrders({ page: 1, size: pageSize }); // Reset to page 1 when filter changes
     });
 
     listFilterStatus.appendChild(tagDiv);
@@ -444,6 +480,25 @@ function setupDropdownToggle(buttonId, dropdownId) {
   });
 }
 
+// Setup search functionality
+function setupSearchInput() {
+  const searchInput = document.getElementById("searchNameInput");
+  if (!searchInput) return;
+  
+  // Handle Enter key press for immediate search
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const searchValue = e.target.value.trim();
+      lastSearchQuery = searchValue;
+      callApiGetOrders({ 
+        name: searchValue,
+        page: 1, 
+        size: pageSize 
+      });
+    }
+  });
+}
+
 // Helper functions
 function capitalizeFirstLetter(status) {
   if (!status) return "";
@@ -484,9 +539,18 @@ document.addEventListener("DOMContentLoaded", function () {
   renderStatusTags();
   renderSalesChart("salesChart", ["14", "15", "16", "17", "18", "19", "20"], [15, 20, 25, 22, 28, 18, 27]);
   setupDropdownToggle("filterBtn", "filterDropdown");
+  setupSearchInput(); // Setup search functionality
+  
+  // Setup page size selector if needed
+  setupPageSizeSelector((newSize) => {
+    pageSize = newSize;
+    callApiGetOrders({ page: 1, size: newSize });
+  });
 
   // Filter change listener
-  document.getElementById("order-status-filter").addEventListener("change", callApiGetOrders);
+  document.getElementById("order-status-filter").addEventListener("change", () => {
+    callApiGetOrders({ page: 1, size: pageSize }); // Reset to page 1 when date filter changes
+  });
 
   // Status filter listeners
   document.querySelectorAll('#filterDropdown input[type="checkbox"]').forEach((checkbox) => {
@@ -503,7 +567,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       renderStatusTags();
-      callApiGetOrders();
+      callApiGetOrders({ page: 1, size: pageSize }); // Reset to page 1 when status filter changes
     });
   });
 
@@ -522,5 +586,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  callApiGetOrders();
+  // Initial API call
+  callApiGetOrders({ page: 1, size: pageSize });
 });

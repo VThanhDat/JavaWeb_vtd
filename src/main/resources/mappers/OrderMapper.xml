@@ -64,8 +64,8 @@
           AND o.created_at &lt;= #{toDate}
         </if>
 
-        <if test="searchName != null and searchName != ''">
-          AND i.name LIKE CONCAT('%', #{search.searchName}, '%')
+        <if test="name != null and name != ''">
+          AND i.name LIKE CONCAT('%', #{name}, '%')
         </if>
       </where>
 
@@ -108,8 +108,8 @@
           AND o.created_at &lt;= #{toDate}
         </if>
 
-        <if test="searchName != null and searchName != ''">
-          AND i.name LIKE CONCAT('%', #{searchName}, '%')
+        <if test="name != null and name != ''">
+          AND i.name LIKE CONCAT('%', #{name}, '%')
         </if>
       </where>
     </select>

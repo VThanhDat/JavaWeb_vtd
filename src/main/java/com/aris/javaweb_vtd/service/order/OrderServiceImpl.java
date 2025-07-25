@@ -83,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
     LocalDateTime toDate = null;
     LocalDate today = LocalDate.now();
 
-    switch (Optional.ofNullable(orderSearchDTO.getDateFilter()).orElse("all")) {
+    switch (Optional.ofNullable(orderSearchDTO.getDate()).orElse("all")) {
       case "today":
         fromDate = today.atStartOfDay();
         toDate = fromDate.plusDays(1).minusNanos(1);
