@@ -1,4 +1,4 @@
-package com.aris.javaweb_vtd.dto.item.request;
+package com.aris.javaweb_vtd.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,4 +13,7 @@ public class ItemSearchDTO {
   private Integer status;
   private String sortBy;
   private String sortOrder;
+  private Integer page;
+  private Integer size;
+  private Integer offset;
 }

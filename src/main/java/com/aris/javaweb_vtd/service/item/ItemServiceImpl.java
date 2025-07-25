@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.ItemConverter;
+import com.aris.javaweb_vtd.dto.common.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.entity.Item;
 import com.aris.javaweb_vtd.mapper.ItemMapper;
@@ -140,29 +141,17 @@ public class ItemServiceImpl implements ItemService {
   }
 
   @Override
-  public List<ItemResponseDTO> getItemsByTypeAndStatus(String type) {
-      ItemSearchDTO searchDTO = new ItemSearchDTO();
-      searchDTO.setType(type);
-      searchDTO.setStatus(1);
-      
-      List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(searchDTO);
-      if (items == null || items.isEmpty()) {
-          throw new IllegalArgumentException("No items found with type is " + type + " and status = 1");
-      }
-      return items;
-  }
-
-  @Override
-  public List<ItemResponseDTO> searchItemsForClient(ItemSearchDTO searchDTO) {
-    if (searchDTO.getStatus() == null) {
-      searchDTO.setStatus(1);
+  public PageDTO<ItemResponseDTO> searchItemsWithPaging(ItemSearchDTO dto) {
+    if (dto.getPage() != null && dto.getSize() != null) {
+        dto.setOffset((dto.getPage() - 1) * dto.getSize());
     }
-    return itemMapper.getItemsWithFilters(searchDTO);
-  }
 
-  @Override
-  public List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO searchDTO) {
-    return itemMapper.getItemsWithFilters(searchDTO);
+    List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(dto);
+    int total = itemMapper.countItemsWithFilters(dto);
+
+    int totalPages = (int) Math.ceil((double) total / dto.getSize());
+
+    return new PageDTO<>(items, dto.getPage(), totalPages, total);
   }
 
 }

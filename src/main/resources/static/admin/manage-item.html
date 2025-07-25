@@ -175,57 +175,14 @@
     </div>
 
     <!-- Pagination -->
-    <div
-      class="flex flex-row justify-center items-center p-0 gap-2 w-full max-w-6xl mx-auto h-auto flex-none order-2 self-stretch flex-grow-0 md:flex-row md:gap-3 md:h-auto md:p-4">
-
-      <!-- Left: Tổng số items -->
-      <div class="flex items-center">
-        <div class="pagination-total">
-          <p class="text-sm text-gray-600 m-0 font-normal">Total 200 items</p>
-        </div>
+   <div class="flex flex-row justify-between items-center gap-4 p-4 max-w-6xl mx-auto">
+  
+      <div class="pagination-total">
+        <p class="text-sm text-gray-600 m-0 font-normal">Total 0 items</p>
       </div>
 
-      <!-- Center: Các nút phân trang -->
-      <div
-        class="flex items-center bg-white border border-gray-300 rounded-md shadow-sm md:flex-wrap md:justify-center">
-        <!-- Previous button -->
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&lt;</button>
+      <div class="pagination-container flex flex-row"></div>
 
-        <!-- Active page -->
-        <button
-          class="border border-orange-500 bg-orange-500 text-white font-medium px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out min-w-8 h-8 flex items-center justify-center hover:bg-orange-600 hover:border-orange-600">1</button>
-
-        <!-- Dots -->
-        <span
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
-
-        <!-- Regular pages -->
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">4</button>
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">5</button>
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">6</button>
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">7</button>
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">8</button>
-
-        <!-- Dots -->
-        <span
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">...</span>
-
-        <!-- Last page -->
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">20</button>
-
-        <!-- Next button -->
-        <button
-          class="border border-gray-400 bg-white px-3 py-1.5 text-sm cursor-pointer transition-all duration-200 ease-in-out text-gray-700 min-w-8 h-8 flex items-center justify-center hover:bg-gray-50 hover:border-gray-500">&gt;</button>
-      </div>
-
-      <!-- Right: Chọn số item/trang -->
       <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
         <select
           class="border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select">
@@ -235,7 +192,9 @@
           <option value="40">40 / page</option>
         </select>
       </div>
+
     </div>
+
   </main>
 
   <!-- Form Add Modal -->

@@ -1,15 +1,32 @@
 import { showToast } from "./toast.js";
+import { renderPaginationControls, setupPageSizeSelector } from "./pagination.js";
 
 let items = [];
-function callApiGetItems(type) {
+let currentType = "food";
+let currentPage = 1;
+let pageSize = 10;
+let lastSearchQuery = "";
+
+function callApiSearchWithPaging({ 
+  name = "", 
+  type = "food", 
+  page = 1, 
+  size = 10, 
+}) {
   $.ajax({
-    url: "/api/item",
+    url: "/api/item/filter",
     method: "GET",
-    data: { type },
+    data: { name, type, page, size},
     xhrFields: { withCredentials: true },
     success: function (response) {
-      items = response?.data || [];
-      renderItems(items);
+      const result = response?.data || {};
+      items = result.items || [];
+      currentPage = result.currentPage;
+      currentType = type;
+      lastSearchQuery = name;
+      
+      renderItems();
+      renderPaginationControls(result.totalPages, result.currentPage, result.totalItems, fetchPage);
     },
     error: function (xhr) {
       const msg = xhr.responseJSON?.data || "Lỗi không xác định";
@@ -18,9 +35,45 @@ function callApiGetItems(type) {
   });
 }
 
+function loadItems(type = currentType) {
+  callApiSearchWithPaging({ 
+    name: lastSearchQuery, 
+    type, 
+    page: 1, 
+    size: pageSize 
+  });
+}
+
+function searchItems(query) {
+  lastSearchQuery = query;
+  callApiSearchWithPaging({ 
+    name: query, 
+    type: currentType, 
+    page: 1, 
+    size: pageSize 
+  });
+}
+
+function fetchPage(page, size = pageSize) {
+  callApiSearchWithPaging({ 
+    name: lastSearchQuery, 
+    type: currentType, 
+    page, 
+    size 
+  });
+}
+
+function reloadItemList() {
+  callApiSearchWithPaging({ 
+    name: lastSearchQuery, 
+    type: currentType, 
+    page: currentPage, 
+    size: pageSize 
+  });
+}
+
 function renderItems() {
   const tbody = document.getElementById("item-table-body");
-
   tbody.innerHTML = "";
 
   if (items.length === 0) {
@@ -34,11 +87,14 @@ function renderItems() {
     return;
   }
 
+  const startIndex = (currentPage - 1) * pageSize;
+
   items.forEach((item, index) => {
     const tr = document.createElement("tr");
-
+    const itemNumber = startIndex + index + 1;
+    
     tr.innerHTML = `
-      <td>${String(index + 1).padStart(3, "0")}</td>
+      <td>${String(itemNumber).padStart(3, "0")}</td>
       <td><img src="/${item.image}"></td>
       <td>${item.name}</td>
       <td>${item.description}</td>
@@ -50,12 +106,10 @@ function renderItems() {
         </label>
       </td>
       <td>
-     <div class="flex flex-row items-center gap-2">
-      <span class="text-[#658280] cursor-pointer btn-delete" data-id="${item.id
-      }">Delete</span> |
-      <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${item.id
-      }">Edit</span>
-    </div>
+        <div class="flex flex-row items-center gap-2">
+          <span class="text-[#658280] cursor-pointer btn-delete" data-id="${item.id}">Delete</span> |
+          <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${item.id}">Edit</span>
+        </div>
       </td>
     `;
     tbody.appendChild(tr);
@@ -90,7 +144,7 @@ function setupTabToggle() {
       foodText.classList.add("text-[#7C7C7C]");
     }
 
-    callApiGetItems(type);
+    loadItems(type);
   }
 
   foodTab.addEventListener("click", () => activateTab("food"));
@@ -99,7 +153,18 @@ function setupTabToggle() {
   activateTab("food");
 }
 
-// Image management functions
+function setupSearchInput() {
+  const input = document.getElementById("searchInput");
+  if (!input) return;
+
+  input.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      const query = e.target.value.trim();
+      searchItems(query);
+    }
+  });
+}
+
 function showRemoveButton() {
   const removeImageBtn = document.getElementById('removeImageBtn');
   if (removeImageBtn) {
@@ -123,7 +188,7 @@ function resetImage() {
   if (imagePreview) imagePreview.src = placeholderImage;
   if (imageInput) imageInput.value = '';
   if (fileName) fileName.innerText = '';
-  hideRemoveButton(); // Ẩn button xóa khi reset
+  hideRemoveButton();
 }
 
 function resetModal() {
@@ -133,9 +198,7 @@ function resetModal() {
   document.getElementById("itemForm").reset();
   document.getElementById("itemType").value = "food";
 
-  // Reset image với function mới
   resetImage();
-
   document.getElementById("manageItemError").innerText = "";
 
   document.querySelector(".addModal h1").innerText = "Create New Item";
@@ -192,7 +255,6 @@ function openModalAdd() {
   });
 }
 
-// Function Create New Item - Update
 let isEditMode = false;
 let editingItemId = null;
 
@@ -218,38 +280,31 @@ function handleItemFormSubmit() {
 
   foodTab.addEventListener("click", () => {
     itemTypeInput.value = "food";
-
     foodTab.classList.add("bg-white");
     foodText.classList.remove("text-gray-600");
-
     drinkTab.classList.remove("bg-white");
     drinkText.classList.add("text-gray-600");
   });
 
   drinkTab.addEventListener("click", () => {
     itemTypeInput.value = "drink";
-
     drinkTab.classList.add("bg-white");
     drinkText.classList.remove("text-gray-600");
-
     foodTab.classList.remove("bg-white");
     foodText.classList.add("text-gray-600");
   });
 
   chooseFileBtn.addEventListener("click", () => imageInput.click());
 
-  // Updated image input handler
   imageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Kiểm tra kích thước file (5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('File size must be less than 5MB');
         resetImage();
         return;
       }
 
-      // Kiểm tra định dạng file
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file');
         resetImage();
@@ -260,18 +315,13 @@ function handleItemFormSubmit() {
       const imageURL = URL.createObjectURL(file);
       imagePreview.src = imageURL;
       imagePreview.onload = () => URL.revokeObjectURL(imageURL);
-      showRemoveButton(); // Hiển thị button xóa khi có ảnh
+      showRemoveButton();
     } else {
       resetImage();
     }
   });
 
-  // Add event listener for remove button
-  if (removeImageBtn) {
-    removeImageBtn.addEventListener("click", () => {
-      resetImage();
-    });
-  }
+  removeImageBtn?.addEventListener("click", resetImage);
 
   createBtn.addEventListener("click", function (e) {
     e.preventDefault();
@@ -351,7 +401,6 @@ function renderEditItem(item) {
   editingItemId = item.id;
 
   document.getElementById("modalOverlay").classList.remove("hidden");
-
   document.getElementById("itemName").value = item.name;
   document.getElementById("itemDesc").value = item.description;
   document.getElementById("itemPrice").value = item.price;
@@ -372,13 +421,11 @@ function renderEditItem(item) {
   if (item.type === "drink") {
     foodTab.classList.remove("bg-white");
     foodText.classList.add("text-gray-600");
-
     drinkTab.classList.add("bg-white");
     drinkText.classList.remove("text-gray-600");
   } else {
     drinkTab.classList.remove("bg-white");
     drinkText.classList.add("text-gray-600");
-
     foodTab.classList.add("bg-white");
     foodText.classList.remove("text-gray-600");
   }
@@ -403,20 +450,10 @@ function callApiUpdateItem(formData) {
   });
 }
 
-function reloadItemList() {
-  const currentType =
-    document.querySelector(".tab-button.bg-white")?.innerText.toLowerCase() ||
-    "food";
-  callApiGetItems(currentType);
-}
-
-// Delete
 function setupDeleteButtons() {
   document.querySelectorAll(".btn-delete").forEach((btn) => {
     btn.addEventListener("click", () => {
       const id = btn.dataset.id;
-      console.log(id);
-
       if (confirm("Are you sure you want to delete this item?")) {
         callApiDeleteItem(id);
       }
@@ -440,58 +477,15 @@ function callApiDeleteItem(id) {
   });
 }
 
-// Search
-function setupSearchInput() {
-  const input = document.getElementById("searchInput");
-  if (!input) return;
-
-  input.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      const query = e.target.value.trim();
-      const type = getCurrentActiveType();
-
-      if (query === "") {
-        callApiGetItems(type);
-      } else {
-        callApiSearch(query, type);
-      }
-    }
-  });
-}
-
-function getCurrentActiveType() {
-  const activeTab = document.querySelector(".tab-button.bg-white");
-  if (activeTab?.innerText.toLowerCase().includes("drink")) {
-    return "drink";
-  }
-  return "food";
-}
-
-function callApiSearch(query, type) {
-  $.ajax({
-    url: "/api/item/searchAdmin",
-    method: "POST",
-    contentType: "application/json",
-    data: JSON.stringify({
-      name: query.trim(),
-      type: type,
-    }),
-    xhrFields: { withCredentials: true },
-    success: function (response) {
-      items = response?.data || [];
-      renderItems();
-    },
-    error: function (xhr) {
-      const msg = xhr.responseJSON?.data || "Lỗi khi tìm kiếm";
-      showToast(msg, "error");
-    },
-  });
-}
-
 document.addEventListener("DOMContentLoaded", function () {
-  renderItems();
   setupTabToggle();
   openModalAdd();
-  handleItemFormSubmit();
+  handleItemFormSubmit();  
   setupSearchInput();
+  setupPageSizeSelector(
+    (newPageSize) => {
+      pageSize = newPageSize;
+    }, fetchPage
+  );
+  loadItems();
 });

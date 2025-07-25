@@ -1,6 +1,5 @@
-export function createToast(message, type = "success") {
+function createToast(message, type = "success") {
   const toastContainer = document.getElementById("toastContainer");
-
   const toast = document.createElement("div");
   toast.className = "flex flex-col items-start p-0 toast-enter";
   toast.style.cssText =
@@ -39,7 +38,7 @@ export function createToast(message, type = "success") {
             </svg>
           </button>
         </div>
-        
+                
         <div class="flex-1 flex items-center px-3 py-2">
           <div class="flex flex-col items-start p-0 text-white" style="width: 400px; height: 21px; background: rgba(255, 255, 255, 0.000001);">
             <p style="width: 100%; height: 21px; font-family: 'Helvetica Neue'; font-style: normal; font-weight: 400; font-size: 14px; line-height: 150%; color: #FFFFFF; flex: none; order: 0; flex-grow: 0;">${message}</p>
@@ -56,7 +55,7 @@ export function createToast(message, type = "success") {
   }, 4000);
 }
 
-export function closeToast(element) {
+function closeToast(element) {
   const toast =
     element.closest(".flex.flex-col") || element.parentElement.parentElement;
   toast.classList.remove("toast-enter");
@@ -69,11 +68,11 @@ export function closeToast(element) {
   }, 300);
 }
 
-export function showToast(message, type = "success") {
+function showToast(message, type = "success") {
   createToast(message, type);
 }
 
-export function showSuccessLogin() {
+function showSuccessLogin() {
   const loginData = localStorage.getItem("loginData");
   if (loginData === "Successfully") {
     showToast(loginData, "success");
@@ -81,7 +80,7 @@ export function showSuccessLogin() {
   }
 }
 
-export function showSuccessLogout() {
+function showSuccessLogout() {
   const logoutData = localStorage.getItem("logoutData");
   if (logoutData === "Logout successful") {
     showToast(logoutData, "success");
@@ -90,3 +89,11 @@ export function showSuccessLogout() {
 }
 
 window.closeToast = closeToast;
+
+export {
+  createToast,
+  closeToast,
+  showToast,
+  showSuccessLogin,
+  showSuccessLogout
+};

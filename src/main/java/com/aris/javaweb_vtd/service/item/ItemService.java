@@ -2,8 +2,9 @@ package com.aris.javaweb_vtd.service.item;
 
 import java.util.List;
 
+import com.aris.javaweb_vtd.dto.common.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 
 public interface ItemService {
@@ -17,9 +18,5 @@ public interface ItemService {
 
   void deleteItem(Long id);
 
-  List<ItemResponseDTO> getItemsByTypeAndStatus(String type);
-
-  List<ItemResponseDTO> searchItemsForClient(ItemSearchDTO searchDTO);
-
-  List<ItemResponseDTO> searchItemsForAdmin(ItemSearchDTO searchDTO);
+  PageDTO<ItemResponseDTO> searchItemsWithPaging(ItemSearchDTO dto);
 }

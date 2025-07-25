@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.common.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
-import com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.service.item.ItemService;
 
@@ -64,21 +64,12 @@ public class ItemController {
     }
   }
 
-  @GetMapping("/status")
-  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> getItemsByTypeAndStatus(
-      @RequestParam(required = false) String type) {
-    return ResponseEntity.ok(ApiResponseDTO.success(itemService.getItemsByTypeAndStatus(type)));
-  }
-
-  @PostMapping("/searchClient")
-  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> searchItemsForClient(
-      @RequestBody ItemSearchDTO searchDTO) {
-    return ResponseEntity.ok(ApiResponseDTO.success("Successfull", itemService.searchItemsForClient(searchDTO)));
-  }
-
-  @PostMapping("/searchAdmin")
-  public ResponseEntity<ApiResponseDTO<List<ItemResponseDTO>>> searchItemsForAdmin(
-      @RequestBody ItemSearchDTO searchDTO) {
-    return ResponseEntity.ok(ApiResponseDTO.success("Successfull", itemService.searchItemsForAdmin(searchDTO)));
+  @GetMapping("/filter")
+  public ResponseEntity<ApiResponseDTO<PageDTO<ItemResponseDTO>>> getItems(ItemSearchDTO dto) {
+      if (dto.getPage() != null && dto.getSize() != null) {
+          dto.setOffset((dto.getPage() - 1) * dto.getSize());
+      }
+      PageDTO<ItemResponseDTO> page = itemService.searchItemsWithPaging(dto);
+      return ResponseEntity.ok(ApiResponseDTO.success(page));
   }
 }

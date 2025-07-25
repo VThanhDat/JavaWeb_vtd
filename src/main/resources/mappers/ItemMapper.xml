@@ -81,7 +81,7 @@
       WHERE i.id = #{id}
     </update>
 
-    <select id="getItemsWithFilters" parameterType="com.aris.javaweb_vtd.dto.item.request.ItemSearchDTO"
+    <select id="getItemsWithFilters" parameterType="com.aris.javaweb_vtd.dto.common.ItemSearchDTO"
           resultType="com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO">
       SELECT 
         i.id
@@ -119,5 +119,25 @@
           <otherwise>ASC</otherwise>
         </choose>
       </if>
+
+      <if test="size != null and offset != null">
+        LIMIT #{size} OFFSET #{offset}
+      </if>
     </select>
+
+    <select id="countItemsWithFilters" parameterType="com.aris.javaweb_vtd.dto.common.ItemSearchDTO"
+        resultType="int">
+        SELECT COUNT(1) FROM items i
+        <where>
+          <if test="name != null and name != ''">
+            AND i.name LIKE CONCAT('%', #{name}, '%')
+          </if>
+          <if test="type != null and type != ''">
+            AND i.type = #{type}
+          </if>
+          <if test="status != null">
+            AND i.status = #{status}
+          </if>
+        </where>
+      </select>
 </mapper>
