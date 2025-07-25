@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.request.StatusRequestDTO;
 import com.aris.javaweb_vtd.dto.response.ApiResponseDTO;
 import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
@@ -48,5 +50,16 @@ public class OrderController {
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemById(@PathVariable Long id) {
     return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderById(id)));
+  }
+
+  @PutMapping("/{id}/status")
+  public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId, @RequestBody StatusRequestDTO request) {
+    try {
+      String newStatus = request.getStatus();
+      orderService.updateOrderStatus(orderId, newStatus);
+      return ResponseEntity.ok(ApiResponseDTO.success("Successfull"));
+    } catch (Exception e) {
+      return ResponseEntity.badRequest().body(ApiResponseDTO.error(e.getMessage()));
+    }
   }
 }

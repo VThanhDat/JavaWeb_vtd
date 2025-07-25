@@ -23,6 +23,7 @@ import com.aris.javaweb_vtd.entity.OrderDetail;
 import com.aris.javaweb_vtd.mapper.CustommerMapper;
 import com.aris.javaweb_vtd.mapper.OrderDetailMapper;
 import com.aris.javaweb_vtd.mapper.OrderMapper;
+import com.aris.javaweb_vtd.util.OrderStatusUtil;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -125,5 +126,23 @@ public class OrderServiceImpl implements OrderService {
 
     return order;
   }
+
+  @Override
+  public void updateOrderStatus(Long orderId, String newStatus) {
+    OrderResponseDTO order = orderMapper.getOrderById(orderId);
+    if (order == null) {
+      throw new IllegalArgumentException("Not found order ID with " + orderId);
+    }
+  
+    String currentStatus = order.getStatus();
+
+    if (!OrderStatusUtil.isValidTransition(currentStatus, newStatus)) {
+      throw new IllegalStateException("Cannot change state from " + currentStatus + " to " + newStatus);
+    }
+
+    orderMapper.updateOrderStatus(orderId, newStatus.toLowerCase());
+  }
+
+  
 
 }

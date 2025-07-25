@@ -10,10 +10,12 @@ function callApiGetOrders() {
     return;
   }
 
-  const statusParam = currentStatusCheckboxes.join(',');
+  const statusParam = currentStatusCheckboxes.join(",");
   const dateParam = getCurrentDateFilter();
 
-  const queryString = `status=${encodeURIComponent(statusParam)}&date=${encodeURIComponent(dateParam)}`;
+  const queryString = `status=${encodeURIComponent(
+    statusParam
+  )}&date=${encodeURIComponent(dateParam)}`;
 
   $.ajax({
     url: `/api/order?${queryString}`,
@@ -46,9 +48,10 @@ function renderOrderCards() {
   }
 
   orders.forEach((order, index) => {
-    const displayId = (index + 1).toString().padStart(3, '0');
+    const displayId = (index + 1).toString().padStart(3, "0");
     const orderCard = document.createElement("div");
-    orderCard.className = "flex flex-col items-start p-6 gap-2 w-[375px] h-[305px] bg-white rounded-[16px] shadow-sm border border-[#f3f3f3] text-[14px] cursor-pointer hover:shadow-md transition";
+    orderCard.className =
+      "flex flex-col items-start p-6 gap-2 w-[375px] h-[305px] bg-white rounded-[16px] shadow-sm border border-[#f3f3f3] text-[14px] cursor-pointer hover:shadow-md transition";
     orderCard.setAttribute("data-order-id", order.id);
 
     const statusStyles = getStatusStyles(order.status.toLowerCase());
@@ -62,17 +65,27 @@ function renderOrderCards() {
     
     <!-- Product section -->
     <div class="flex flex-row items-start py-4 gap-4 w-full h-[130px]">
-      <img src="/${order.itemImage}" alt="Product Image" class="w-16 h-16 rounded-md object-cover" />
+      <img src="/${
+        order.itemImage
+      }" alt="Product Image" class="w-16 h-16 rounded-md object-cover" />
       <div class="flex-1 grid gap-1">
         <div class="flex flex-row items-start gap-1">
-          <h3 class="font-inter font-semibold text-[16px] leading-[24px] text-black flex-grow">${order.itemName}</h3>
+          <h3 class="font-inter font-semibold text-[16px] leading-[24px] text-black flex-grow">${
+            order.itemName
+          }</h3>
         </div>
-        <p class="text-xs text-[#7c7c7c] line-clamp-1">${order.itemDescription}</p>
+        <p class="text-xs text-[#7c7c7c] line-clamp-1">${
+          order.itemDescription
+        }</p>
         <div class="flex justify-between items-end py-1">
           <div class="flex items-center">
-            <span class="font-inter font-bold text-[16px] leading-[24px] text-black">${formatCurrency(order.price)}</span>
+            <span class="font-inter font-bold text-[16px] leading-[24px] text-black">${formatCurrency(
+              order.price
+            )}</span>
           </div>
-          <span class="text-xs text-[#7c7c7c] font-normal">Quantity: ${order.quantity}</span>
+          <span class="text-xs text-[#7c7c7c] font-normal">Quantity: ${
+            order.quantity
+          }</span>
         </div>
       </div>
     </div>
@@ -80,18 +93,28 @@ function renderOrderCards() {
     <!-- Divider -->
     <hr class="w-full border-t border-[#EFEFEF]" />
     
-    <span class="font-inter font-normal text-[14px] text-[#797B7E]">${order.totalItems} Items</span>
+    <span class="font-inter font-normal text-[14px] text-[#797B7E]">${
+      order.totalItems
+    } Items</span>
     
     <div class="flex flex-row justify-end items-center gap-4 w-full h-[48px]">
       <div class="flex flex-row items-center gap-1 flex-grow">
-        <span class="font-inter font-bold text-[18px] leading-[27px] text-black">${formatCurrency(order.totalPrice)}</span>
+        <span class="font-inter font-bold text-[18px] leading-[27px] text-black">${formatCurrency(
+          order.totalPrice
+        )}</span>
       </div>
-      <button class="flex flex-row justify-center items-center px-4 py-2 gap-2 w-[160px] h-[48px] rounded-[4.8px] ${statusStyles.bg}">
+      <button class="flex flex-row justify-center items-center px-4 py-2 gap-2 w-[160px] h-[48px] rounded-[4.8px] ${
+        statusStyles.bg
+      }">
         <div class="w-[22px] h-[22px] flex-none">
           <img src="${statusStyles.icon}" />
         </div>
-        <div class="flex flex-col justify-center items-start ${statusStyles.width} bg-[rgba(255,255,255,0.01)] flex-none">
-          <p class="font-inter font-bold text-[18px] leading-[27px] flex-none ${statusStyles.text}">
+        <div class="flex flex-col justify-center items-start ${
+          statusStyles.width
+        } bg-[rgba(255,255,255,0.01)] flex-none">
+          <p class="font-inter font-bold text-[18px] leading-[27px] flex-none ${
+            statusStyles.text
+          }">
             ${capitalizeFirstLetter(order.status)}
           </p>
         </div>
@@ -115,52 +138,54 @@ function capitalizeFirstLetter(status) {
 
 function formatDateDisplay(dateString) {
   const date = new Date(dateString);
-  const options = { day: '2-digit', month: 'long', year: 'numeric' };
-  return date.toLocaleDateString('en-GB', options);
+  const options = { day: "2-digit", month: "long", year: "numeric" };
+  return date.toLocaleDateString("en-GB", options);
 }
 
 const statusStyles = {
   new: {
-    width: 'w-[40px]',
-    text: 'text-[#4079ED]',
+    width: "w-[40px]",
+    text: "text-[#4079ED]",
     border: "border-[#4079ED]",
     bg: "bg-[#EDF3FF]",
     icon: "/img/icon/new-status-icon.svg",
-    label: "New"
+    label: "New",
   },
   cancelled: {
-    width: 'w-[84px]',
-    text: 'text-[#E31844]',
+    width: "w-[84px]",
+    text: "text-[#E31844]",
     border: "border-[#E31844]",
     bg: "bg-[#FDE8EC]",
     icon: "/img/icon/cancelled-status-icon.svg",
-    label: "Cancelled"
+    label: "Cancelled",
   },
   completed: {
-    width: 'w-[84px]',
-    text: 'text-[#17AE30]',
+    width: "w-[84px]",
+    text: "text-[#17AE30]",
     border: "border-[#17AE30]",
     bg: "bg-[#DCFCE7]",
     icon: "/img/icon/completed-status-icon.svg",
-    label: "Completed"
+    label: "Completed",
   },
   shipping: {
-    width: 'w-[84px]',
-    text: 'text-[#F04438]',
-    border: 'border-[#F04438]',
+    width: "w-[84px]",
+    text: "text-[#F04438]",
+    border: "border-[#F04438]",
     bg: "bg-[#FFE4E1]",
     icon: "/img/icon/shipping-status-icon.svg",
-    label: "Shipping"
+    label: "Shipping",
   },
 };
 
 function getStatusStyles(status) {
-  return statusStyles[status.toLowerCase()] || {
-    width: 'w-[84px]',
-    textColor: 'text-gray-700',
-    buttonClass: "bg-gray-200 text-gray-700",
-    icon: ""
-  };
+  return (
+    statusStyles[status.toLowerCase()] || {
+      width: "w-[84px]",
+      textColor: "text-gray-700",
+      buttonClass: "bg-gray-200 text-gray-700",
+      icon: "",
+    }
+  );
 }
 
 function formatCurrency(value) {
@@ -172,20 +197,32 @@ function formatCurrency(value) {
 }
 
 function renderDashboardSummary() {
-  const todaySales = orders.reduce((sum, order) => {
-    const isToday = new Date(order.createAt).toDateString() === new Date().toDateString();
-    return isToday ? sum + (order.totalPrice || 0) : sum;
+  const today = new Date().toDateString();
+
+  const todayOrders = orders.filter((order) => {
+    return new Date(order.createAt).toDateString() === today;
+  });
+
+  const todaySales = todayOrders.reduce((sum, order) => {
+    return sum + (order.totalPrice || 0);
   }, 0);
 
-  const shipping = orders.filter(o => o.status === 'Shipping').length;
-  const completed = orders.filter(o => o.status === 'Completed').length;
-  const cancelled = orders.filter(o => o.status === 'Cancelled').length;
+  const shipping = todayOrders.filter(
+    (o) => o.status.toLowerCase() === "shipping"
+  ).length;
+  const completed = todayOrders.filter(
+    (o) => o.status.toLowerCase() === "completed"
+  ).length;
+  const cancelled = todayOrders.filter(
+    (o) => o.status.toLowerCase() === "cancelled"
+  ).length;
 
-  document.getElementById('today-sales-amount').innerText = todaySales.toLocaleString() + ' đ';
-  document.getElementById('total-orders').innerText = orders.length;
-  document.getElementById('shipping-orders').innerText = shipping;
-  document.getElementById('complete-orders').innerText = completed;
-  document.getElementById('cancel-orders').innerText = cancelled;
+  document.getElementById("today-sales-amount").innerText =
+    todaySales.toLocaleString() + " đ";
+  document.getElementById("total-orders").innerText = todayOrders.length;
+  document.getElementById("shipping-orders").innerText = shipping;
+  document.getElementById("complete-orders").innerText = completed;
+  document.getElementById("cancel-orders").innerText = cancelled;
 }
 
 function renderSalesChart(canvasId, labels = [], dataPoints = []) {
@@ -266,16 +303,15 @@ function renderSalesChart(canvasId, labels = [], dataPoints = []) {
   });
 }
 
-
 let currentStatusCheckboxes = ["New", "Completed", "Cancelled", "Shipping"];
 
 function renderStatusTags() {
-  const listFilterStatus = document.querySelector('.list-filter-status');
-  listFilterStatus.innerHTML = '';
+  const listFilterStatus = document.querySelector(".list-filter-status");
+  listFilterStatus.innerHTML = "";
 
-  currentStatusCheckboxes.forEach(status => {
-    const tagDiv = document.createElement('div');
-    tagDiv.className = 'tag';
+  currentStatusCheckboxes.forEach((status) => {
+    const tagDiv = document.createElement("div");
+    tagDiv.className = "tag";
     tagDiv.dataset.status = status;
 
     tagDiv.innerHTML = `
@@ -285,11 +321,15 @@ function renderStatusTags() {
     </button>
     `;
 
-    tagDiv.querySelector('.tag-close').addEventListener('click', () => {
-      const checkbox = document.querySelector(`#filterDropdown input[value="${status}"]`);
+    tagDiv.querySelector(".tag-close").addEventListener("click", () => {
+      const checkbox = document.querySelector(
+        `#filterDropdown input[value="${status}"]`
+      );
       if (checkbox) checkbox.checked = false;
 
-      currentStatusCheckboxes = currentStatusCheckboxes.filter(s => s !== status);
+      currentStatusCheckboxes = currentStatusCheckboxes.filter(
+        (s) => s !== status
+      );
       renderStatusTags();
       callApiGetOrders();
     });
@@ -298,37 +338,41 @@ function renderStatusTags() {
   });
 }
 
-document.querySelectorAll('#filterDropdown input[type="checkbox"]').forEach(checkbox => {
-  checkbox.addEventListener('change', (e) => {
-    const status = e.target.value;
-    const isChecked = e.target.checked;
+document
+  .querySelectorAll('#filterDropdown input[type="checkbox"]')
+  .forEach((checkbox) => {
+    checkbox.addEventListener("change", (e) => {
+      const status = e.target.value;
+      const isChecked = e.target.checked;
 
-    if (isChecked) {
-      if (!currentStatusCheckboxes.includes(status)) {
-        currentStatusCheckboxes.push(status);
+      if (isChecked) {
+        if (!currentStatusCheckboxes.includes(status)) {
+          currentStatusCheckboxes.push(status);
+        }
+      } else {
+        currentStatusCheckboxes = currentStatusCheckboxes.filter(
+          (s) => s !== status
+        );
       }
-    } else {
-      currentStatusCheckboxes = currentStatusCheckboxes.filter(s => s !== status);
-    }
 
-    renderStatusTags();
-    callApiGetOrders();
+      renderStatusTags();
+      callApiGetOrders();
+    });
   });
-});
 
 function setupDropdownToggle(buttonId, dropdownId) {
   const button = document.getElementById(buttonId);
   const dropdown = document.getElementById(dropdownId);
   if (!button || !dropdown) return;
 
-  button.addEventListener('click', (e) => {
+  button.addEventListener("click", (e) => {
     e.stopPropagation();
-    dropdown.classList.toggle('hidden');
+    dropdown.classList.toggle("hidden");
   });
 
-  document.addEventListener('click', (e) => {
+  document.addEventListener("click", (e) => {
     if (!button.contains(e.target) && !dropdown.contains(e.target)) {
-      dropdown.classList.add('hidden');
+      dropdown.classList.add("hidden");
     }
   });
 }
@@ -338,20 +382,32 @@ function getCurrentDateFilter() {
 }
 
 // Modal
+let currentOrderId = null;
 function renderOrderDetail(order) {
+  currentOrderId = order.id;
   document.getElementById("orderModal").classList.remove("hidden");
 
-  document.querySelector(".detailOrder-popup-code span:nth-child(2)").innerText = " " + order.displayId || order.id;
-  document.querySelector(".detailOrder-popup-date span").innerText = formatDateDisplay(order.createAt);
-  document.querySelector(".detailOrder-popup-total-items").innerText = `${order.totalItems} Items`;
+  document.querySelector(
+    ".detailOrder-popup-code span:nth-child(2)"
+  ).innerText = " " + order.displayId || order.id;
+  document.querySelector(".detailOrder-popup-date span").innerText =
+    formatDateDisplay(order.createAt);
+  document.querySelector(
+    ".detailOrder-popup-total-items"
+  ).innerText = `${order.totalItems} Items`;
   document.querySelector(".fullname span").innerText = order.customer.fullName;
   document.querySelector(".tel span").innerText = order.customer.phone;
-  document.querySelector(".detail-address span").innerText = `${order.customer.address}, ${order.customer.ward}, ${order.customer.city}`;
-  document.querySelector(".detail-message span").innerText = order.customer.message || "No message.";
+  document.querySelector(
+    ".detail-address span"
+  ).innerText = `${order.customer.address}, ${order.customer.ward}, ${order.customer.city}`;
+  document.querySelector(".detail-message span").innerText =
+    order.customer.message || "No message.";
 
-  const productListContainer = document.querySelector(".detailOrder-popup-product-list");
+  const productListContainer = document.querySelector(
+    ".detailOrder-popup-product-list"
+  );
   productListContainer.innerHTML = "";
-  order.items.forEach(product => {
+  order.items.forEach((product) => {
     const productHTML = `
       <div class="detailOrder-popup-product-card">
         <div class="detailOrder-popup-product-card-img">
@@ -376,13 +432,18 @@ function renderOrderDetail(order) {
     productListContainer.insertAdjacentHTML("beforeend", productHTML);
   });
 
-  document.querySelector(".detailOrder-popup-total span:nth-child(2)").innerText = formatCurrency(order.subTotal);
-  document.querySelector(".detailOrder-popup-shippingFee span:nth-child(2)").innerText = formatCurrency(order.shippingFee);
-  document.querySelector(".detailOrder-popup-footer-total-bill span:nth-child(2)").innerText = formatCurrency(order.totalPrice);
+  document.querySelector(
+    ".detailOrder-popup-total span:nth-child(2)"
+  ).innerText = formatCurrency(order.subTotal);
+  document.querySelector(
+    ".detailOrder-popup-shippingFee span:nth-child(2)"
+  ).innerText = formatCurrency(order.shippingFee);
+  document.querySelector(
+    ".detailOrder-popup-footer-total-bill span:nth-child(2)"
+  ).innerText = formatCurrency(order.totalPrice);
 
   setOrderStatusUI(order.status.toLowerCase());
 }
-
 
 function callApiGetOrderById(id) {
   $.ajax({
@@ -401,38 +462,120 @@ function callApiGetOrderById(id) {
 }
 
 function closeOrderModal() {
-  document.getElementById("closeModalBtn").addEventListener("click", function () {
-    const modal = document.getElementById("orderModal");
-    modal.classList.add("hidden");
-  });
+  document
+    .getElementById("closeModalBtn")
+    .addEventListener("click", function () {
+      const modal = document.getElementById("orderModal");
+      modal.classList.add("hidden");
+    });
 }
 
-function setOrderStatusUI(status) {
+function setOrderStatusUI(currentStatus) {
   const btn = document.getElementById("statusDropdownBtn");
   const imgEl = btn.querySelector("img");
   const textEl = btn.querySelector("span");
+  const menu = document.getElementById("statusDropdownMenu");
 
-  const style = statusStyles[status];
+  const style = statusStyles[currentStatus];
   if (!style) return;
 
   btn.classList.remove(
-    "border-[#4079ED]", "text-[#4079ED]", "bg-[#EDF3FF]",
-    "border-[#F04438]", "text-[#F04438]", "bg-[#FFE4E1]",
-    "border-[#17AE30]", "text-[#17AE30]", "bg-[#E6F4EA]",
-    "border-[#E31844]", "text-[#E31844]", "bg-[#FDE8EC]"
+    "border-[#4079ED]",
+    "text-[#4079ED]",
+    "bg-[#EDF3FF]",
+    "border-[#F04438]",
+    "text-[#F04438]",
+    "bg-[#FFE4E1]",
+    "border-[#17AE30]",
+    "text-[#17AE30]",
+    "bg-[#E6F4EA]",
+    "border-[#E31844]",
+    "text-[#E31844]",
+    "bg-[#FDE8EC]"
   );
 
   btn.classList.add(style.border, style.text, style.bg);
   imgEl.src = style.icon;
   textEl.innerText = style.label;
+
+  const allowedStatuses = allowedNextStatuses[currentStatus];
+
+  btn.removeEventListener("click", handleDropdownClick);
+
+  if (!allowedStatuses || allowedStatuses.length === 0) {
+    menu.style.display = "none";
+    btn.classList.remove("cursor-pointer");
+    menu.innerHTML = "";
+    return;
+  }
+
+  btn.classList.add("cursor-pointer");
+
+  menu.style.display = "none";
+
+  btn.addEventListener("click", handleDropdownClick);
+
+  menu.innerHTML = "";
+  allowedStatuses.forEach((status) => {
+    const item = document.createElement("div");
+    item.className =
+      "px-4 py-2 hover:bg-gray-100 flex items-center cursor-pointer";
+    item.setAttribute("data-value", status);
+
+    item.innerHTML = `
+      <img src="${statusStyles[status].icon}" class="w-4 h-4 mr-2" alt="">
+      <span class="${statusStyles[status].text}">${statusStyles[status].label}</span>
+    `;
+
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menu.style.display = "none";
+      callUpdateStatus(currentOrderId, status);
+    });
+
+    menu.appendChild(item);
+  });
+
+  getValueDropdownOrder();
 }
 
+function handleDropdownClick(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
+  const menu = document.getElementById("statusDropdownMenu");
+
+    if (menu.style.display === "none" || menu.style.display === "") {
+      menu.style.display = "block";
+    } else {
+      menu.style.display = "none";
+    }
+}
+
+document.addEventListener("click", function (event) {
+  const menu = document.getElementById("statusDropdownMenu");
+  const btn = document.getElementById("statusDropdownBtn");
+
+  if (!btn.contains(event.target) && !menu.contains(event.target)) {
+    menu.classList.add("hidden");
+  }
+});
+
+const allowedNextStatuses = {
+  new: ["shipping", "cancelled"],
+  shipping: ["completed", "cancelled"],
+  completed: [],
+  cancelled: [],
+};
+
 function showDropdownOrder() {
-  document.getElementById("statusDropdownBtn").addEventListener("click", function (e) {
-    e.stopPropagation();
-    const menu = document.getElementById("statusDropdownMenu");
-    menu.classList.toggle("hidden");
-  });
+  document
+    .getElementById("statusDropdownBtn")
+    .addEventListener("click", function (e) {
+      e.stopPropagation();
+      const menu = document.getElementById("statusDropdownMenu");
+      menu.classList.toggle("hidden");
+    });
 }
 
 function hiddenDropdownOrder() {
@@ -442,10 +585,12 @@ function hiddenDropdownOrder() {
   });
 }
 
+let selectedStatus = "";
 function getValueDropdownOrder() {
-  document.querySelectorAll("#statusDropdownMenu > div").forEach(option => {
+  document.querySelectorAll("#statusDropdownMenu > div").forEach((option) => {
     option.addEventListener("click", function () {
-      const value = this.getAttribute("data-value");
+      selectedStatus = this.getAttribute("data-value");
+
       const label = this.innerText.trim();
       const icon = this.querySelector("img").src;
 
@@ -457,14 +602,21 @@ function getValueDropdownOrder() {
       textEl.innerText = label;
 
       btn.classList.remove(
-        "border-[#4079ED]", "text-[#4079ED]", "bg-[#EDF3FF]",
-        "border-[#F04438]", "text-[#F04438]", "bg-[#FFE4E1]",
-        "border-[#17AE30]", "text-[#17AE30]", "bg-[#E6F4EA]",
-        "border-[#E31844]", "text-[#E31844]", "bg-[#FDE8EC]"
+        "border-[#4079ED]",
+        "text-[#4079ED]",
+        "bg-[#EDF3FF]",
+        "border-[#F04438]",
+        "text-[#F04438]",
+        "bg-[#FFE4E1]",
+        "border-[#17AE30]",
+        "text-[#17AE30]",
+        "bg-[#E6F4EA]",
+        "border-[#E31844]",
+        "text-[#E31844]",
+        "bg-[#FDE8EC]"
       );
 
-      const style = statusStyles[value];
-
+      const style = statusStyles[selectedStatus];
       if (style) {
         btn.classList.add(style.border, style.text, style.bg);
       }
@@ -474,17 +626,41 @@ function getValueDropdownOrder() {
   });
 }
 
+// Update
+function callUpdateStatus(orderId) {
+  $.ajax({
+    url: `/api/order/${orderId}/status`,
+    method: "PUT",
+    contentType: "application/json",
+    data: JSON.stringify({ status: selectedStatus }),
+    success: function (response) {
+      showToast(response.data, "success");
+
+      callApiGetOrderById(orderId);
+    },
+    error: function (xhr) {
+      const msg = xhr.responseJSON?.data;
+      showToast(msg, "error");
+    },
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   renderOrderCards();
   showSuccessLogin();
   renderStatusTags();
-  renderSalesChart("salesChart", ["14", "15", "16", "17", "18", "19", "20"], [15, 20, 25, 22, 28, 18, 27]);
-  setupDropdownToggle('filterBtn', 'filterDropdown');
+  renderSalesChart(
+    "salesChart",
+    ["14", "15", "16", "17", "18", "19", "20"],
+    [15, 20, 25, 22, 28, 18, 27]
+  );
+  setupDropdownToggle("filterBtn", "filterDropdown");
 
-  document.getElementById("order-status-filter").addEventListener("change", function () {
-    callApiGetOrders();
-  });
-
+  document
+    .getElementById("order-status-filter")
+    .addEventListener("change", function () {
+      callApiGetOrders();
+    });
   closeOrderModal();
   callApiGetOrders();
   showDropdownOrder();

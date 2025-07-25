@@ -136,4 +136,10 @@
       WHERE o.id = #{id}
       ORDER BY o.id DESC
     </select>
+
+    <update id="updateOrderStatus">
+      UPDATE orders
+      SET status = #{newStatus}
+      WHERE id = #{orderId}
+    </update>
 </mapper>

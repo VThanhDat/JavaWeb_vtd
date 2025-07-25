@@ -20,4 +20,6 @@ public interface OrderMapper {
       @Param("toDate") LocalDateTime toDate);
 
   OrderResponseDTO getOrderById(Long id);
+
+  void updateOrderStatus(@Param("orderId") Long id, @Param("newStatus") String newStatus);
 }

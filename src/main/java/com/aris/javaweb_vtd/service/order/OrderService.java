@@ -7,9 +7,11 @@ import com.aris.javaweb_vtd.dto.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.response.OrderSummaryDTO;
 
 public interface OrderService {
-    public void createOrder(CreateOrderRequestDTO request);
+    void createOrder(CreateOrderRequestDTO request);
 
     List<OrderSummaryDTO> getOrders(List<String> statusList, String dateFilter);
 
     OrderResponseDTO getOrderById(Long id);
+
+    void updateOrderStatus(Long orderId, String newStatus);
 }
