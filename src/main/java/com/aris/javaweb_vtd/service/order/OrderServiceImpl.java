@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
+import com.aris.javaweb_vtd.dto.common.OrderSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
@@ -75,12 +78,12 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public List<OrderSummaryDTO> getOrders(List<String> statusList, String dateFilter) {
+  public PageDTO<OrderSummaryDTO> getOrders(OrderSearchDTO orderSearchDTO) {
     LocalDateTime fromDate = null;
     LocalDateTime toDate = null;
     LocalDate today = LocalDate.now();
 
-    switch (dateFilter) {
+    switch (Optional.ofNullable(orderSearchDTO.getDateFilter()).orElse("all")) {
       case "today":
         fromDate = today.atStartOfDay();
         toDate = fromDate.plusDays(1).minusNanos(1);
@@ -97,8 +100,19 @@ public class OrderServiceImpl implements OrderService {
         break;
     }
 
-    List<OrderSummaryDTO> orders = orderMapper.getOrdersByFilters(statusList, fromDate, toDate);
-    return orders;
+    orderSearchDTO.setFromDate(fromDate);
+    orderSearchDTO.setToDate(toDate);
+
+    int totalItems = orderMapper.countOrdersWithFilters(orderSearchDTO);
+    if (totalItems == 0) {
+      return new PageDTO<>(List.of(), orderSearchDTO.getPage(), 0, 0);
+    }
+    
+    int totalPages = (int) Math.ceil((double) totalItems / orderSearchDTO.getSize());
+
+    List<OrderSummaryDTO> orders = orderMapper.getOrdersWithFilters(orderSearchDTO);
+
+    return new PageDTO<>(orders, orderSearchDTO.getPage(), totalPages, totalItems);
   }
 
   @Override

@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatusRequestDTO {
-    private String status;
+    private String newStatus;
 }

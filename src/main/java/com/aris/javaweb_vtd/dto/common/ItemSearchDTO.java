@@ -15,5 +15,4 @@ public class ItemSearchDTO {
   private String sortOrder;
   private Integer page;
   private Integer size;
-  private Integer offset;
 }

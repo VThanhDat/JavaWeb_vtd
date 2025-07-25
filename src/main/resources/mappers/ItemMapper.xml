@@ -120,7 +120,9 @@
         </choose>
       </if>
 
-      <if test="size != null and offset != null">
+      <bind name="offset" value="(page - 1) * size"/>
+
+      <if test="size != null and page != null">
         LIMIT #{size} OFFSET #{offset}
       </if>
     </select>

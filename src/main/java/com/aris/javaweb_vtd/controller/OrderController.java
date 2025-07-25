@@ -1,19 +1,18 @@
 package com.aris.javaweb_vtd.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
-import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
+import com.aris.javaweb_vtd.dto.common.OrderSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.order.request.StatusRequestDTO;
+import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
@@ -40,10 +39,8 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponseDTO<List<OrderSummaryDTO>>> getOrders(
-      @RequestParam(required = false) List<String> status,
-      @RequestParam(required = false, defaultValue = "all") String date) {
-    List<OrderSummaryDTO> data = orderService.getOrders(status, date);
+  public ResponseEntity<ApiResponseDTO<PageDTO<OrderSummaryDTO>>> getOrders(OrderSearchDTO orderSearchDTO) {
+    PageDTO<OrderSummaryDTO> data = orderService.getOrders(orderSearchDTO);
     return ResponseEntity.ok(ApiResponseDTO.success(data));
   }
 
@@ -55,7 +52,7 @@ public class OrderController {
   @PutMapping("/{id}/status")
   public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId, @RequestBody StatusRequestDTO request) {
     try {
-      String newStatus = request.getStatus();
+      String newStatus = request.getNewStatus();
       orderService.updateOrderStatus(orderId, newStatus);
       return ResponseEntity.ok(ApiResponseDTO.success("Successfull"));
     } catch (Exception e) {

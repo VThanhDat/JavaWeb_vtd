@@ -66,9 +66,6 @@ public class ItemController {
 
   @GetMapping("/filter")
   public ResponseEntity<ApiResponseDTO<PageDTO<ItemResponseDTO>>> getItems(ItemSearchDTO dto) {
-      if (dto.getPage() != null && dto.getSize() != null) {
-          dto.setOffset((dto.getPage() - 1) * dto.getSize());
-      }
       PageDTO<ItemResponseDTO> page = itemService.searchItemsWithPaging(dto);
       return ResponseEntity.ok(ApiResponseDTO.success(page));
   }

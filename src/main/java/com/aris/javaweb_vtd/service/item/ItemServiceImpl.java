@@ -142,10 +142,6 @@ public class ItemServiceImpl implements ItemService {
 
   @Override
   public PageDTO<ItemResponseDTO> searchItemsWithPaging(ItemSearchDTO dto) {
-    if (dto.getPage() != null && dto.getSize() != null) {
-        dto.setOffset((dto.getPage() - 1) * dto.getSize());
-    }
-
     List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(dto);
     int total = itemMapper.countItemsWithFilters(dto);
 
