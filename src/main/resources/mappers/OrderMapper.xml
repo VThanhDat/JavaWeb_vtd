@@ -50,9 +50,9 @@
       LEFT JOIN items i ON od.item_id = i.id
 
       <where>
-        <if test="statusList != null and statusList.size > 0">
+        <if test="status != null and status.size > 0">
           o.status IN
-          <foreach collection="statusList" item="status" open="(" separator="," close=")">
+          <foreach collection="status" item="status" open="(" separator="," close=")">
             #{status}
           </foreach>
         </if>
@@ -93,9 +93,9 @@
       LEFT JOIN items i ON od.item_id = i.id
 
       <where>
-        <if test="statusList != null and statusList.size > 0">
+        <if test="status != null and status.size > 0">
           o.status IN
-          <foreach collection="statusList" item="status" open="(" separator="," close=")">
+          <foreach collection="status" item="status" open="(" separator="," close=")">
             #{status}
           </foreach>
         </if>

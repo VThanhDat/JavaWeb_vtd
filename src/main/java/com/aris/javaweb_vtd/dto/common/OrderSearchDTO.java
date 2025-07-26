@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSearchDTO {
-    private List<String> statusList;
+    private List<String> status;
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
     private String date;

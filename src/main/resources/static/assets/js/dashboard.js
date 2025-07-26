@@ -568,11 +568,15 @@ document.addEventListener("DOMContentLoaded", function () {
   setupSearchInput(); // Setup search functionality
   
   // Setup page size selector if needed
-  setupPageSizeSelector((newSize) => {
+  setupPageSizeSelector(
+  (newSize) => {
     pageSize = newSize;
-    callApiGetOrders({ page: 1, size: newSize });
-  });
-
+  },
+  (page, size) => {
+    callApiGetOrders({ page, size });
+  }
+  );
+  
   // Filter change listener
   document.getElementById("order-status-filter").addEventListener("change", () => {
     callApiGetOrders({ page: 1, size: pageSize }); // Reset to page 1 when date filter changes

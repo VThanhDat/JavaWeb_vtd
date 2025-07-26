@@ -89,32 +89,14 @@
       <!-- List item -->
     </div>
     <!-- Pagination -->
-    <div class="pagination">
-      <!-- Left: Tổng số items -->
-      <div class="pagination-info">
-        <div class="pagination-total">
-          <p>Total 200 items</p>
-        </div>
+    <div class="flex flex-row justify-between items-center gap-4 p-4 max-w-6xl mx-auto">
+      <div class="pagination-total">
+        <p class="text-sm text-gray-600 m-0 font-normal">Total 0 items</p>
       </div>
-
-      <!-- Center: Các nút phân trang -->
-      <div class="pagination-pages">
-        <button>&lt;</button>
-        <button class="active">1</button>
-        <button>...</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>7</button>
-        <button>8</button>
-        <button>...</button>
-        <button>20</button>
-        <button>&gt;</button>
-      </div>
-
-      <!-- Right: Chọn số item/trang -->
-      <div class="pagination-per-item">
-        <select>
+      <div class="pagination-container flex flex-row"></div>
+      <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
+        <select
+          class="pagination-select border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select" style="font-size: 130%;">
           <option value="10">10 / page</option>
           <option value="20">20 / page</option>
           <option value="30">30 / page</option>

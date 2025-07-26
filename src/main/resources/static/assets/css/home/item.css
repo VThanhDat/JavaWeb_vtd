@@ -20,7 +20,7 @@
 
   /* Inside auto layout */
   flex: none;
-  order: 1;
+  order: 0;
   flex-grow: 0;
 
   justify-content: space-between; /* hoặc space-evenly nếu muốn đều 2 bên */
@@ -115,130 +115,12 @@
   }
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-  gap: 8px;
-
-  width: 1200px;
-  height: 31px;
-
-  /* Inside auto layout */
-  flex: none;
-  order: 2;
-  align-self: stretch;
-  flex-grow: 0;
+.pagination-container >  button{
+  min-width: 3rem;
+  height: 3rem;
+  font-size: 135%;
 }
 
-.pagination-info {
-  display: flex;
-  align-items: center;
-}
-
-.pagination-total p {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-  font-weight: 400;
-}
-
-.pagination-pages {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.pagination-pages button {
-  border: 1px solid #d0d0d0;
-  background: white;
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #333;
-  min-width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pagination-pages button:hover {
-  background-color: #f8f8f8;
-  border-color: #bbb;
-}
-
-.pagination-pages button.active {
-  background-color: #ff6b35;
-  color: white;
-  font-weight: 500;
-  border-color: #ff6b35;
-}
-
-.pagination-pages button.active:hover {
-  background-color: #e55a2b;
-  border-color: #e55a2b;
-}
-
-.pagination-pages span {
-  color: #999;
-  font-size: 14px;
-  padding: 0 4px;
-}
-
-.pagination-per-item {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 3px 0px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.pagination-per-item select {
-  border: none;
-  padding: 4px 8px;
-  font-size: 14px;
-  background-color: transparent;
-  cursor: pointer;
-  color: #333;
-  min-width: 80px;
-  outline: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .pagination {
-    flex-direction: column;
-    gap: 12px;
-    height: auto;
-    padding: 16px;
-  }
-
-  .pagination-pages {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .pagination-pages button {
-    padding: 4px 8px;
-    min-width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-
-  .pagination-total p,
-  .pagination-per-item select {
-    font-size: 12px;
-  }
+.pagination-select {
+  height: 2.5rem;
 }

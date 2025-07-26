@@ -1,4 +1,5 @@
 import { showToast } from "./toast.js";
+import { renderPaginationControls, setupPageSizeSelector } from "./pagination.js";
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -6,6 +7,13 @@ if ("scrollRestoration" in history) {
 
 let bannerTimeout = null;
 let searchValue = "";
+let items = [];
+let currentPage = 1;
+let currentType = "food";
+let lastSearchQuery = "";
+let currentSortBy = "";
+let currentSortOrder = "";
+let currentPageSize = 10;
 
 function resetScrollPosition() {
   window.scrollTo(0, 0);
@@ -180,7 +188,9 @@ function handleEventType() {
   function switchTab(activeTab, inactiveTab, type) {
     activeTab.classList.add("active");
     inactiveTab.classList.remove("active");
-    callApiGetItemByType(type); // Load item luôn
+    currentType = type;
+    currentPage = 1; // Reset page when switching tabs
+    callApiSearchWithPaging({ type: type, page: 1, size: currentPageSize }); // Load item luôn
   }
 
   foodTab.addEventListener("click", function (e) {
@@ -195,7 +205,6 @@ function handleEventType() {
 }
 
 // Handle data item
-let items = [];
 function handleFoodTypeFilter() {
   const foodLink = document.querySelector(
     ".main_content-filter_foodType-type_food a"
@@ -211,22 +220,55 @@ function handleFoodTypeFilter() {
 
   foodLink.addEventListener("click", function (e) {
     e.preventDefault();
-    callApiGetItemByType("food");
+    currentType = "food";
+    currentPage = 1;
+    callApiSearchWithPaging({ type: "food", page: 1 });
   });
 
   drinkLink.addEventListener("click", function (e) {
     e.preventDefault();
-    callApiGetItemByType("drink");
+    currentType = "drink";
+    currentPage = 1;
+    callApiSearchWithPaging({ type: "drink", page: 1 });
   });
 }
 
-function callApiGetItemByType(type) {
+// Updated API call function with pagination and sorting
+function callApiSearchWithPaging({
+  name = "",
+  type = "food",
+  page = 1,
+  size = 10,
+  sortBy = "",
+  sortOrder = ""
+}) {
+  const params = { name, type, page, size };
+  
+  // Add sorting parameters if provided
+  if (sortBy) {
+    params.sortBy = sortBy;
+  }
+  if (sortOrder) {
+    params.sortOrder = sortOrder;
+  }
+
   $.ajax({
-    url: `http://localhost:8080/api/item/status?type=${type}`,
+    url: "/api/item",
     method: "GET",
+    data: params,
+    xhrFields: { withCredentials: true },
     success: function (response) {
-      const items = response.data;
-      renderItems(items);
+      const result = response?.data || {};
+      items = result.items || [];
+      currentPage = result.currentPage;
+      currentType = type;
+      lastSearchQuery = name;
+      currentSortBy = sortBy;
+      currentSortOrder = sortOrder;
+      currentPageSize = size;
+
+      renderItems();
+      renderPaginationControls(result.totalPages, result.currentPage, result.totalItems, fetchPage);
     },
     error: function (xhr) {
       const msg = xhr.responseJSON?.data;
@@ -235,7 +277,19 @@ function callApiGetItemByType(type) {
   });
 }
 
-function renderItems(items) {
+// Function to fetch specific page
+function fetchPage(page, pageSize = currentPageSize) {
+  callApiSearchWithPaging({
+    name: lastSearchQuery,
+    type: currentType,
+    page: page,
+    size: pageSize,
+    sortBy: currentSortBy,
+    sortOrder: currentSortOrder
+  });
+}
+
+function renderItems() {
   const menuContainer = document.querySelector(".main_content-menu_food");
   menuContainer.innerHTML = "";
 
@@ -252,19 +306,21 @@ function renderItems(items) {
     const itemHtml = `
       <div class="menu_food-item">
         <div class="menu_food-item_img">
-          <img src="${item.image}" alt="${item.name}"">
+          <img src="${item.image}" alt="${item.name}">
         </div>
         <div class="menu_food-item_content">
           <p class="menu_food-item_content-title">${item.name}</p>
           <p class="menu_food-item_content-describe">${item.description}</p>
-          <span class="menu_food-item_content-price">${item.price}đ</div>
-           <div class="menu_food-item_add">+</div>
+          <span class="menu_food-item_content-price">${item.price}đ</span>
+          <div class="menu_food-item_add">+</div>
         </div>
       </div>
     `;
     menuContainer.insertAdjacentHTML("beforeend", itemHtml);
   });
 }
+
+
 
 // Search
 function getCurrentType() {
@@ -283,13 +339,18 @@ function setupSearchInput() {
       const query = e.target.value.trim();
       const type = getCurrentType();
 
-      if (query !== "") {
-        navInput.value = query;
-        mainInput.value = query;
-        callApiSearch(query, type);
-      } else {
-        callApiGetItemByType(type);
-      }
+      navInput.value = query;
+      mainInput.value = query;
+      currentPage = 1; // Reset to first page when searching
+      
+      callApiSearchWithPaging({
+        name: query,
+        type: type,
+        page: 1,
+        size: currentPageSize,
+        sortBy: currentSortBy,
+        sortOrder: currentSortOrder
+      });
     }
   }
 
@@ -299,72 +360,29 @@ function setupSearchInput() {
 
 function setupPriceSortFilter() {
   const sortSelect = document.getElementById("filter-price");
-  const navInput = document.querySelector(".heading_nav-search input");
-  const mainInput = document.querySelector(".main_content-search input");
 
   if (!sortSelect) return;
 
   sortSelect.addEventListener("change", function () {
     const sortOrder = this.value;
-    const type = getCurrentType();
-    const query = mainInput?.value?.trim() || navInput?.value?.trim() || "";
-
-    if (query !== "") {
-      callApiSearch(query, type, sortOrder);
-    } else {
-      callApiGetItemSorted(type, sortOrder);
-    }
+    const sortBy = sortOrder ? "price" : "";
+    
+    currentPage = 1; // Reset to first page when sorting
+    
+    callApiSearchWithPaging({
+      name: lastSearchQuery,
+      type: currentType,
+      page: 1,
+      size: currentPageSize,
+      sortBy: sortBy,
+      sortOrder: sortOrder
+    });
   });
 }
 
-function callApiSearch(query, type, sortOrder = null) {
-  const requestData = {
-    name: query.trim(),
-    type: type,
-  };
-
-  if (sortOrder) {
-    requestData.sortBy = "price";
-    requestData.sortOrder = sortOrder;
-  }
-
-  $.ajax({
-    url: "/api/item/searchClient",
-    method: "POST",
-    contentType: "application/json",
-    data: JSON.stringify(requestData),
-    xhrFields: { withCredentials: true },
-    success: function (response) {
-      items = response?.data || [];
-      renderItems(items);
-    },
-    error: function (xhr) {
-      const msg = xhr.responseJSON?.data;
-      showToast(msg, "error");
-    },
-  });
-}
-
-function callApiGetItemSorted(type, sortOrder) {
-  $.ajax({
-    url: "/api/item/searchClient",
-    method: "POST",
-    contentType: "application/json",
-    data: JSON.stringify({
-      type: type,
-      sortBy: "price",
-      sortOrder: sortOrder,
-    }),
-    xhrFields: { withCredentials: true },
-    success: function (response) {
-      items = response?.data || [];
-      renderItems(items);
-    },
-    error: function (xhr) {
-      const msg = xhr.responseJSON?.data;
-      showToast(msg, "error");
-    },
-  });
+function onPageSizeChange(newPageSize) {
+  currentPageSize = parseInt(newPageSize);
+  currentPage = 1;
 }
 
 // Event listeners
@@ -375,10 +393,11 @@ document.addEventListener("DOMContentLoaded", function () {
   syncSearchInputs();
   setupSmoothScrolling();
   handleFoodTypeFilter();
-  callApiGetItemByType("food");
+  callApiSearchWithPaging({ type: "food", page: 1, size: currentPageSize }); // Load initial data with pagination
   handleEventType();
   setupSearchInput();
   setupPriceSortFilter();
+  setupPageSizeSelector(onPageSizeChange, fetchPage); // Setup page size selector
   setTimeout(function () {
     handleScrollEffects();
   }, 50);
