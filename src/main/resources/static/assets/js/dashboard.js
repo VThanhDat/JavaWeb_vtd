@@ -6,7 +6,7 @@ let currentOrderId = null;
 let currentStatusCheckboxes = ["New", "Completed", "Cancelled", "Shipping"];
 let currentPage = 1;
 let pageSize = 10;
-let lastSearchQuery = ""; // Add search query tracking
+let lastSearchQuery = "";
 
 const statusStyles = {
   new: {
@@ -67,7 +67,6 @@ function callApiGetOrders({
   if (currentStatusCheckboxes.length === 0) {
     orders = [];
     renderOrderCards();
-    renderDashboardSummary();
     return;
   }
 
@@ -90,7 +89,6 @@ function callApiGetOrders({
       lastSearchQuery = name; // Update last search query
       
       renderOrderCards();
-      renderDashboardSummary();
       
       // Render pagination if result has pagination info
       if (result.totalPages && result.currentPage !== undefined) {
@@ -147,7 +145,7 @@ function callUpdateStatus(orderId, status) {
       
       callApiGetOrderById(orderId);
       renderOrderCards();
-      renderDashboardSummary();
+      loadDashboardSummary();
     },
     error: function (xhr) {
       showToast(xhr.responseJSON?.data, "error");
@@ -281,9 +279,37 @@ function renderOrderDetail(order) {
   setOrderStatusUI(order.status.toLowerCase());
 }
 
-function renderDashboardSummary() {
+// Sumary total today's
+
+function loadDashboardSummary() {
+  const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  
+  $.ajax({
+    url: "/api/order",
+    method: "GET",
+    data: { 
+      status: "New,Completed,Cancelled,Shipping",
+      date: today,
+      page: 1,
+      size: 1000
+    },
+    xhrFields: { withCredentials: true },
+    success: function (response) {
+      const result = response?.data || {};
+      const todayOrders = result.orders || result.items || response.data || [];
+      renderDashboardSummary(todayOrders);
+    },
+    error: function (xhr) {
+      console.error("Failed to fetch dashboard summary data");
+    },
+  });
+}
+
+function renderDashboardSummary(ordersData = null) {
+  const dataToUse = ordersData || orders;
+  
   const today = new Date().toDateString();
-  const todayOrders = orders.filter(order => new Date(order.createAt).toDateString() === today);
+  const todayOrders = dataToUse.filter(order => new Date(order.createAt).toDateString() === today);
   const todaySales = todayOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
   const shipping = todayOrders.filter(o => o.status.toLowerCase() === "shipping").length;
@@ -588,4 +614,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initial API call
   callApiGetOrders({ page: 1, size: pageSize });
+  loadDashboardSummary();
 });
