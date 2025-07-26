@@ -33,4 +33,28 @@ public class FileUploadUtil {
       e.printStackTrace();
     }
   }
+
+  public static void validateImage(MultipartFile image) {
+    if (image == null || image.isEmpty()) {
+      throw new IllegalArgumentException("Select one image");
+    }
+  }
+
+  public static String getImageFolder(String type) {
+    return type.equalsIgnoreCase("food") ? "uploads/food" : "uploads/drink";
+  }
+
+  public static String extractFilename(String fullPath) {
+    return fullPath.substring(fullPath.lastIndexOf('/') + 1);
+  }
+
+  public static String extractFolder(String fullPath) {
+    return fullPath.substring(0, fullPath.lastIndexOf('/'));
+  }
+
+  public static void safeDeleteImage(String fullPath) {
+    String folder = extractFolder(fullPath);
+    String file = extractFilename(fullPath);
+    FileUploadUtil.deleteImage(folder, file);
+  }
 }

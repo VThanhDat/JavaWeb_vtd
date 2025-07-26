@@ -26,28 +26,26 @@ public class ItemServiceImpl implements ItemService {
 
   @Transactional
   public void createItem(ItemRequestDTO dto) {
-    String filename = null;
-    String folder = null;
     boolean isDuplicate = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
     if (isDuplicate) {
       throw new IllegalArgumentException("A item already exists with this name and type.");
     }
 
-    if (dto.getImage() == null || dto.getImage().isEmpty()) {
-      throw new IllegalArgumentException("Select one image");
-    }
+    FileUploadUtil.validateImage(dto.getImage());
+
+    String folder = FileUploadUtil.getImageFolder(dto.getType());
+    String fullPath = null;
 
     try {
-      folder = dto.getType().equalsIgnoreCase("food") ? "uploads/food" : "uploads/drink";
-      String saveName = FileUploadUtil.saveImage(dto.getImage(), folder);
-      filename = folder + "/" + saveName;
+      String savedName = FileUploadUtil.saveImage(dto.getImage(), folder);
+      fullPath = folder + "/" + savedName;
 
-      Item item = itemConverter.toEntity(dto, filename);
+      Item item = itemConverter.toEntity(dto, fullPath);
       itemMapper.insertItem(item);
+
     } catch (Exception e) {
-      if (filename != null && folder != null) {
-        String savedName = filename.substring(filename.lastIndexOf('/') + 1);
-        FileUploadUtil.deleteImage(folder, savedName);
+      if (fullPath != null) {
+        FileUploadUtil.safeDeleteImage(fullPath);
       }
       throw new RuntimeException("Create is failed", e);
     }
@@ -81,11 +79,10 @@ public class ItemServiceImpl implements ItemService {
 
     String newFilename = currentItem.getImage();
     boolean isNewImageUploaded = false;
-    String folder = null;
 
     try {
       if (dto.getImage() != null && !dto.getImage().isEmpty()) {
-        folder = dto.getType().equalsIgnoreCase("food") ? "uploads/food" : "uploads/drink";
+        String folder = FileUploadUtil.getImageFolder(dto.getType());
         String savedName = FileUploadUtil.saveImage(dto.getImage(), folder);
         newFilename = folder + "/" + savedName;
         isNewImageUploaded = true;
@@ -99,17 +96,14 @@ public class ItemServiceImpl implements ItemService {
       }
 
       if (isNewImageUploaded && !newFilename.equals(currentItem.getImage())) {
-        String oldFolder = currentItem.getImage().substring(0, currentItem.getImage().lastIndexOf('/'));
-        String oldFilename = currentItem.getImage().substring(currentItem.getImage().lastIndexOf('/') + 1);
-        FileUploadUtil.deleteImage(oldFolder, oldFilename);
+        FileUploadUtil.safeDeleteImage(currentItem.getImage());
       }
 
       return itemMapper.getItemById(dto.getId());
 
     } catch (Exception e) {
       if (isNewImageUploaded && !newFilename.equals(currentItem.getImage())) {
-        String savedName = newFilename.substring(newFilename.lastIndexOf('/') + 1);
-        FileUploadUtil.deleteImage(folder, savedName);
+        FileUploadUtil.safeDeleteImage(newFilename);
       }
       throw new RuntimeException("Update failed", e);
     }
