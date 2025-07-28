@@ -218,6 +218,31 @@ select,
     display: flex;
     flex-direction: column;
     gap: 4%;
+    
+    max-height: 400px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    scrollbar-width: thin;
+    scrollbar-color: #ccc #f1f1f1;
+}
+
+.order-product-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.order-product-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.order-product-list::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.order-product-list::-webkit-scrollbar-thumb:hover {
+    background: #999;
 }
 
 .order-product-img {
@@ -245,6 +270,8 @@ select,
     width: 100%;
     min-height: 100px;
     align-items: center;
+    
+    flex-shrink: 0;
 }
 
 .order-product-img {

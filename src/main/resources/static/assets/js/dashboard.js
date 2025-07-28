@@ -474,7 +474,14 @@ function setOrderStatusUI(currentStatus) {
     item.addEventListener("click", (e) => {
       e.stopPropagation();
       menu.style.display = "none";
-      callUpdateStatus(currentOrderId, status);
+      
+      // Show simple confirm dialog
+      const currentStatusLabel = statusStyles[currentStatus]?.label || currentStatus;
+      const newStatusLabel = statusStyles[status]?.label || status;
+      
+      if (confirm(`Are you sure you want to change the order status from "${currentStatusLabel}" to "${newStatusLabel}"?`)) {
+        callUpdateStatus(currentOrderId, status);
+      }
     });
 
     menu.appendChild(item);

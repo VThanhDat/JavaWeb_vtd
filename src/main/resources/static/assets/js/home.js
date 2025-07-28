@@ -204,7 +204,7 @@ function handleEventType() {
     inactiveTab.classList.remove("active");
     currentType = type;
     currentPage = 1; // Reset page when switching tabs
-    callApiSearchWithPaging({ type: type, page: 1, size: currentPageSize }); // Load item luôn
+    callApiSearchWithPaging({ type: type, page: 1, size: currentPageSize, status: 1 }); // Load item luôn
   }
 
   foodTab.addEventListener("click", function (e) {
@@ -236,14 +236,14 @@ function handleFoodTypeFilter() {
     e.preventDefault();
     currentType = "food";
     currentPage = 1;
-    callApiSearchWithPaging({ type: "food", page: 1 });
+    callApiSearchWithPaging({ type: "food", page: 1, status: 1 });
   });
 
   drinkLink.addEventListener("click", function (e) {
     e.preventDefault();
     currentType = "drink";
     currentPage = 1;
-    callApiSearchWithPaging({ type: "drink", page: 1 });
+    callApiSearchWithPaging({ type: "drink", page: 1, status: 1 });
   });
 }
 
@@ -255,8 +255,9 @@ function callApiSearchWithPaging({
   size = 10,
   sortBy = "",
   sortOrder = "",
+  status = 1
 }) {
-  const params = { name, type, page, size };
+  const params = { name, type, page, size, status };
 
   // Add sorting parameters if provided
   if (sortBy) {
@@ -302,6 +303,7 @@ function fetchData() {
       type: "food",
       page: 1,
       size: currentPageSize,
+      status: 1,
     });
 
     setTimeout(() => {
@@ -319,6 +321,7 @@ function fetchPage(page, pageSize = currentPageSize) {
     size: pageSize,
     sortBy: currentSortBy,
     sortOrder: currentSortOrder,
+    status: 1,
   });
 }
 
@@ -625,6 +628,7 @@ function setupSearchInput() {
         size: currentPageSize,
         sortBy: currentSortBy,
         sortOrder: currentSortOrder,
+        status: 1,
       });
     }
   }
@@ -651,6 +655,7 @@ function setupPriceSortFilter() {
       size: currentPageSize,
       sortBy: sortBy,
       sortOrder: sortOrder,
+      status: 1,
     });
   });
 }

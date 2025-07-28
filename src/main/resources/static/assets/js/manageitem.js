@@ -93,6 +93,24 @@ function renderItems() {
     const tr = document.createElement("tr");
     const itemNumber = startIndex + index + 1;
     
+    // Chỉ render nút Delete/Edit khi status = 1
+    let actionButtons = '';
+    if (item.status === 1) {
+      actionButtons = `
+        <div class="flex flex-row items-center gap-2">
+          <span class="text-[#658280] cursor-pointer btn-delete" data-id="${item.id}">Delete</span> |
+          <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${item.id}">Edit</span>
+        </div>
+      `;
+    } else {
+      actionButtons = `
+        <div class="flex flex-row items-center gap-2">
+          <span class="text-[#658280]">Delete</span> |
+          <span class="text-[#0D6EFD]">Edit</span>
+        </div>
+      `;
+    }
+    
     tr.innerHTML = `
       <td>${String(itemNumber).padStart(3, "0")}</td>
       <td><img src="/${item.image}"></td>
@@ -106,10 +124,7 @@ function renderItems() {
         </label>
       </td>
       <td>
-        <div class="flex flex-row items-center gap-2">
-          <span class="text-[#658280] cursor-pointer btn-delete" data-id="${item.id}">Delete</span> |
-          <span class="text-[#0D6EFD] cursor-pointer btn-edit" data-id="${item.id}">Edit</span>
-        </div>
+        ${actionButtons}
       </td>
     `;
     tbody.appendChild(tr);
