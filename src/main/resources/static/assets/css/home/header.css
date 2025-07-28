@@ -149,6 +149,7 @@
   background: #fafbfc;
   border: 1px solid #ced4da;
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .heading_nav-cart img {

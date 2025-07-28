@@ -7,138 +7,339 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Food Application</title>
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/base/skeleton.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/flowbite@1.4.1/dist/flowbite.js"></script>
 </head>
 
 <body>
-  <!-- Toast -->
-  <div id="toastContainer" class="fixed top-4 right-4 z-50"
-    style="position: fixed !important; top: 1rem !important; right: 1rem !important; z-index: 9999 !important;">
-  </div>
+  <!-- Loading -->
+  <div class="bg-gray-100" id="loading">
+    <div class="p-[40px] mb-6 relative">
+      <div class="max-w-[1200px] mx-auto">
+        <!-- Top section with logo and profile -->
+        <div class="flex justify-between items-center mb-10">
+          <div class="skeleton w-16 h-6 rounded"></div>
+          <div class="skeleton w-8 h-8 rounded-full"></div>
+        </div>
 
-  <!-- Header -->
-  <div class="header">
-    <!-- Navbar -->
-    <div class="navbar">
-      <div class="heading_nav">
-        <!-- Header Nav Container -->
-        <div class="heading_nav-container">
-          <div class="heading_nav-mid">
-            <!-- Logo and search -->
-            <div class="heading_nav-logo_search">
-              <div class="heading_nav-logo">
-                <img src="./assets/img/logo/logo.svg" alt="logo">
-              </div>
-              <div class="heading_nav-search">
-                <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
-                <input type="text" placeholder="Find your favorite food...">
-              </div>
-            </div>
-            <!-- Cart and order -->
-            <div class="heading_nav-cart-order">
-              <div class="heading_nav-cart">
-                <img src="./assets/img/icon/cart-icon.svg" alt="cart-icon">
-              </div>
-              <div class="heading_nav-order">
-                <img src="./assets/img/icon/order-icon.svg" alt="order-icon">
-                <p>Your Order</p>
-              </div>
-            </div>
+        <!-- Large Search box in center -->
+        <div class="flex justify-center mb-24">
+          <div class="skeleton w-3/5 h-12 rounded-full"></div>
+        </div>
+      </div>
+      <!-- Search bar below -->
+      <div
+        class="absolute top-[80%] left-[19%] bg-white w-[1200px] h-36 rounded-lg mb-6 flex items-center justify-center">
+        <div class="skeleton w-3/5 h-12 rounded-full"></div>
+      </div>
+    </div>
+
+    <div class="mt-24">
+      <!-- Filter buttons row -->
+      <div class="flex justify-end mb-8">
+        <div class="skeleton w-[120px] h-4 rounded-full mr-[20%]"></div>
+      </div>
+      <div class="flex justify-center gap-4">
+        <div class="skeleton w-[580px] h-8 rounded-full"></div>
+        <div class="skeleton w-[580px] h-8 rounded-full"></div>
+      </div>
+    </div>
+
+    <!-- Food Items Grid -->
+    <div class="food-grid">
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-4/5 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-3/4 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
           </div>
         </div>
       </div>
 
-      <!-- Banner Title -->
-      <img class="heading_title" src="./assets/img/banner/banner-title.svg" alt="banner-title">
-    </div>
-    <div class="home_heading relative">
-    </div>
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-3/4 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-4/5 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Search Down-->
-    <div class="main_content-search absolute top-[335px] left-[18.5%] z-[99]">
-      <div class="main_content-search_container">
-        <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
-        <input type="text" placeholder="Find your favorite food...">
+      <!-- Row 2 -->
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-4/5 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-2/3 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-3/4 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-4/5 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-4/5 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-3/4 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-2/3 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-4/5 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-3/4 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-2/3 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-4/5 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-3/4 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-2/3 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-4/5 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skeleton-card">
+        <div class="skeleton w-[96px] h-[96px] rounded flex-shrink-0"></div>
+        <div class="flex-1">
+          <div class="skeleton skeleton-title w-3/4 mb-2"></div>
+          <div class="skeleton skeleton-text w-full mb-1"></div>
+          <div class="skeleton skeleton-text w-2/3 mb-3"></div>
+          <div class="flex justify-between items-center">
+            <div class="skeleton w-12 h-4 rounded"></div>
+            <div class="skeleton w-6 h-6 rounded-full"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Sort - Filter -->
-    <div class="main_content-filter z-[99]">
+    <!-- Pagination -->
+    <div class="flex justify-center items-center gap-4 p-6">
+      <div class="skeleton w-16 h-3 rounded"></div>
+      <div class="flex gap-2">
+        <div class="skeleton w-6 h-6 rounded"></div>
+        <div class="skeleton w-6 h-6 rounded"></div>
+        <div class="skeleton w-6 h-6 rounded"></div>
+        <div class="skeleton w-6 h-6 rounded"></div>
+      </div>
+      <div class="skeleton w-16 h-6 rounded"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-white p-6 mt-8 border-t border-gray-200">
+      <div class="max-w-[1100px] mx-auto">
+        <div class="flex items-center gap-4">
+          <div class="skeleton w-[96px] h-[96px] rounded-lg flex-shrink-0"></div>
+          <div class="flex-1 ml-[40px]">
+            <div class="skeleton w-full h-3 rounded mb-2"></div>
+            <div class="skeleton w-3/4 h-3 rounded mb-2"></div>
+            <div class="skeleton w-2/3 h-3 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main home -->
+  <main id="main">
+    <!-- Toast -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-50"
+      style="position: fixed !important; top: 1rem !important; right: 1rem !important; z-index: 9999 !important;">
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <!-- Navbar -->
+      <div class="navbar">
+        <div class="heading_nav">
+          <!-- Header Nav Container -->
+          <div class="heading_nav-container">
+            <div class="heading_nav-mid">
+              <!-- Logo and search -->
+              <div class="heading_nav-logo_search">
+                <div class="heading_nav-logo">
+                  <img src="./assets/img/logo/logo.svg" alt="logo">
+                </div>
+                <div class="heading_nav-search">
+                  <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
+                  <input type="text" placeholder="Find your favorite food...">
+                </div>
+              </div>
+              <!-- Cart and order -->
+              <div class="heading_nav-cart-order">
+                <div class="heading_nav-cart">
+                  <img src="./assets/img/icon/cart-icon.svg" alt="cart-icon">
+                </div>
+                <div class="heading_nav-order">
+                  <img src="./assets/img/icon/order-icon.svg" alt="order-icon">
+                  <p>Your Order</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Banner Title -->
+        <img class="heading_title" src="./assets/img/banner/banner-title.svg" alt="banner-title">
+      </div>
+      <div class="home_heading relative">
+      </div>
+
+      <!-- Search Down-->
+      <div class="main_content-search absolute top-[335px] left-[18.5%] z-[99]">
+        <div class="main_content-search_container">
+          <img src="./assets/img/icon/search-icon.svg" alt="search-icon">
+          <input type="text" placeholder="Find your favorite food...">
+        </div>
+      </div>
+
+      <!-- Sort - Filter -->
+      <div class="main_content-filter z-[99]">
         <div class="main_content-filter_container">
-            <select id="filter-price">
-                <option value="asc">Price: From low to high</option>
-                <option value="desc">Price: From high to low</option>
-            </select>
+          <select id="filter-price">
+            <option value="asc">Price: From low to high</option>
+            <option value="desc">Price: From high to low</option>
+          </select>
         </div>
         <hr>
         <div class="main_content-filter_foodType">
-            <div class="main_content-filter_foodType-type_food active" id="food-tab">
-                <a href="#">Food</a>
-            </div>
-            <div class="main_content-filter_foodType-type_drink" id="drink-tab">
-                <a href="#">Drink</a>
-            </div>
-        </div>
-    </div>
-  </div>
-
-  <!-- Item -->
-  <div class="main_content-menu mt-20">
-    <div class="main_content-menu_food">
-      <!-- List item -->
-    </div>
-    <!-- Pagination -->
-    <div class="flex flex-row justify-between items-center gap-4 p-4 max-w-6xl mx-auto">
-      <div class="pagination-total">
-        <p class="text-sm text-gray-600 m-0 font-normal">Total 0 items</p>
-      </div>
-      <div class="pagination-container flex flex-row"></div>
-      <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
-        <select
-          class="pagination-select border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select" style="font-size: 130%;">
-          <option value="10">10 / page</option>
-          <option value="20">20 / page</option>
-          <option value="30">30 / page</option>
-          <option value="40">40 / page</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <!-- Footer -->
-  <footer class="home_footer">
-    <div class="home_footer-container">
-      <div class="home_footer-logo">
-        <img src="./assets/img/logo/logo.svg" alt="logo">
-      </div>
-
-      <div class="home_footer-content">
-        <div class="home_footer-content_container">
-          <h1 class="home_footer-title font-bold">CONTACT</h1>
-          <div class="home_footer-hotline">
-            <img src="./assets/img/icon/phone-icon.svg" alt="Hotline-icon">
-            <div class="home_footer-hotline_content">
-              <h2 class="font-bold mr-2">Hotline: </h2>
-              <p> 19001080</p>
-            </div>
+          <div class="main_content-filter_foodType-type_food active" id="food-tab">
+            <a href="#">Food</a>
           </div>
-
-          <div class="home_footer-address">
-            <img src="./assets/img/icon/address-icon.svg" alt="address-icon">
-            <div class="home_footer-address_content">
-              <h2 class="font-bold mr-2">Address: </h2>
-              <p> 19 Hoang Van Thu str. 2 Ward, Tan Binh District, Ho Chi Minh City.</p>
-            </div>
+          <div class="main_content-filter_foodType-type_drink" id="drink-tab">
+            <a href="#">Drink</a>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="home_footer-designer">
-      <div class="home-footer-designer-text">Copyright © 2022 Design By Aris</div>
+    <!-- Item -->
+    <div class="main_content-menu mt-20">
+      <div class="main_content-menu_food">
+        <!-- List item -->
+      </div>
+      <!-- Pagination -->
+      <div class="flex flex-row justify-between items-center gap-4 p-4 max-w-6xl mx-auto">
+        <div class="pagination-total">
+          <p class="text-sm text-gray-600 m-0 font-normal">Total 0 items</p>
+        </div>
+        <div class="pagination-container flex flex-row"></div>
+        <div class="flex items-center bg-white border border-gray-300 rounded-md py-0.5 px-0 shadow-sm">
+          <select
+            class="pagination-select border-none py-1 px-2 text-sm bg-transparent cursor-pointer text-gray-700 min-w-20 outline-none appearance-none custom-select"
+            style="font-size: 130%;">
+            <option value="10">10 / page</option>
+            <option value="20">20 / page</option>
+            <option value="30">30 / page</option>
+            <option value="40">40 / page</option>
+          </select>
+        </div>
+      </div>
     </div>
-  </footer>
+    <!-- Footer -->
+    <footer class="home_footer">
+      <div class="home_footer-container">
+        <div class="home_footer-logo">
+          <img src="./assets/img/logo/logo.svg" alt="logo">
+        </div>
 
+        <div class="home_footer-content">
+          <div class="home_footer-content_container">
+            <h1 class="home_footer-title font-bold">CONTACT</h1>
+            <div class="home_footer-hotline">
+              <img src="./assets/img/icon/phone-icon.svg" alt="Hotline-icon">
+              <div class="home_footer-hotline_content">
+                <h2 class="font-bold mr-2">Hotline: </h2>
+                <p> 19001080</p>
+              </div>
+            </div>
+
+            <div class="home_footer-address">
+              <img src="./assets/img/icon/address-icon.svg" alt="address-icon">
+              <div class="home_footer-address_content">
+                <h2 class="font-bold mr-2">Address: </h2>
+                <p> 19 Hoang Van Thu str. 2 Ward, Tan Binh District, Ho Chi Minh City.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="home_footer-designer">
+        <div class="home-footer-designer-text">Copyright © 2022 Design By Aris</div>
+      </div>
+    </footer>
+  </main>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="module" src="/js/home.js"></script>
 </body>

@@ -38,11 +38,7 @@
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-}
-
-.menu_food-item:hover {
-  outline: 0.1rem solid #ff6b00;
-  box-shadow: 0.5rem 0 0 #ff6b00, 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .menu_food-item_img {
@@ -115,7 +111,76 @@
   }
 }
 
-.pagination-container >  button{
+/* Quantity */
+
+.quantity-delete {
+  position: absolute;
+  bottom: 2rem;
+  right: 14rem;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 100%;
+  font-size: 2rem;
+  background-color: #efefef;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.quantity-delete:hover {
+  background-color: #d2d2d2;
+}
+
+.quantity-selector {
+  align-items: center;
+  border: 1px solid #ff6b00;
+  border-radius: 25px;
+  padding: 5px 10px;
+  position: absolute;
+  right: 2rem;
+  bottom: 2rem;
+}
+
+.quantity-selector.active {
+  display: flex;
+}
+
+.quantity-btn {
+  background: white;
+  color: #989898;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.quantity-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-display {
+  color: #000000;
+  font-weight: bold;
+  font-size: 14px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.pagination-container > button {
   min-width: 3rem;
   height: 3rem;
   font-size: 135%;
@@ -123,4 +188,33 @@
 
 .pagination-select {
   height: 2.5rem;
+}
+
+.menu_food-item.active {
+  outline: 0.1rem solid #ff6b00;
+  box-shadow: 0.5rem 0 0 #ff6b00, 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Scroll list item*/
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }
