@@ -3,20 +3,29 @@
 <mapper namespace="com.aris.javaweb_vtd.mapper.OrderMapper">
     <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO orders 
-        (total_price
+        (order_code
+        ,total_price
         ,status
         ,customer_id
         ,shipping_fee
         ,created_at
         ,updated_at)
         VALUES 
-        (#{totalPrice}
+        (#{orderCode}
+        ,#{totalPrice}
         ,#{status}
         ,#{customerId}
         ,#{shippingFee}
         ,#{createdAt}
         ,#{updatedAt})
     </insert>
+
+    <select id="existsOrderCode" resultType="boolean">
+      SELECT COUNT(1) > 0
+      FROM orders
+      WHERE
+        order_code = #{orderCode}
+    </select>
 
     <select id="getOrdersWithFilters" parameterType="com.aris.javaweb_vtd.dto.common.OrderSearchDTO" resultType="com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO">
       SELECT
@@ -188,4 +197,38 @@
       SET status = #{newStatus}
       WHERE id = #{orderId}
     </update>
+
+    <select id="getOrderByOrderCode" resultMap="OrderResponseMap">
+      SELECT
+        o.id AS order_id
+        ,o.status
+        ,o.total_price
+        ,o.shipping_fee
+        ,o.created_at
+
+        ,c.id AS customer_id
+        ,c.full_name
+        ,c.phone
+        ,c.city
+        ,c.ward
+        ,c.address
+        ,c.message
+
+        ,od.quantity AS order_detail_quantity
+        ,od.price AS order_detail_price
+        
+        ,i.id AS item_id
+        ,i.name AS item_name
+        ,i.description AS item_description
+        ,i.image AS item_image
+        ,i.type AS item_type
+
+      FROM orders o
+      JOIN customers c ON o.customer_id = c.id
+      LEFT JOIN order_details od ON od.order_id = o.id
+      LEFT JOIN items i ON od.item_id = i.id
+
+      WHERE o.order_code = #{orderCode}
+      ORDER BY o.id DESC
+    </select>
 </mapper>

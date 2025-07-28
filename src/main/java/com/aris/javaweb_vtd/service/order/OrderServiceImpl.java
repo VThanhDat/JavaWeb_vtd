@@ -46,6 +46,9 @@ public class OrderServiceImpl implements OrderService {
   @Autowired
   private CustommerMapper customerMapper;
 
+  @Autowired
+  private OrderStatusUtil orderStatusUtil;
+
   @Transactional
   public void createOrder(CreateOrderRequestDTO request) {
     CustomerRequestDTO customerDTO = request.getCustomer();
@@ -62,9 +65,12 @@ public class OrderServiceImpl implements OrderService {
     }
     total += shippingFee;
 
+    String orderCode = orderStatusUtil.generateUniqueOrderCode();
+
     Order order = orderConverter.toEntity(request);
     order.setCustomerId(customerId);
     order.setTotalPrice(total);
+    order.setOrderCode(orderCode);
     order.setStatus("new");
 
     orderMapper.insertOrder(order);
@@ -107,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
     if (totalItems == 0) {
       return new PageDTO<>(List.of(), orderSearchDTO.getPage(), 0, 0);
     }
-    
+
     int totalPages = (int) Math.ceil((double) totalItems / orderSearchDTO.getSize());
 
     List<OrderSummaryDTO> orders = orderMapper.getOrdersWithFilters(orderSearchDTO);
@@ -147,13 +153,39 @@ public class OrderServiceImpl implements OrderService {
     if (order == null) {
       throw new IllegalArgumentException("Not found order ID with " + orderId);
     }
-  
+
     String currentStatus = order.getStatus();
 
-    if (!OrderStatusUtil.isValidTransition(currentStatus, newStatus)) {
+    if (!orderStatusUtil.isValidTransition(currentStatus, newStatus)) {
       throw new IllegalStateException("Cannot change state from " + currentStatus + " to " + newStatus);
     }
 
     orderMapper.updateOrderStatus(orderId, newStatus.toLowerCase());
+  }
+
+  @Override
+  public OrderResponseDTO getOrderByOrderCode(String orderCode) {
+    OrderResponseDTO order = orderMapper.getOrderByOrderCode(orderCode);
+    if (order == null) {
+      throw new IllegalArgumentException("No order found with order code is " + orderCode);
+    }
+
+    int totalItems = 0;
+    int subTotal = 0;
+
+    List<OrderItemResponseDTO> items = order.getItems();
+    if (items != null) {
+      for (OrderItemResponseDTO item : items) {
+        int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
+        int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
+
+        totalItems += quantity;
+        subTotal += quantity * price;
+      }
+    }
+    order.setTotalItems(totalItems);
+    order.setSubTotal(subTotal);
+
+    return order;
   }
 }

@@ -50,7 +50,8 @@ public class OrderController {
   }
 
   @PutMapping("/{id}/status")
-  public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId, @RequestBody StatusRequestDTO request) {
+  public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId,
+      @RequestBody StatusRequestDTO request) {
     try {
       String newStatus = request.getStatus();
       orderService.updateOrderStatus(orderId, newStatus);
@@ -59,5 +60,10 @@ public class OrderController {
       e.printStackTrace();
       return ResponseEntity.badRequest().body(ApiResponseDTO.error(e.getMessage()));
     }
+  }
+
+  @GetMapping("/ordercode/{orderCode}")
+  public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemByOrderCode(@PathVariable String orderCode) {
+    return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderByOrderCode(orderCode)));
   }
 }

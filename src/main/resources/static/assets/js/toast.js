@@ -88,6 +88,14 @@ function showSuccessLogout() {
   }
 }
 
+function showSuccessOrder() {
+  const orderData = localStorage.getItem("orderData");
+  if (orderData === "Successfully") {
+    showToast("Order placed successfully! We're preparing your food", "success");
+    localStorage.removeItem("orderData");
+  }
+}
+
 window.closeToast = closeToast;
 
 export {
@@ -95,5 +103,6 @@ export {
   closeToast,
   showToast,
   showSuccessLogin,
-  showSuccessLogout
+  showSuccessLogout,
+  showSuccessOrder
 };

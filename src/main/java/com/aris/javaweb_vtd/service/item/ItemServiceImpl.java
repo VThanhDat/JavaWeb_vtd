@@ -26,8 +26,8 @@ public class ItemServiceImpl implements ItemService {
 
   @Transactional
   public void createItem(ItemRequestDTO dto) {
-    boolean isDuplicate = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
-    if (isDuplicate) {
+    boolean isDuplicateItem = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
+    if (isDuplicateItem) {
       throw new IllegalArgumentException("A item already exists with this name and type.");
     }
 
@@ -71,8 +71,8 @@ public class ItemServiceImpl implements ItemService {
     boolean isTypeChanged = !dto.getType().equalsIgnoreCase(currentItem.getType());
 
     if (isNameChanged || isTypeChanged) {
-      boolean isDuplicate = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
-      if (isDuplicate) {
+      boolean isDuplicateItem = itemMapper.existsByNameAndType(dto.getName(), dto.getType());
+      if (isDuplicateItem) {
         throw new IllegalArgumentException("An item already exists with this name and type.");
       }
     }
@@ -124,14 +124,14 @@ public class ItemServiceImpl implements ItemService {
 
   @Override
   public List<ItemResponseDTO> getItemsByType(String type) {
-      ItemSearchDTO searchDTO = new ItemSearchDTO();
-      searchDTO.setType(type);
-      
-      List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(searchDTO);
-      if (items == null || items.isEmpty()) {
-          throw new IllegalArgumentException("No items found with type is " + type);
-      }
-      return items;
+    ItemSearchDTO searchDTO = new ItemSearchDTO();
+    searchDTO.setType(type);
+
+    List<ItemResponseDTO> items = itemMapper.getItemsWithFilters(searchDTO);
+    if (items == null || items.isEmpty()) {
+      throw new IllegalArgumentException("No items found with type is " + type);
+    }
+    return items;
   }
 
   @Override

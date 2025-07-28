@@ -6,7 +6,7 @@ const cityData = {
     wards: [
       { name: "Ward 1", shippingFee: 20000 },
       { name: "Ward 2", shippingFee: 22000 }, // Thêm Ward 2
-      { name: "Ward 3", shippingFee: 25000 }, 
+      { name: "Ward 3", shippingFee: 25000 },
       { name: "Ward 7", shippingFee: 30000 },
       { name: "Binh Thanh Ward", shippingFee: 35000 },
       { name: "Tan Binh Ward", shippingFee: 25000 }
@@ -16,7 +16,7 @@ const cityData = {
     wards: [
       { name: "Hoan Kiem Ward", shippingFee: 30000 },
       { name: "Ba Dinh Ward", shippingFee: 35000 },
-      { name: "Dong Da Ward", shippingFee: 40000 }, 
+      { name: "Dong Da Ward", shippingFee: 40000 },
       { name: "Hai Ba Trung Ward", shippingFee: 35000 },
       { name: "Cau Giay Ward", shippingFee: 45000 }
     ]
@@ -26,7 +26,7 @@ const cityData = {
       { name: "Hai Chau Ward", shippingFee: 35000 },
       { name: "Thanh Khe Ward", shippingFee: 40000 },
       { name: "Son Tra Ward", shippingFee: 45000 },
-      { name: "Ngu Hanh Son Ward", shippingFee: 50000 }, 
+      { name: "Ngu Hanh Son Ward", shippingFee: 50000 },
       { name: "Lien Chieu Ward", shippingFee: 55000 }
     ]
   },
@@ -42,7 +42,7 @@ const cityData = {
   "An Giang": {
     wards: [
       { name: "Rach Gia Ward", shippingFee: 45000 },
-      { name: "Long Xuyen Ward", shippingFee: 50000 }, 
+      { name: "Long Xuyen Ward", shippingFee: 50000 },
       { name: "Chau Doc Ward", shippingFee: 55000 },
       { name: "Kien Luong Ward", shippingFee: 60000 },
       { name: "Hon Dat Ward", shippingFee: 65000 }
@@ -61,7 +61,7 @@ function initDeliveryInfo() {
 
   // Khởi tạo dropdown cho thành phố và phường
   initCityWardDropdowns();
-  
+
   // Khởi tạo event listeners cho các buttons
   initEventListeners();
 }
@@ -69,20 +69,20 @@ function initDeliveryInfo() {
 function initCityWardDropdowns() {
   const citySelect = document.getElementById('city');
   const wardSelect = document.getElementById('ward');
-  
+
   if (!citySelect || !wardSelect) return;
-  
+
   citySelect.innerHTML = '<option value="">Choose City</option>';
   wardSelect.innerHTML = '<option value="">Choose Ward</option>';
-  
+
   Object.keys(cityData).forEach(city => {
     const option = document.createElement('option');
     option.value = city;
     option.textContent = city;
     citySelect.appendChild(option);
   });
-  
-  citySelect.addEventListener('change', function() {
+
+  citySelect.addEventListener('change', function () {
     const selectedCity = this.value;
     updateWardOptions(selectedCity);
     // Reset shipping fee khi đổi thành phố
@@ -91,22 +91,22 @@ function initCityWardDropdowns() {
       calculateTotals(basketData);
     }
   });
-  
-  wardSelect.addEventListener('change', function() {
+
+  wardSelect.addEventListener('change', function () {
     updateShippingFee();
   });
 }
 
 function updateWardOptions(selectedCity) {
   const wardSelect = document.getElementById('ward');
-  
+
   if (!wardSelect || !selectedCity) {
     wardSelect.innerHTML = '<option value="">Choose Ward</option>';
     return;
   }
-  
+
   wardSelect.innerHTML = '<option value="">Choose Ward</option>';
-  
+
   if (cityData[selectedCity]) {
     cityData[selectedCity].wards.forEach(wardData => {
       const option = document.createElement('option');
@@ -131,14 +131,14 @@ function getShippingFee() {
   const wardSelect = document.getElementById('ward');
   const selectedCity = citySelect?.value;
   const selectedWard = wardSelect?.value;
-  
+
   if (selectedCity && selectedWard && cityData[selectedCity]) {
     const wardData = cityData[selectedCity].wards.find(ward => ward.name === selectedWard);
     if (wardData) {
       return wardData.shippingFee;
     }
   }
-  
+
   return 35000; // Default shipping fee
 }
 
@@ -165,20 +165,18 @@ function createProductCard(item) {
 
   productCard.innerHTML = `
         <div class="order-product-img">
-            <img src="${
-              item.image || "/uploads/drink/default.jpg"
-            }" alt="product" />
+            <img src="${item.image || "/uploads/drink/default.jpg"
+    }" alt="product" />
         </div>
         <div class="order-product-info">
             <span class="order-product-name">${item.name || 'Product'}</span>
-            <span class="order-product-description">${
-              item.description || ""
-            }</span>
+            <span class="order-product-description">${item.description || ""
+    }</span>
         </div>
         <div class="order-product-price-quantity">
             <span class="order-product-price">${formatPrice(
-              item.price
-            )} đ</span>
+      item.price
+    )} đ</span>
             <div class="order-product-quantity">
                 <span class="quantity-label">Quantity: </span>
                 <span class="quantity-count">${item.quantity}</span>
@@ -249,15 +247,21 @@ function handleCancelOrder() {
   window.location.href = "home.html";
 }
 
-// Xử lý đặt hàng - SỬA ĐỔI CHÍNH Ở ĐÂY
+function generateOrderCode() {
+  const randomNum = Math.floor(100000 + Math.random() * 900000);
+  return "OD" + randomNum;
+}
+
 function handlePlaceOrder() {
   const deliveryInfo = collectDeliveryInfo();
 
   if (validateDeliveryInfo(deliveryInfo)) {
     const basketData = getBasketFromSession();
-    
-    // Chuyển đổi sang format mới
+
+    const randomOrderCode = generateOrderCode();
+
     const orderData = {
+      orderCode: randomOrderCode,
       customer: {
         fullName: deliveryInfo.fullName,
         phone: deliveryInfo.phone,
@@ -267,7 +271,7 @@ function handlePlaceOrder() {
         message: deliveryInfo.message
       },
       items: basketData.map(item => ({
-        itemId: item.id || item.itemId, // Hỗ trợ cả id và itemId
+        itemId: item.id || item.itemId,
         quantity: item.quantity,
         price: parseInt(item.price)
       })),
@@ -275,6 +279,8 @@ function handlePlaceOrder() {
     };
 
     processOrder(orderData);
+
+    sessionStorage.setItem("orderCode", randomOrderCode);
   }
 }
 
@@ -303,7 +309,7 @@ function validateDeliveryInfo(info) {
     showToast("Please enter your phone", "error");
     return false;
   } else {
-    // Cho phép cả format "0901234567" và "039 3456 244"
+    // Cho phép cả format "0901234567" và "0393456244"
     const phoneRegex = /^(0[3|5|7|8|9])+([0-9\s]{8,10})$/;
     const cleanPhone = info.phone.trim().replace(/\s/g, ''); // Xóa khoảng trắng
     if (!phoneRegex.test(cleanPhone) || cleanPhone.length !== 10) {
@@ -336,32 +342,27 @@ function validateDeliveryInfo(info) {
   return true;
 }
 
-// SỬA HÀM processOrder để gửi dữ liệu theo format mới
-function processOrder(orderData) {
-  const placeOrderButton = document.querySelector(".place-order-button");
+function callApiCreateOrder(orderData) {
+  $.ajax({
+    url: "/api/order/add",
+    method: "POST",
+    data: JSON.stringify(orderData),
+    contentType: "application/json",
+    success: function (response) {
+      localStorage.setItem("orderData", response?.data);
+      window.location.href = "order-success.html";
+    },
+    error: function (xhr) {
+      const msg = xhr.responseJSON?.data;
+      showToast(msg, "error");
+    },
+  });
+}
 
-  try {
-    // In ra console để kiểm tra format
-    console.log("Order data to send:", JSON.stringify(orderData, null, 2));
-    
-    // Ở đây bạn có thể gửi orderData lên server
-    // fetch('/api/orders', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(orderData)
-    // })
-    
-    // Xóa giỏ hàng sau khi đặt hàng thành công
-    sessionStorage.removeItem("basket");
-    // window.location.href = "order-success.html";
-  } catch (error) {
-    showToast(
-      "An error occurred while placing your order. Please try again.",
-      "error"
-    );
-  }
+function processOrder(orderData) {
+  console.log("Order data to send:", JSON.stringify(orderData));
+  callApiCreateOrder(orderData);
+  sessionStorage.removeItem("basket");
 }
 
 function initMap() {

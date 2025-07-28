@@ -23,7 +23,6 @@ html {
 }
 
 .wrapper {
-    width: 100%;
     min-width: 100%;
     height: 100%;
     margin: 0 auto;
@@ -46,10 +45,6 @@ header img {
     width: 7%;
     height: 7%;
     margin-left: 3%;
-}
-
-main {
-    width: 100%;
 }
 
 .order-success-box {
@@ -79,9 +74,12 @@ main {
 .shipper-icon {
     position: absolute;
     top: 44.5%;
-    animation-name: shipper-moving;
-    animation-duration: 5s;
-    animation-iteration-count: infinite;
+    animation: 5s shipper-moving linear infinite;
+}
+
+.shipper-icon img {
+    max-width: none;
+    width: auto;
 }
 
 @keyframes shipper-moving {
@@ -90,7 +88,7 @@ main {
     }
 
     50% {
-        left: 40%;
+        left: 10%;
     }
 
     100% {
@@ -111,7 +109,7 @@ main {
     border-radius: 5px;
 }
 
-.back-home-button a {
+.back-home-button span {
     text-decoration: none;
     font-size: 1.9rem;
     font-weight: 600;

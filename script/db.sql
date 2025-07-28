@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS customers (
 -- Order table
 CREATE TABLE IF NOT EXISTS orders (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_code VARCHAR(255) NOT NULL,
     total_price DOUBLE NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'new' COMMENT 'new, completed, cancelled',
     customer_id BIGINT,

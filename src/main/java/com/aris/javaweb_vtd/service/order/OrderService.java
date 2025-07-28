@@ -14,4 +14,7 @@ public interface OrderService {
     OrderResponseDTO getOrderById(Long id);
 
     void updateOrderStatus(Long orderId, String newStatus);
+
+    OrderResponseDTO getOrderByOrderCode(String orderCode);
+
 }

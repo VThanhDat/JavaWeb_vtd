@@ -16,9 +16,13 @@ public interface OrderMapper {
 
   List<OrderSummaryDTO> getOrdersWithFilters(OrderSearchDTO search);
 
+  boolean existsOrderCode(String orderCode);
+
   int countOrdersWithFilters(OrderSearchDTO search);
 
   OrderResponseDTO getOrderById(Long id);
 
   void updateOrderStatus(@Param("orderId") Long id, @Param("newStatus") String newStatus);
+
+  OrderResponseDTO getOrderByOrderCode(String orderCode);
 }
