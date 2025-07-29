@@ -312,7 +312,7 @@ function fetchData() {
 
     setTimeout(() => {
       resolve();
-    }, 2000);
+    }, 1000);
   });
 }
 

@@ -18,7 +18,6 @@ import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
 import com.aris.javaweb_vtd.entity.OrderDetail;
@@ -81,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public PageDTO<OrderSummaryDTO> getOrders(OrderSearchDTO orderSearchDTO) {
+  public PageDTO<OrderResponseDTO> getOrders(OrderSearchDTO orderSearchDTO) {
     LocalDateTime fromDate = null;
     LocalDateTime toDate = null;
     LocalDate today = LocalDate.now();
@@ -113,7 +112,17 @@ public class OrderServiceImpl implements OrderService {
 
     int totalPages = (int) Math.ceil((double) totalItems / orderSearchDTO.getSize());
 
-    List<OrderSummaryDTO> orders = orderMapper.getOrdersWithFilters(orderSearchDTO);
+    List<Long> orderIds = orderMapper.getOrderIdsWithFilters(orderSearchDTO);
+
+    if (orderIds.isEmpty()) {
+      return new PageDTO<>(List.of(), orderSearchDTO.getPage(), totalPages, totalItems);
+    }
+
+    List<OrderResponseDTO> orders = orderMapper.getOrdersByIds(orderIds);
+
+    for (OrderResponseDTO order : orders) {
+      orderStatusUtil.computeOrderSummary(order);
+    }
 
     return new PageDTO<>(orders, orderSearchDTO.getPage(), totalPages, totalItems);
   }

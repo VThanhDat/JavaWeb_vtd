@@ -58,7 +58,7 @@ const statusClasses = [
 ];
 
 function callApiGetOrders({
-  name = lastSearchQuery, // Add name parameter
+  name = lastSearchQuery,
   status = currentStatusCheckboxes.join(","),
   date = getCurrentDateFilter(),
   page = 1,
@@ -170,6 +170,7 @@ function renderOrderCards() {
   orders.forEach((order, index) => {
     // Calculate display ID based on current page and page size
     const displayId = ((currentPage - 1) * pageSize + index + 1).toString().padStart(3, "0");
+    const representativeItem = order.items && order.items.length > 0 ? order.items[0] : null;
     const orderCard = document.createElement("div");
     orderCard.className = "flex flex-col items-start p-6 gap-2 w-[375px] h-[305px] bg-white rounded-[16px] shadow-sm border border-[#f3f3f3] text-[14px] cursor-pointer hover:shadow-md transition";
     orderCard.setAttribute("data-order-id", order.id);
@@ -184,24 +185,24 @@ function renderOrderCards() {
     </div>
     
     <div class="flex flex-row items-start py-4 gap-4 w-full h-[130px]">
-      <img src="/${order.itemImage}" alt="Product Image" class="w-16 h-16 rounded-md object-cover" />
+      <img src="/${representativeItem.img}" alt="Product Image" class="w-16 h-16 rounded-md object-cover" />
       <div class="flex-1 grid gap-1">
         <div class="flex flex-row items-start gap-1">
-          <h3 class="font-inter font-semibold text-[16px] leading-[24px] text-black flex-grow">${order.itemName}</h3>
+          <h3 class="font-inter font-semibold text-[16px] leading-[24px] text-black flex-grow">${representativeItem.name}</h3>
         </div>
-        <p class="text-xs text-[#7c7c7c] line-clamp-1">${order.itemDescription}</p>
+        <p class="text-xs text-[#7c7c7c] line-clamp-1">${representativeItem.description}</p>
         <div class="flex justify-between items-end py-1">
           <div class="flex items-center">
-            <span class="font-inter font-bold text-[16px] leading-[24px] text-black">${formatCurrency(order.price)}</span>
+            <span class="font-inter font-bold text-[16px] leading-[24px] text-black">${formatCurrency(representativeItem.price)}</span>
           </div>
-          <span class="text-xs text-[#7c7c7c] font-normal">Quantity: ${order.quantity}</span>
+          <span class="text-xs text-[#7c7c7c] font-normal">Quantity: ${representativeItem.quantity}</span>
         </div>
       </div>
     </div>
     
     <hr class="w-full border-t border-[#EFEFEF]" />
     
-    <span class="font-inter font-normal text-[14px] text-[#797B7E]">${order.totalItems} Items</span>
+    <span class="font-inter font-normal text-[14px] text-[#797B7E]">${order.items.length} Items</span>
     
     <div class="flex flex-row justify-end items-center gap-4 w-full h-[48px]">
       <div class="flex flex-row items-center gap-1 flex-grow">
@@ -235,7 +236,7 @@ function renderOrderDetail(order) {
   // Update order info
   document.querySelector(".detailOrder-popup-code span:nth-child(2)").innerText = " " + order.displayId;
   document.querySelector(".detailOrder-popup-date span").innerText = formatDateDisplay(order.createAt);
-  document.querySelector(".detailOrder-popup-total-items").innerText = `${order.totalItems} Items`;
+  document.querySelector(".detailOrder-popup-total-items").innerText = `${order.items.length} Items`;
 
   // Update customer info
   document.querySelector(".fullname span").innerText = order.customer.fullName;
@@ -399,15 +400,13 @@ function loadChart(mode = "day") {
     url: "/api/order",
     method: "GET",
     data: {
-      status: "Completed",
+      status: "New,Completed,Cancelled,Shipping",
       page: 1,
       size: 1000
     },
     xhrFields: { withCredentials: true },
     success: function (response) {
       const orders = response?.data?.items || [];
-      console.log(orders);
-
       let labels = [];
       let modeKey = "";
 
@@ -704,7 +703,6 @@ function getCurrentDateFilter() {
 
 // Event listeners setup
 document.addEventListener("DOMContentLoaded", function () {
-  renderOrderCards();
   showSuccessLogin();
   renderStatusTags();
   renderSalesChart("salesChart", ["14", "15", "16", "17", "18", "19", "20"], [15, 20, 25, 22, 28, 18, 27]);

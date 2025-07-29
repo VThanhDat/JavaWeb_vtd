@@ -1,6 +1,5 @@
 package com.aris.javaweb_vtd.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.order.request.StatusRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
-import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
 
 import jakarta.validation.Valid;
@@ -41,8 +39,8 @@ public class OrderController {
   }
 
   @GetMapping
-  public ResponseEntity<ApiResponseDTO<PageDTO<OrderSummaryDTO>>> getOrders(OrderSearchDTO orderSearchDTO) {
-    PageDTO<OrderSummaryDTO> data = orderService.getOrders(orderSearchDTO);
+  public ResponseEntity<ApiResponseDTO<PageDTO<OrderResponseDTO>>> getOrders(OrderSearchDTO orderSearchDTO) {
+    PageDTO<OrderResponseDTO> data = orderService.getOrders(orderSearchDTO);
     return ResponseEntity.ok(ApiResponseDTO.success(data));
   }
 
@@ -71,6 +69,6 @@ public class OrderController {
 
   @GetMapping("/check-order-code")
   public ResponseEntity<ApiResponseDTO<Boolean>> checkOrderCode(@RequestParam String code) {
-      return ResponseEntity.ok(ApiResponseDTO.success(orderService.existsOrderCode(code)));
+    return ResponseEntity.ok(ApiResponseDTO.success(orderService.existsOrderCode(code)));
   }
 }

@@ -16,7 +16,7 @@ public class OrderSearchDTO {
     private LocalDateTime toDate;
     private String date;
     private String name;
-    
+
     private Integer page;
     private Integer size;
 }

@@ -27,101 +27,117 @@
         order_code = #{orderCode}
     </select>
 
-    <select id="getOrdersWithFilters" parameterType="com.aris.javaweb_vtd.dto.common.OrderSearchDTO" resultType="com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO">
-      SELECT
-        o.id AS id
-        ,o.status AS status
-        ,o.total_price AS totalPrice
-        ,o.created_at AS createAt
-
-        ,i.id AS itemId
-        ,i.name AS itemName
-        ,i.description AS itemDescription
-        ,i.image AS itemImage
-        ,i.type AS itemType
-        ,od.quantity
-        ,od.price
+    <select id="getOrderIdsWithFilters"
+            parameterType="com.aris.javaweb_vtd.dto.common.OrderSearchDTO"
+            resultType="java.lang.Long">
+        SELECT DISTINCT o.id
+        FROM orders o
+        <if test="name != null and name != ''">
+            LEFT JOIN order_details od ON od.order_id = o.id
+            LEFT JOIN items i ON od.item_id = i.id
+        </if>
         
-        ,(SELECT SUM(od2.quantity)
-          FROM order_details od2
-          WHERE od2.order_id = o.id) AS totalItems
-      FROM orders o
-      JOIN (
-        SELECT 
-          od.*
-        FROM order_details od
-        JOIN (
-          SELECT order_id, MIN(id) AS min_id
-          FROM order_details
-          GROUP BY order_id
-        ) AS min_od ON od.id = min_od.min_id
-      ) od ON od.order_id = o.id  
-      LEFT JOIN items i ON od.item_id = i.id
-
-      <where>
-        <if test="status != null and status.size > 0">
-          o.status IN
-          <foreach collection="status" item="status" open="(" separator="," close=")">
-            #{status}
-          </foreach>
+        <where>
+            <if test="status != null and status.size() > 0">
+                o.status IN
+                <foreach collection="status" item="status" open="(" separator="," close=")">
+                    #{status}
+                </foreach>
+            </if>
+            
+            <if test="fromDate != null">
+                AND o.created_at &gt;= #{fromDate}
+            </if>
+            
+            <if test="toDate != null">
+                AND o.created_at &lt;= #{toDate}
+            </if>
+            
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        
+        ORDER BY o.id DESC
+        
+        <if test="page != null and size != null">
+            <bind name="offset" value="(page - 1) * size"/>
+            LIMIT #{size} OFFSET #{offset}
         </if>
-
-        <if test="fromDate != null">
-          AND o.created_at &gt;= #{fromDate}
-        </if>
-        <if test="toDate != null">
-          AND o.created_at &lt;= #{toDate}
-        </if>
-
-        <if test="name != null and name != ''">
-          AND i.name LIKE CONCAT('%', #{name}, '%')
-        </if>
-      </where>
-
-      ORDER BY o.id DESC
-
-      <bind name="offset" value="(page - 1) * size"/>
-
-      <if test="size != null and page != null">
-        LIMIT #{size} OFFSET #{offset}
-      </if>
     </select>
 
-    <select id="countOrdersWithFilters" parameterType="com.aris.javaweb_vtd.dto.common.OrderSearchDTO" resultType="int">
-      SELECT COUNT(1)
-      FROM orders o
-      JOIN (
-        SELECT od.*
-        FROM order_details od
-        JOIN (
-          SELECT order_id, MIN(id) AS min_id
-          FROM order_details
-          GROUP BY order_id
-        ) min_od ON od.id = min_od.min_id
-      ) od ON od.order_id = o.id
-      LEFT JOIN items i ON od.item_id = i.id
-
-      <where>
-        <if test="status != null and status.size > 0">
-          o.status IN
-          <foreach collection="status" item="status" open="(" separator="," close=")">
-            #{status}
-          </foreach>
-        </if>
-
-        <if test="fromDate != null">
-          AND o.created_at &gt;= #{fromDate}
-        </if>
-
-        <if test="toDate != null">
-          AND o.created_at &lt;= #{toDate}
-        </if>
-
-        <if test="name != null and name != ''">
-          AND i.name LIKE CONCAT('%', #{name}, '%')
-        </if>
-      </where>
+    <select id="getOrdersByIds"
+            parameterType="java.util.List"
+            resultMap="OrderResponseMap">
+        SELECT
+            o.id AS order_id
+            ,o.status
+            ,o.order_code
+            ,o.total_price
+            ,o.shipping_fee
+            ,o.created_at
+            
+            ,c.id AS customer_id
+            ,c.full_name
+            ,c.phone
+            ,c.city
+            ,c.ward
+            ,c.address
+            ,c.message
+            
+            ,od.quantity AS order_detail_quantity
+            ,od.price AS order_detail_price
+            
+            ,i.id AS item_id
+            ,i.name AS item_name
+            ,i.description AS item_description
+            ,i.image AS item_image
+            ,i.type AS item_type
+        FROM orders o
+        JOIN customers c ON o.customer_id = c.id
+        LEFT JOIN order_details od ON od.order_id = o.id
+        LEFT JOIN items i ON od.item_id = i.id
+        
+        WHERE o.id IN
+        <foreach collection="list" item="orderId" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+        
+        ORDER BY o.id DESC
     </select>
+
+    <select id="countOrdersWithFilters"
+            parameterType="com.aris.javaweb_vtd.dto.common.OrderSearchDTO"
+            resultType="int">
+        SELECT COUNT(DISTINCT o.id)
+        FROM orders o
+        <if test="name != null and name != ''">
+            LEFT JOIN order_details od ON od.order_id = o.id
+            LEFT JOIN items i ON od.item_id = i.id
+        </if>
+        
+        <where>
+            <if test="status != null and status.size() > 0">
+                o.status IN
+                <foreach collection="status" item="s" open="(" separator="," close=")">
+                    #{s}
+                </foreach>
+            </if>
+            
+            <if test="fromDate != null">
+                AND o.created_at &gt;= #{fromDate}
+            </if>
+            
+            <if test="toDate != null">
+                AND o.created_at &lt;= #{toDate}
+            </if>
+            
+            <if test="name != null and name != ''">
+                AND i.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
+
 
     <!-- Map field belongs to OrderDetail - Item object -->
     <resultMap id="OrderItemMap" type="com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO">

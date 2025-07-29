@@ -17,7 +17,6 @@ public class OrderResponseDTO {
     private String createAt;
     private String status;
     private Integer shippingFee;
-    private Integer totalItems;
     private Integer subTotal;
     private Integer totalPrice;
 }

@@ -26,7 +26,6 @@ public class OrderStatusUtil {
   }
 
   public void computeOrderSummary(OrderResponseDTO order) {
-    int totalItems = 0;
     int subTotal = 0;
 
     List<OrderItemResponseDTO> items = order.getItems();
@@ -35,12 +34,10 @@ public class OrderStatusUtil {
         int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
         int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
 
-        totalItems += quantity;
         subTotal += quantity * price;
       }
     }
 
-    order.setTotalItems(totalItems);
     order.setSubTotal(subTotal);
   }
 }
