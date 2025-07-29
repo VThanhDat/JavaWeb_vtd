@@ -8,12 +8,15 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+  public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+      @NonNull Object handler)
       throws Exception {
     System.out.println("[Interceptor] Before handling: " + request.getRequestURI());
     String uri = request.getRequestURI();
@@ -29,7 +32,8 @@ public class LoggingInterceptor implements HandlerInterceptor {
   }
 
   @Override
-  public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+  public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+      @NonNull Object handler, @Nullable Exception ex)
       throws Exception {
     System.out.println("[Interceptor] After completion: " +
         request.getRequestURI());

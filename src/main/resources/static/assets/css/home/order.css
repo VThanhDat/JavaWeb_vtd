@@ -82,3 +82,19 @@
   max-height: 340px;
   overflow-y: auto;
 }
+
+.content-expanded {
+  height: 716px !important;
+}
+
+.content-collapsed {
+  height: 522px !important;
+}
+
+.adjust-expanded {
+  top: 65% !important;
+}
+
+.adjust-collapsed {
+  top: 55% !important;
+}

@@ -349,11 +349,9 @@ function renderItems() {
 
   items.forEach(function (item) {
     const itemHtml = `
-      <div class="menu_food-item" data-item-id="${item.id}" data-item-name="${
-      item.name
-    }" data-item-price="${item.price}" data-item-image="${
-      item.image
-    }" data-item-description="${item.description}">
+      <div class="menu_food-item" data-item-id="${item.id}" data-item-name="${item.name
+      }" data-item-price="${item.price}" data-item-image="${item.image
+      }" data-item-description="${item.description}">
         <div class="menu_food-item_img">
           <img src="${item.image}" alt="${item.name}">
         </div>
@@ -361,8 +359,8 @@ function renderItems() {
           <p class="menu_food-item_content-title">${item.name}</p>
           <p class="menu_food-item_content-describe">${item.description}</p>
           <span class="menu_food-item_content-price">${formatPrice(
-            item.price
-          )}đ</span>
+        item.price
+      )}đ</span>
           <div class="menu_food-item_add">+</div>
           <div class="quantity hidden">
             <div class="quantity-delete">
@@ -686,6 +684,7 @@ function onPageSizeChange(newPageSize) {
 }
 
 // Modal order
+let expanded = false;
 function setupScrollModalOrder(orderStatus = 'new') {
   const statusContainer = document.querySelector(".status-container");
 
@@ -723,7 +722,7 @@ function setupScrollModalOrder(orderStatus = 'new') {
     } else if (currentIndex >= 0 && steps > 0) {
       width = (currentIndex / steps) * availableWidth;
     }
-    
+
     bar.style.width = `${width}px`;
   });
 
@@ -736,11 +735,10 @@ function setupScrollModalOrder(orderStatus = 'new') {
   const contentOrder = document.querySelector(".content-order");
   const adjustOrder = document.querySelector(".adjust-order");
 
-  let expanded = false;
-
   // Remove existing event listener to avoid duplicates
   const newToggleBtn = toggleBtn.cloneNode(true);
   toggleBtn.parentNode.replaceChild(newToggleBtn, toggleBtn);
+
 
   newToggleBtn.addEventListener("click", () => {
     expanded = !expanded;
@@ -803,10 +801,10 @@ function updateStatusDisplay(orderStatus, statusContainer) {
   };
 
   const currentMapping = statusMapping[orderStatus.toLowerCase()] || statusMapping['new'];
-  
+
   // Tạo HTML cho progress bar
   const progressHTML = generateProgressHTML(currentMapping.statuses);
-  
+
   // Cập nhật nội dung status container
   statusContainer.innerHTML = progressHTML;
 }
@@ -816,15 +814,15 @@ function generateProgressHTML(statuses) {
   const statusItems = statuses.map(status => {
     let iconSrc;
     let statusStyle = '';
-    
-    switch(status.state) {
+
+    switch (status.state) {
       case 'completed':
         iconSrc = '/img/icon/complete-order-icon.svg';
         statusStyle = 'color: #28a745;'; // Force màu xanh
         break;
       case 'current':
-        iconSrc = status.key === 'cancelled' 
-          ? '/img/icon/cancel-order-icon.svg' 
+        iconSrc = status.key === 'cancelled'
+          ? '/img/icon/cancel-order-icon.svg'
           : '/img/icon/indicator-current-icon.svg';
         statusStyle = 'color: #ff6b00;'; // Màu cam
         break;
@@ -871,59 +869,6 @@ function callApiOrderByOrderCode(orderCode) {
       showToast(msg, "error");
     },
   });
-}
-
-let orderWebSocket = null;
-
-function connectOrderWebSocket(orderCode) {
-  // Tạo WebSocket connection
-  const wsUrl = `ws://localhost:8080/ws/order/${orderCode}`; // Thay đổi URL theo BE
-  orderWebSocket = new WebSocket(wsUrl);
-  
-  orderWebSocket.onopen = function(event) {
-    console.log('WebSocket connected for order:', orderCode);
-  };
-  
-  orderWebSocket.onmessage = function(event) {
-    try {
-      const data = JSON.parse(event.data);
-      
-      if (data.type === 'order_status_update') {
-        console.log('Received order status update:', data);
-        
-        // Cập nhật UI
-        const order = data.order;
-        renderOrderCard(order);
-        setupScrollModalOrder(order.status);
-        
-        // Hiển thị thông báo
-        showToast(`Order status updated to: ${order.status}`, "success");
-      }
-    } catch (error) {
-      console.error('Error parsing WebSocket message:', error);
-    }
-  };
-  
-  orderWebSocket.onclose = function(event) {
-    console.log('WebSocket disconnected');
-    // Tự động reconnect sau 3 giây
-    setTimeout(() => {
-      if (currentOrderCode) {
-        connectOrderWebSocket(currentOrderCode);
-      }
-    }, 3000);
-  };
-  
-  orderWebSocket.onerror = function(error) {
-    console.error('WebSocket error:', error);
-  };
-}
-
-function disconnectOrderWebSocket() {
-  if (orderWebSocket) {
-    orderWebSocket.close();
-    orderWebSocket = null;
-  }
 }
 
 function renderOrderCard(order) {
@@ -1002,7 +947,7 @@ function updatePricingDisplay(subTotal, shippingFee, totalPrice) {
 
 
 function showModalOrder(modalId) {
- const modal = document.getElementById(modalId);
+  const modal = document.getElementById(modalId);
   if (modal) {
     modal.classList.remove("hidden");
     modal.style.display = "block";
