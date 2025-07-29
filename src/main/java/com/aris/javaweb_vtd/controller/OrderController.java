@@ -17,6 +17,7 @@ import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.service.order.OrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class OrderController {
   @Autowired
   private OrderService orderService;
 
+  @Operation(summary = "Create order")
   @PostMapping("/add")
   public ResponseEntity<ApiResponseDTO<String>> createOrder(@RequestBody @Valid CreateOrderRequestDTO request) {
     try {
@@ -38,17 +40,20 @@ public class OrderController {
     }
   }
 
+  @Operation(summary = "Get all orders by filters and can pagination")
   @GetMapping
   public ResponseEntity<ApiResponseDTO<PageDTO<OrderResponseDTO>>> getOrders(OrderSearchDTO orderSearchDTO) {
     PageDTO<OrderResponseDTO> data = orderService.getOrders(orderSearchDTO);
     return ResponseEntity.ok(ApiResponseDTO.success(data));
   }
 
+  @Operation(summary = "Get order by id")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemById(@PathVariable Long id) {
     return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderById(id)));
   }
 
+  @Operation(summary = "Update status order")
   @PutMapping("/{id}/status")
   public ResponseEntity<ApiResponseDTO<String>> updateStatus(@PathVariable("id") Long orderId,
       @RequestBody StatusRequestDTO request) {
@@ -62,11 +67,13 @@ public class OrderController {
     }
   }
 
+  @Operation(summary = "Get order by order code")
   @GetMapping("/ordercode/{orderCode}")
   public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemByOrderCode(@PathVariable String orderCode) {
     return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderByOrderCode(orderCode)));
   }
 
+  @Operation(summary = "Check order code is exist in database")
   @GetMapping("/check-order-code")
   public ResponseEntity<ApiResponseDTO<Boolean>> checkOrderCode(@RequestParam String code) {
     return ResponseEntity.ok(ApiResponseDTO.success(orderService.existsOrderCode(code)));

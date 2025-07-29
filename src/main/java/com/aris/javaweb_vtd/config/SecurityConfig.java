@@ -33,6 +33,13 @@ public class SecurityConfig {
         .httpBasic(Customizer.withDefaults())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/login", "/js/**", "/css/**", "/img/**").permitAll()
+            .requestMatchers(
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/webjars/**")
+            .permitAll()
             .requestMatchers("/admin/**").authenticated()
             .anyRequest().permitAll())
         .formLogin(form -> form

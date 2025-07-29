@@ -17,6 +17,7 @@ import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.service.item.ItemService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
 @RestController
@@ -25,6 +26,7 @@ public class ItemController {
   @Autowired
   private ItemService itemService;
 
+  @Operation(summary = "Create item")
   @PostMapping("/add")
   public ResponseEntity<ApiResponseDTO<String>> createItem(@ModelAttribute @Valid ItemRequestDTO dto) {
     try {
@@ -35,16 +37,19 @@ public class ItemController {
     }
   }
 
+  @Operation(summary = "Get item by id")
   @GetMapping("/{id}")
   public ResponseEntity<ApiResponseDTO<ItemResponseDTO>> getItemById(@PathVariable Long id) {
     return ResponseEntity.ok(ApiResponseDTO.success(itemService.getItemById(id)));
   }
 
+  @Operation(summary = "Update item")
   @PostMapping("/update")
   public ResponseEntity<ApiResponseDTO<ItemResponseDTO>> updateItem(@ModelAttribute @Valid ItemRequestDTO dto) {
     return ResponseEntity.ok(ApiResponseDTO.success("Successful", itemService.updateItem(dto)));
   }
 
+  @Operation(summary = "Delete item")
   @DeleteMapping("/{id}")
   public ResponseEntity<ApiResponseDTO<String>> softDeleteItem(@PathVariable Long id) {
     try {
@@ -55,9 +60,10 @@ public class ItemController {
     }
   }
 
+  @Operation(summary = "Get all items")
   @GetMapping
   public ResponseEntity<ApiResponseDTO<PageDTO<ItemResponseDTO>>> getItems(ItemSearchDTO dto) {
-      PageDTO<ItemResponseDTO> page = itemService.searchItemsWithPaging(dto);
-      return ResponseEntity.ok(ApiResponseDTO.success(page));
+    PageDTO<ItemResponseDTO> page = itemService.searchItemsWithPaging(dto);
+    return ResponseEntity.ok(ApiResponseDTO.success(page));
   }
 }

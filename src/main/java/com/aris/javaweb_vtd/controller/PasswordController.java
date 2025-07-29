@@ -20,12 +20,15 @@ import com.aris.javaweb_vtd.dto.admin.request.ChangePasswordRequestDTO;
 import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
 import com.aris.javaweb_vtd.service.admin.AdminService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/admin/password")
+@SecurityRequirement(name = "basicAuth")
 public class PasswordController {
 
   @Autowired
@@ -34,6 +37,7 @@ public class PasswordController {
   @Autowired
   private AdminService adminService;
 
+  @Operation(summary = "Change password", description = "This API is used to change the password on information sent from the client.")
   @PutMapping("/change")
   public ResponseEntity<ApiResponseDTO<String>> updatePassword(
       @RequestBody @Valid ChangePasswordRequestDTO dto,
