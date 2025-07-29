@@ -13,6 +13,7 @@ public class OrderResponseDTO {
     private Long id;
     private List<OrderItemResponseDTO> items;
     private CustomerResponseDTO customer;
+    private String orderCode;
     private String createAt;
     private String status;
     private Integer shippingFee;

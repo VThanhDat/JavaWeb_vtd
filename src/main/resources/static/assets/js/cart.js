@@ -687,6 +687,7 @@ export function setupCartDetailClickListener() {
 
 // Function format price - cần import từ nơi khác hoặc định nghĩa lại
 function formatPrice(price) {
+  if (!price) return '0 đ';
   return parseInt(price).toLocaleString('vi-VN');
 }
 

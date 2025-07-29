@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.aris.javaweb_vtd.config.OrderWebSocketHandler;
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
 import com.aris.javaweb_vtd.dto.common.OrderSearchDTO;
@@ -17,7 +18,6 @@ import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
-import com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderSummaryDTO;
 import com.aris.javaweb_vtd.entity.Customer;
@@ -49,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
   @Autowired
   private OrderStatusUtil orderStatusUtil;
 
+  @Autowired
+  private OrderWebSocketHandler orderWebSocketHandler;
+
   @Transactional
   public void createOrder(CreateOrderRequestDTO request) {
     CustomerRequestDTO customerDTO = request.getCustomer();
@@ -65,12 +68,10 @@ public class OrderServiceImpl implements OrderService {
     }
     total += shippingFee;
 
-    String orderCode = orderStatusUtil.generateUniqueOrderCode();
-
     Order order = orderConverter.toEntity(request);
     order.setCustomerId(customerId);
     order.setTotalPrice(total);
-    order.setOrderCode(orderCode);
+    order.setOrderCode(request.getOrderCode());
     order.setStatus("new");
 
     orderMapper.insertOrder(order);
@@ -128,21 +129,7 @@ public class OrderServiceImpl implements OrderService {
       throw new IllegalArgumentException("No order found with ID is " + id);
     }
 
-    int totalItems = 0;
-    int subTotal = 0;
-
-    List<OrderItemResponseDTO> items = order.getItems();
-    if (items != null) {
-      for (OrderItemResponseDTO item : items) {
-        int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
-        int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
-
-        totalItems += quantity;
-        subTotal += quantity * price;
-      }
-    }
-    order.setTotalItems(totalItems);
-    order.setSubTotal(subTotal);
+    orderStatusUtil.computeOrderSummary(order);
 
     return order;
   }
@@ -160,7 +147,14 @@ public class OrderServiceImpl implements OrderService {
       throw new IllegalStateException("Cannot change state from " + currentStatus + " to " + newStatus);
     }
 
+    // Cập nhật vào DB
     orderMapper.updateOrderStatus(orderId, newStatus.toLowerCase());
+
+    // Lấy lại dữ liệu mới nhất (trạng thái đã thay đổi)
+    OrderResponseDTO updatedOrder = orderMapper.getOrderById(orderId);
+
+    // Gửi WebSocket tới tất cả client đang xem đơn hàng này
+    orderWebSocketHandler.sendOrderUpdate(updatedOrder.getOrderCode(), updatedOrder);
   }
 
   @Override
@@ -170,22 +164,13 @@ public class OrderServiceImpl implements OrderService {
       throw new IllegalArgumentException("No order found with order code is " + orderCode);
     }
 
-    int totalItems = 0;
-    int subTotal = 0;
-
-    List<OrderItemResponseDTO> items = order.getItems();
-    if (items != null) {
-      for (OrderItemResponseDTO item : items) {
-        int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
-        int price = item.getPrice() != null ? item.getPrice().intValue() : 0;
-
-        totalItems += quantity;
-        subTotal += quantity * price;
-      }
-    }
-    order.setTotalItems(totalItems);
-    order.setSubTotal(subTotal);
+    orderStatusUtil.computeOrderSummary(order);
 
     return order;
+  }
+
+  @Override
+  public boolean existsOrderCode(String orderCode) {
+    return orderMapper.existsOrderCode(orderCode);
   }
 }

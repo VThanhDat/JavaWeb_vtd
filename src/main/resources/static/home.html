@@ -342,9 +342,9 @@
   </main>
 
   <!-- Modal Order -->
-  <!-- <div id="modal-order">
+  <div id="modal-order" class="hidden">
     <div
-      class="fixed flex flex-col items-start pt-0 pr-0 pb-8 pl-0 gap-[43px] w-[900px] h-[840px] left-1/2 top-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-[-54px_0px_22px_rgba(199,199,199,0.03),-30px_0px_18px_rgba(199,199,199,0.1),-14px_0px_14px_rgba(199,199,199,0.17),-3px_0px_7px_rgba(199,199,199,0.2)] z-[9999]">
+      class="modal-order-content fixed flex flex-col items-start pt-0 pr-0 pb-8 pl-0 gap-[43px] w-[900px] h-[658px] left-1/2 top-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-white shadow-[-54px_0px_22px_rgba(199,199,199,0.03),-30px_0px_18px_rgba(199,199,199,0.1),-14px_0px_14px_rgba(199,199,199,0.17),-3px_0px_7px_rgba(199,199,199,0.2)] z-[9999]">
       <div
         class="flex flex-col items-start px-8 py-0 gap-[22px] w-[900px] h-[600px] flex-none order-0 self-stretch flex-grow">
         <div
@@ -359,40 +359,36 @@
 
           <div
             class="flex flex-col justify-center items-center p-0 m-auto w-6 h-6 flex-none order-2 flex-grow-0 cursor-pointer"
-            id="close-basket-btn">
+            id="close-order-btn">
             <img src="/img/icon/cancel-basket-icon.svg" alt="">
           </div>
         </div>
 
         <div
-          class="flex flex-col items-center px-8 py-6 gap-8 w-[836px] h-[716px] bg-white order-1 self-stretch flex-none">
+          class="content-order flex flex-col items-center px-8 py-6 gap-8 w-[836px] h-[522px] bg-white order-1 self-stretch flex-none">
           <div class="flex flex-row items-start p-0 w-[618px] h-[34px] order-0 flex-none">
             <div class="flex flex-col justify-center items-center p-0 w-[154.5px] h-[34px] flex-none order-0 flex-grow">
               <div class="status-container">
                 <div class="progress">
-                  <div class="status">
-                    <div class="hidden-element">test</div>
+                  <div class="status future">
                     <div class="img">
-                      <img src="/img/icon/complete-order-icon.svg" alt="">
+                      <img src="/img/icon/indicator-future-icon.svg" alt="">
                     </div>
                     <div class="name">Order placed successfully</div>
                   </div>
-                  <div class="status">
-                    <div class="hidden-element">test</div>
+                  <div class="status future">
                     <div class="img">
-                      <img src="/img/icon/complete-order-icon.svg" alt="">
+                      <img src="/img/icon/indicator-future-icon.svg" alt="">
                     </div>
                     <div class="name">Preparing your order</div>
                   </div>
-                  <div class="status">
-                    <div class="hidden-element">test</div>
+                  <div class="status future">
                     <div class="img">
-                      <img src="/img/icon/indicator-current-icon.svg" alt="">
+                      <img src="/img/icon/indicator-future-icon.svg" alt="">
                     </div>
                     <div class="name">Shipping</div>
                   </div>
-                  <div class="status">
-                    <div class="hidden-element">test</div>
+                  <div class="status future">
                     <div class="img">
                       <img src="/img/icon/indicator-future-icon.svg" alt="">
                     </div>
@@ -411,30 +407,27 @@
             </h5>
             <span
               class="w-[71px] h-[24px] text-[16px] leading-[150%] font-bold text-[#292929] flex-none order-0 flex-grow-0">
-              #231234
             </span>
           </div>
-          <div class="list-item-order order-2">
+          <div id="listItemOrder"
+            class="list-item-order max-h-[200px] overflow-y-auto transition-all duration-300 ease-in-out collapsed  order-2">
             <div
               class="mb-10 box-border flex flex-row items-start p-4 gap-4 w-[772px] h-[162px] bg-[#F9F9F9] border border-transparent rounded-[16px] self-stretch flex-none">
               <img class="flex flex-col items-start p-0 w-[130px] h-[130px] rounded-[8px]"
-                src="/uploads/drink/05154033-82e6-4d69-9abd-47208c7c712b_4.jpg" alt="">
+                src="/img/form/landscape-placeholder.svg" alt="">
               <div class="flex flex-row items-start p-0 gap-4 w-[594px] h-[130px] self-stretch flex-grow">
 
                 <div class="flex flex-col items-start p-0 w-[466px] h-[124px] flex-grow flex-1">
                   <div
                     class="item-order-name w-[527px] h-[30px] text-[20px] leading-[150%] font-semibold text-[#292929] font-[inter] flex-none order-0 flex-grow">
-                    Cơm Gà Xối Mỡ Nhỏ (Đùi Tỏi Hoặc Má Đùi Ngẫu nhiên)
                   </div>
                   <div
                     class="item-order-description w-[527px] h-[24px] text-[16px] leading-[150%] font-normal text-[#656565] font-[inter] flex-none order-0 self-stretch flex-grow">
-                    Cơm + gà tươi xối mỡ + salad + dưa leo + canh.
                   </div>
                 </div>
                 <div class="flex flex-col items-end p-0 w-[112px] h-[130px] order-1 self-stretch flex-grow-0">
                   <div
                     class="item-basket-price w-[74px] h-[30px] text-[20px] leading-[150%] font-bold text-[#292929] font-[inter] flex-none order-0 flex-grow-0">
-                    60.000 đ
                   </div>
                   <div class="flex flex-row justify-end items-end p-0 gap-2 w-[112px] h-[100px] self-stretch flex-grow">
                     <div
@@ -444,43 +437,6 @@
                     <div class="w-[34px] h-[34px] bg-[#FF6B00] rounded-[44px] flex-none order-1 flex-grow-0 relative">
                       <span
                         class="absolute w-[11px] h-[24px] left-1/2 top-1/2 -translate-x-[5.5px] -translate-y-[12px] font-inter font-normal text-[16px] leading-[24px] text-white">
-                        3
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="mb-10 box-border flex flex-row items-start p-4 gap-4 w-[772px] h-[162px] bg-[#F9F9F9] border border-transparent rounded-[16px] self-stretch flex-none">
-              <img class="flex flex-col items-start p-0 w-[130px] h-[130px] rounded-[8px]"
-                src="/uploads/drink/05154033-82e6-4d69-9abd-47208c7c712b_4.jpg" alt="">
-              <div class="flex flex-row items-start p-0 gap-4 w-[594px] h-[130px] self-stretch flex-grow">
-
-                <div class="flex flex-col items-start p-0 w-[466px] h-[124px] flex-grow flex-1">
-                  <div
-                    class="item-order-name w-[527px] h-[30px] text-[20px] leading-[150%] font-semibold text-[#292929] font-[inter] flex-none order-0 flex-grow">
-                    Cơm Gà Xối Mỡ Nhỏ (Đùi Tỏi Hoặc Má Đùi Ngẫu nhiên)
-                  </div>
-                  <div
-                    class="item-order-description w-[527px] h-[24px] text-[16px] leading-[150%] font-normal text-[#656565] font-[inter] flex-none order-0 self-stretch flex-grow">
-                    Cơm + gà tươi xối mỡ + salad + dưa leo + canh.
-                  </div>
-                </div>
-                <div class="flex flex-col items-end p-0 w-[112px] h-[130px] order-1 self-stretch flex-grow-0">
-                  <div
-                    class="item-basket-price w-[74px] h-[30px] text-[20px] leading-[150%] font-bold text-[#292929] font-[inter] flex-none order-0 flex-grow-0">
-                    60.000 đ
-                  </div>
-                  <div class="flex flex-row justify-end items-end p-0 gap-2 w-[112px] h-[100px] self-stretch flex-grow">
-                    <div
-                      class="w-[70px] h-[24px] font-inter not-italic font-medium text-[16px] leading-[150%] text-black order-0 flex-none flex-grow-0">
-                      Quantity:
-                    </div>
-                    <div class="w-[34px] h-[34px] bg-[#FF6B00] rounded-[44px] flex-none order-1 flex-grow-0 relative">
-                      <span
-                        class="absolute w-[11px] h-[24px] left-1/2 top-1/2 -translate-x-[5.5px] -translate-y-[12px] font-inter font-normal text-[16px] leading-[24px] text-white">
-                        3
                       </span>
                     </div>
                   </div>
@@ -497,7 +453,6 @@
               </div>
               <h6
                 class="w-[63px] h-[19px] font-medium text-[16px] leading-[120%] text-[#292929] order-0 flex-none flex-grow-0">
-                180.000
               </h6>
             </div>
             <div class="flex flex-row items-center p-0 gap-1 w-[772px] h-[19px] order-0 self-stretch flex-none">
@@ -508,7 +463,6 @@
               </div>
               <h6
                 class="w-[63px] h-[19px] font-medium text-[16px] leading-[120%] text-[#292929] order-0 flex-none flex-grow-0">
-                35.000
               </h6>
             </div>
             <hr class="w-[772px] h-0 border border-[#EFEFEF] mt-10 mb-10" />
@@ -520,24 +474,23 @@
               </div>
               <h1
                 class="w-[181px] h-[48px] text-[32px] leading-[150%] font-bold text-[#FF6B00] flex-none order-0 flex-grow-0">
-                240.000 đ
               </h1>
             </div>
           </div>
         </div>
       </div>
       <div
-        class="absolute w-[72px] h-[24px] left-[45%] top-[65%] bg-white shadow-[0px_3px_1px_rgba(143,143,143,0.02),0px_2px_1px_rgba(143,143,143,0.08),0px_1px_1px_rgba(143,143,143,0.13)] rounded-[20px] -rotate-180 z-[1]">
+        class="adjust-order absolute w-[72px] h-[24px] left-[45%] top-[55%] bg-white shadow-[0px_3px_1px_rgba(143,143,143,0.02),0px_2px_1px_rgba(143,143,143,0.08),0px_1px_1px_rgba(143,143,143,0.13)] rounded-[20px] cursor-pointer z-[1]"
+        id="toggle-expand-btn">
         <div class="relative">
-          <div class="flex flex-col items-center p-0 absolute w-4 h-4 left-[30px] top-3 transform -rotate-180">
-            <img src="/img/icon/retract-icon.svg" alt="">
+          <div class="flex flex-col items-center p-0 absolute w-4 h-4 left-[30px] top-3 transform" id="icon-wrapper">
+            <img src="/img/icon/expand-icon.svg" alt="" id="toggle-icon">
           </div>
         </div>
       </div>
     </div>
     <div class="fixed inset-0 bg-black bg-opacity-10 z-[9998]" id="modal-backdrop"></div>
-  </div> -->
-
+  </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script type="module" src="/js/home.js"></script>
 </body>

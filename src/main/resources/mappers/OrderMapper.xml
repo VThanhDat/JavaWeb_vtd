@@ -149,6 +149,7 @@
     <resultMap id="OrderResponseMap" type="com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO">
       <id property="id" column="order_id"/>
       <result property="status" column="status"/>
+      <result property="orderCode" column="order_code"/>
       <result property="shippingFee" column="shipping_fee"/>
       <result property="totalPrice" column="total_price"/>
       <result property="createAt" column="created_at"/>
@@ -162,6 +163,7 @@
       SELECT
         o.id AS order_id
         ,o.status
+        ,o.order_code
         ,o.total_price
         ,o.shipping_fee
         ,o.created_at

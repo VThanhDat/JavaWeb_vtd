@@ -1,11 +1,13 @@
 package com.aris.javaweb_vtd.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
@@ -65,5 +67,10 @@ public class OrderController {
   @GetMapping("/ordercode/{orderCode}")
   public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> getItemByOrderCode(@PathVariable String orderCode) {
     return ResponseEntity.ok(ApiResponseDTO.success(orderService.getOrderByOrderCode(orderCode)));
+  }
+
+  @GetMapping("/check-order-code")
+  public ResponseEntity<ApiResponseDTO<Boolean>> checkOrderCode(@RequestParam String code) {
+      return ResponseEntity.ok(ApiResponseDTO.success(orderService.existsOrderCode(code)));
   }
 }

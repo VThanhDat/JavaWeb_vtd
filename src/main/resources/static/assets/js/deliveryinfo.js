@@ -247,18 +247,47 @@ function handleCancelOrder() {
   window.location.href = "home.html";
 }
 
-function generateOrderCode() {
-  const randomNum = Math.floor(100000 + Math.random() * 900000);
-  return "OD" + randomNum;
+function checkOrderCodeExists(code) {
+  return $.ajax({
+    url: `/api/order/check-order-code`,
+    method: 'GET',
+    data: { code: code },
+  }).then(function(response) {
+    return response.data;
+  });
 }
 
-function handlePlaceOrder() {
+
+function generateUniqueOrderCode() {
+  return new Promise(function(resolve, reject) {
+    function tryGenerate() {
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      const code = "OD" + randomNum;
+
+      checkOrderCodeExists(code)
+        .then(function(exists) {
+          if (!exists) {
+            resolve(code);
+          } else {
+            tryGenerate();
+          }
+        })
+        .catch(function(err) {
+          reject(err);
+        });
+    }
+
+    tryGenerate();
+  });
+}
+
+async function handlePlaceOrder() {
   const deliveryInfo = collectDeliveryInfo();
 
   if (validateDeliveryInfo(deliveryInfo)) {
     const basketData = getBasketFromSession();
 
-    const randomOrderCode = generateOrderCode();
+    const randomOrderCode = await generateUniqueOrderCode();
 
     const orderData = {
       orderCode: randomOrderCode,

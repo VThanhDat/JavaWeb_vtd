@@ -17,4 +17,6 @@ public interface OrderService {
 
     OrderResponseDTO getOrderByOrderCode(String orderCode);
 
+    boolean existsOrderCode(String orderCode);
+
 }
