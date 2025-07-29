@@ -87,9 +87,9 @@ function callApiGetOrders({
       currentPage = result.currentPage || page;
       pageSize = size;
       lastSearchQuery = name; // Update last search query
-      
+
       renderOrderCards();
-      
+
       // Render pagination if result has pagination info
       if (result.totalPages && result.currentPage !== undefined) {
         renderPaginationControls(result.totalPages, result.currentPage, result.totalItems, fetchOrdersPage);
@@ -137,12 +137,12 @@ function callUpdateStatus(orderId, status) {
     data: JSON.stringify({ status: status }),
     success: function (response) {
       showToast(response.data, "success");
-    
+
       const orderIndex = orders.findIndex(order => order.id === orderId);
       if (orderIndex !== -1) {
         orders[orderIndex].status = status;
       }
-      
+
       callApiGetOrderById(orderId);
       renderOrderCards();
       loadDashboardSummary();
@@ -236,7 +236,7 @@ function renderOrderDetail(order) {
   document.querySelector(".detailOrder-popup-code span:nth-child(2)").innerText = " " + order.displayId;
   document.querySelector(".detailOrder-popup-date span").innerText = formatDateDisplay(order.createAt);
   document.querySelector(".detailOrder-popup-total-items").innerText = `${order.totalItems} Items`;
-  
+
   // Update customer info
   document.querySelector(".fullname span").innerText = order.customer.fullName;
   document.querySelector(".tel span").innerText = order.customer.phone;
@@ -280,14 +280,13 @@ function renderOrderDetail(order) {
 }
 
 // Sumary total today's
-
 function loadDashboardSummary() {
   const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-  
+
   $.ajax({
     url: "/api/order",
     method: "GET",
-    data: { 
+    data: {
       status: "New,Completed,Cancelled,Shipping",
       date: today,
       page: 1,
@@ -307,7 +306,7 @@ function loadDashboardSummary() {
 
 function renderDashboardSummary(ordersData = null) {
   const dataToUse = ordersData || orders;
-  
+
   const today = new Date().toDateString();
   const todayOrders = dataToUse.filter(order => new Date(order.createAt).toDateString() === today);
   const todaySales = todayOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
@@ -323,16 +322,153 @@ function renderDashboardSummary(ordersData = null) {
   document.getElementById("cancel-orders").innerText = cancelled;
 }
 
+// Summary chart
+
+// Get Last 7 Days Labels
+function getLast7DaysLabels() {
+  const labels = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    labels.push(d.toLocaleDateString("vi-VN"));
+  }
+  return labels;
+}
+
+// Get Last 12 Weeks Labels
+function getLast12WeeksLabels() {
+  const labels = [];
+  const today = new Date();
+  let endOfWeek = new Date(today);
+  endOfWeek.setDate(today.getDate() - today.getDay() + 7); // Sunday
+
+  for (let i = 11; i >= 0; i--) {
+    const start = new Date(endOfWeek);
+    start.setDate(endOfWeek.getDate() - 6 - (i * 7));
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    labels.push(`W${12 - i} (${start.toLocaleDateString("vi-VN")}~${end.toLocaleDateString("vi-VN")})`);
+  }
+  return labels;
+}
+
+// Get Last 12 Months Labels
+function getLast12MonthsLabels() {
+  const labels = [];
+  const today = new Date();
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    labels.push(`${d.getMonth() + 1}/${d.getFullYear()}`); // ex: 3/2023
+  }
+  return labels;
+}
+
+function groupOrdersByLabel(orders, labels, mode = "day") {
+  const map = {};
+
+  labels.forEach(label => map[label] = 0);
+
+  orders.forEach(order => {
+    const date = new Date(order.createAt);
+    let label;
+
+    if (mode === "day") {
+      label = date.toLocaleDateString("vi-VN");
+    }
+    else if (mode === "week") {
+      const monday = new Date(date);
+      monday.setDate(date.getDate() - ((date.getDay() + 6) % 7)); // về thứ 2
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+      label = labels.find(l => l.includes(monday.toLocaleDateString("vi-VN")));
+    }
+    else if (mode === "month") {
+      label = `${date.getMonth() + 1}/${date.getFullYear()}`;
+    }
+
+    if (label && map[label] !== undefined) {
+      map[label] += order.totalPrice || 0;
+    }
+  });
+
+  return labels.map(label => map[label]);
+}
+
+function loadChart(mode = "day") {
+  $.ajax({
+    url: "/api/order",
+    method: "GET",
+    data: {
+      status: "Completed",
+      page: 1,
+      size: 1000
+    },
+    xhrFields: { withCredentials: true },
+    success: function (response) {
+      const orders = response?.data?.items || [];
+      console.log(orders);
+
+      let labels = [];
+      let modeKey = "";
+
+      if (mode === "day") {
+        labels = getLast7DaysLabels();
+        modeKey = "day";
+      } else if (mode === "week") {
+        labels = getLast12WeeksLabels();
+        modeKey = "week";
+      } else if (mode === "month") {
+        labels = getLast12MonthsLabels();
+        modeKey = "month";
+      }
+
+      const dataPoints = groupOrdersByLabel(orders, labels, modeKey);
+      renderSalesChart("salesChart", labels, dataPoints);
+    },
+    error: function () {
+      console.error("Failed to load chart data.");
+    }
+  });
+}
+
+function getValueSummaryChart() {
+  const tabElements = document.querySelectorAll(".tab-mode");
+
+  tabElements.forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Bỏ active ở tất cả tab
+      tabElements.forEach(t => t.classList.remove("active-tab"));
+      // Thêm active vào tab hiện tại
+      tab.classList.add("active-tab");
+
+      const mode = tab.getAttribute("data-mode");
+      console.log(mode);
+
+      loadChart(mode);
+    });
+  });
+
+  // Mặc định là "day"
+  loadChart("day");
+}
+
+let salesChartInstance = null;
+
 function renderSalesChart(canvasId, labels = [], dataPoints = []) {
   const chartCanvas = document.getElementById(canvasId);
   if (!chartCanvas) return;
 
   const ctx = chartCanvas.getContext("2d");
+
+  if (salesChartInstance) {
+    salesChartInstance.destroy();
+  }
+
   const gradient = ctx.createLinearGradient(0, 0, 0, 250);
   gradient.addColorStop(0, "rgba(255, 128, 0, 0.5)");
   gradient.addColorStop(1, "rgba(255, 128, 0, 0)");
 
-  new Chart(ctx, {
+  salesChartInstance = new Chart(ctx, {
     type: "line",
     data: {
       labels: labels,
@@ -370,7 +506,7 @@ function renderSalesChart(canvasId, labels = [], dataPoints = []) {
           ticks: { color: "#888", font: { size: 12 } },
           title: {
             display: true,
-            text: "May",
+            text: "",
             color: "#555",
             font: { size: 14, weight: "bold" },
           },
@@ -397,6 +533,7 @@ function renderSalesChart(canvasId, labels = [], dataPoints = []) {
     },
   });
 }
+
 
 function renderStatusTags() {
   const listFilterStatus = document.querySelector(".list-filter-status");
@@ -439,7 +576,7 @@ function setOrderStatusUI(currentStatus) {
   // Reset classes
   btn.classList.remove(...statusClasses);
   btn.classList.add(style.border, style.text, style.bg);
-  
+
   imgEl.src = style.icon;
   textEl.innerText = style.label;
 
@@ -474,11 +611,11 @@ function setOrderStatusUI(currentStatus) {
     item.addEventListener("click", (e) => {
       e.stopPropagation();
       menu.style.display = "none";
-      
+
       // Show simple confirm dialog
       const currentStatusLabel = statusStyles[currentStatus]?.label || currentStatus;
       const newStatusLabel = statusStyles[status]?.label || status;
-      
+
       if (confirm(`Are you sure you want to change the order status from "${currentStatusLabel}" to "${newStatusLabel}"?`)) {
         callUpdateStatus(currentOrderId, status);
       }
@@ -491,7 +628,7 @@ function setOrderStatusUI(currentStatus) {
 function handleDropdownClick(event) {
   event.preventDefault();
   event.stopPropagation();
-  
+
   const menu = document.getElementById("statusDropdownMenu");
   menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
 }
@@ -517,16 +654,16 @@ function setupDropdownToggle(buttonId, dropdownId) {
 function setupSearchInput() {
   const searchInput = document.getElementById("searchNameInput");
   if (!searchInput) return;
-  
+
   // Handle Enter key press for immediate search
-  searchInput.addEventListener('keypress', function(e) {
+  searchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
       const searchValue = e.target.value.trim();
       lastSearchQuery = searchValue;
-      callApiGetOrders({ 
+      callApiGetOrders({
         name: searchValue,
-        page: 1, 
-        size: pageSize 
+        page: 1,
+        size: pageSize
       });
     }
   });
@@ -573,17 +710,17 @@ document.addEventListener("DOMContentLoaded", function () {
   renderSalesChart("salesChart", ["14", "15", "16", "17", "18", "19", "20"], [15, 20, 25, 22, 28, 18, 27]);
   setupDropdownToggle("filterBtn", "filterDropdown");
   setupSearchInput(); // Setup search functionality
-  
+
   // Setup page size selector if needed
   setupPageSizeSelector(
-  (newSize) => {
-    pageSize = newSize;
-  },
-  (page, size) => {
-    callApiGetOrders({ page, size });
-  }
+    (newSize) => {
+      pageSize = newSize;
+    },
+    (page, size) => {
+      callApiGetOrders({ page, size });
+    }
   );
-  
+
   // Filter change listener
   document.getElementById("order-status-filter").addEventListener("change", () => {
     callApiGetOrders({ page: 1, size: pageSize }); // Reset to page 1 when date filter changes
@@ -626,4 +763,5 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial API call
   callApiGetOrders({ page: 1, size: pageSize });
   loadDashboardSummary();
+  getValueSummaryChart();
 });

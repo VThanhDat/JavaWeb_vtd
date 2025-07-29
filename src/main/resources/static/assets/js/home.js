@@ -28,7 +28,6 @@ let currentSortBy = "";
 let currentSortOrder = "";
 let currentPageSize = 10;
 
-// Các functions không thay đổi...
 function resetScrollPosition() {
   window.scrollTo(0, 0);
 }
@@ -313,7 +312,7 @@ function fetchData() {
 
     setTimeout(() => {
       resolve();
-    }, 0);
+    }, 2000);
   });
 }
 
@@ -771,8 +770,8 @@ function updateStatusDisplay(orderStatus, statusContainer) {
     'new': {
       statuses: [
         { key: 'placed', name: 'Order placed successfully', state: 'completed' },
-        { key: 'preparing', name: 'Preparing your order', state: 'completed' },
-        { key: 'shipping', name: 'Shipping', state: 'current' },
+        { key: 'preparing', name: 'Preparing your order', state: 'current' },
+        { key: 'shipping', name: 'Shipping', state: 'future' },
         { key: 'completed', name: 'Completed', state: 'future' }
       ]
     },
@@ -780,8 +779,8 @@ function updateStatusDisplay(orderStatus, statusContainer) {
       statuses: [
         { key: 'placed', name: 'Order placed successfully', state: 'completed' },
         { key: 'preparing', name: 'Preparing your order', state: 'completed' },
-        { key: 'shipping', name: 'Shipping', state: 'completed' },
-        { key: 'completed', name: 'Completed', state: 'current' }
+        { key: 'shipping', name: 'Shipping', state: 'current' },
+        { key: 'completed', name: 'Completed', state: 'future' }
       ]
     },
     'completed': {
@@ -818,23 +817,22 @@ function generateProgressHTML(statuses) {
     switch (status.state) {
       case 'completed':
         iconSrc = '/img/icon/complete-order-icon.svg';
-        statusStyle = 'color: #28a745;'; // Force màu xanh
+        statusStyle = 'color: #28a745;';
         break;
       case 'current':
         iconSrc = status.key === 'cancelled'
           ? '/img/icon/cancel-order-icon.svg'
           : '/img/icon/indicator-current-icon.svg';
-        statusStyle = 'color: #ff6b00;'; // Màu cam
+        statusStyle = 'color: #ff0000;';
         break;
       case 'future':
         iconSrc = '/img/icon/indicator-future-icon.svg';
-        statusStyle = 'color: #666;'; // Màu xám
+        statusStyle = 'color: #666;';
         break;
       default:
         iconSrc = '/img/icon/indicator-future-icon.svg';
         statusStyle = 'color: #666;';
     }
-
     return `
       <div class="status ${status.state}" style="${statusStyle}">
         <div class="img">
@@ -944,7 +942,6 @@ function updatePricingDisplay(subTotal, shippingFee, totalPrice) {
     totalBillElement.textContent = `${formatPrice(totalPrice)} đ`;
   }
 }
-
 
 function showModalOrder(modalId) {
   const modal = document.getElementById(modalId);

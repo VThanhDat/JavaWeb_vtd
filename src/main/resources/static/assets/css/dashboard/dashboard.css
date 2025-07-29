@@ -497,3 +497,8 @@
     justify-content: right;
     align-items: center;
 }
+
+.active-tab {
+    background-color: white;
+    font-weight: 600;
+}

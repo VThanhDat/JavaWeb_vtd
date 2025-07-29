@@ -189,29 +189,23 @@
                 class="flex flex-row justify-end items-center p-0 gap-2 w-[988px] h-[31px] flex-none order-0 self-stretch grow-0">
                 <div id="outerTabContainer"
                   class="flex flex-row items-start p-1 w-[147px] h-[31px] bg-[#EFEFEF] rounded-[8px] flex-none order-2 grow-0">
+
                   <!-- Day tab -->
-                  <div
-                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[38px] h-[23px] bg-white rounded-[4px] flex-none order-0 grow-0">
-                    <span
-                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
-                      Day
-                    </span>
+                  <div data-mode="day"
+                    class="tab-mode active-tab flex flex-row justify-center items-center px-2 py-1 gap-1 w-[38px] h-[23px] rounded-[4px] cursor-pointer">
+                    <span class="text-[12px] text-[#3D3D3D]">Day</span>
                   </div>
+
                   <!-- Week tab -->
-                  <div
-                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] flex-none order-1 grow-0">
-                    <span
-                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
-                      Week
-                    </span>
+                  <div data-mode="week"
+                    class="tab-mode flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] cursor-pointer">
+                    <span class="text-[12px] text-[#3D3D3D]">Week</span>
                   </div>
+
                   <!-- Month tab -->
-                  <div
-                    class="flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] flex-none order-1 grow-0">
-                    <span
-                      class="w-[22px] h-[15px] font-inter font-normal text-[12px] leading-[15px] text-[#3D3D3D] flex-none order-0 grow-0">
-                      Month
-                    </span>
+                  <div data-mode="month"
+                    class="tab-mode flex flex-row justify-center items-center px-2 py-1 gap-1 w-[48px] h-[23px] rounded-[4px] cursor-pointer">
+                    <span class="text-[12px] text-[#3D3D3D]">Month</span>
                   </div>
                 </div>
               </div>
@@ -362,7 +356,7 @@
 
           <div id="statusDropdownMenu"
             class="absolute top-[84%] left-[97%] mt-2 w-44 bg-white border-gray-200 rounded-md shadow-lg hidden z-50">
-          
+
           </div>
         </div>
       </div>
