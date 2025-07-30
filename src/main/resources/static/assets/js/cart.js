@@ -9,16 +9,16 @@ let currentBasketItem = null;
 // Function để lưu/update basket từ menu actions (set quantity, không cộng thêm)
 export function saveToBasketSession(basketItem) {
   let basket = JSON.parse(sessionStorage.getItem('basket')) || [];
-  
+
   const existingItemIndex = basket.findIndex(item => item.id === basketItem.id);
-  
+
   if (existingItemIndex !== -1) {
     basket[existingItemIndex].quantity = basketItem.quantity;
     basket[existingItemIndex].totalPrice = basket[existingItemIndex].price * basket[existingItemIndex].quantity;
   } else {
     basket.push(basketItem);
   }
-  
+
   sessionStorage.setItem('basket', JSON.stringify(basket));
   updateBasketCounter();
 }
@@ -31,12 +31,12 @@ export function getBasketFromSession() {
 // Function để cập nhật quantity của item trong basket
 export function updateBasketItemQuantity(itemId, newQuantity) {
   let basket = JSON.parse(sessionStorage.getItem('basket')) || [];
-  
+
   const itemIndex = basket.findIndex(item => item.id === itemId);
   if (itemIndex !== -1) {
     basket[itemIndex].quantity = newQuantity;
     basket[itemIndex].totalPrice = basket[itemIndex].price * newQuantity;
-    
+
     sessionStorage.setItem('basket', JSON.stringify(basket));
     updateBasketCounter();
   }
@@ -45,16 +45,16 @@ export function updateBasketItemQuantity(itemId, newQuantity) {
 // Function để SET quantity của item trong basket (dùng cho modal "Add to Basket")
 export function setBasketItemQuantity(basketItem) {
   let basket = JSON.parse(sessionStorage.getItem('basket')) || [];
-  
+
   const existingItemIndex = basket.findIndex(item => item.id === basketItem.id);
-  
+
   if (existingItemIndex !== -1) {
     basket[existingItemIndex].quantity = basketItem.quantity;
     basket[existingItemIndex].totalPrice = basket[existingItemIndex].price * basketItem.quantity;
   } else {
     basket.push(basketItem);
   }
-  
+
   sessionStorage.setItem('basket', JSON.stringify(basket));
   updateBasketCounter();
 }
@@ -73,27 +73,29 @@ export function updateBasketCounter() {
   const basket = JSON.parse(sessionStorage.getItem('basket')) || [];
   const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = basket.reduce((sum, item) => sum + item.totalPrice, 0);
-  
+
   // Tìm container chứa cart
   const cartContainer = document.querySelector('.heading_nav-cart-order');
   if (!cartContainer) return;
-  
+
   const existingCart = cartContainer.querySelector('.heading_nav-cart');
   const existingDetailedCart = cartContainer.querySelector('.card-detail');
-  
+
+  // Luôn xóa card-detail cũ nếu có
+  if (existingDetailedCart) {
+    existingDetailedCart.remove();
+  }
+
+  // Luôn tạo card-detail mới (kể cả khi giỏ hàng trống)
+  let detailedCartHtml;
+
   if (totalItems > 0) {
-    // Có sản phẩm trong giỏ - ẩn cart bình thường và hiển thị cart chi tiết
+    // Có sản phẩm trong giỏ - ẩn cart bình thường và hiển thị cart chi tiết với basket-icon
     if (existingCart) {
       existingCart.style.display = 'none';
     }
-    
-    // Xóa cart chi tiết cũ nếu có
-    if (existingDetailedCart) {
-      existingDetailedCart.remove();
-    }
-    
-    // Tạo cart chi tiết mới với class card-detail
-    const detailedCartHtml = `
+
+    detailedCartHtml = `
       <div class="card-detail relative cursor-pointer box-border flex flex-row items-center p-[10px] gap-2 isolate w-[129px] h-[44px] bg-[#FF6B00] border border-[#CED4DA] rounded-[4px] flex-none order-0 flex-grow-0">
         <img src="/img/icon/basket-icon.svg" alt="cart-icon">
         <div class="box-border flex flex-col justify-center items-center p-0 absolute w-[17px] h-[17px] left-[-8px] top-[-8px] bg-white border border-[#FF6B00] rounded-[42px] flex-none order-1 flex-grow-0 z-[1]">
@@ -104,22 +106,21 @@ export function updateBasketCounter() {
         </div>
       </div>
     `;
-    
-    // Thêm cart chi tiết vào vị trí giữa cart bình thường và order
-    const orderElement = cartContainer.querySelector('.heading_nav-order');
-    if (orderElement) {
-      orderElement.insertAdjacentHTML('beforebegin', detailedCartHtml);
-    }
-    
   } else {
-    // Không có sản phẩm - hiển thị cart bình thường và ẩn cart chi tiết
+    // Giỏ hàng trống - hiển thị cart bình thường với cart-icon, có thể click được
     if (existingCart) {
       existingCart.style.display = 'block';
     }
-    
-    // Xóa cart chi tiết nếu có
-    if (existingDetailedCart) {
-      existingDetailedCart.remove();
+
+    // Không tạo card-detail khi giỏ hàng trống, để cart bình thường hiển thị
+    detailedCartHtml = '';
+  }
+
+  // Thêm card-detail vào vị trí giữa cart bình thường và order (chỉ khi có sản phẩm)
+  if (detailedCartHtml) {
+    const orderElement = cartContainer.querySelector('.heading_nav-order');
+    if (orderElement) {
+      orderElement.insertAdjacentHTML('beforebegin', detailedCartHtml);
     }
   }
 }
@@ -254,15 +255,15 @@ function closeBasketPopup() {
 function increaseQuantityModal() {
   const quantityInput = document.getElementById('modal-quantity');
   let currentQuantity = parseInt(quantityInput.value);
-  
+
   if (currentQuantity < 3) {
     currentQuantity++;
     quantityInput.value = currentQuantity;
-    
+
     // Chỉ cập nhật giá trong button, KHÔNG cập nhật session
     updateModalPrice(currentQuantity);
   } else {
-    showToast("Maximum quantity is 3","error");
+    showToast("Maximum quantity is 3", "error");
   }
 }
 
@@ -270,7 +271,7 @@ function increaseQuantityModal() {
 function decreaseQuantityModal() {
   const quantityInput = document.getElementById('modal-quantity');
   let currentQuantity = parseInt(quantityInput.value);
-  
+
   if (currentQuantity > 1) {
     currentQuantity--;
     quantityInput.value = currentQuantity;
@@ -282,7 +283,7 @@ function decreaseQuantityModal() {
 function handleQuantityInputChange() {
   const quantityInput = document.getElementById('modal-quantity');
   let value = parseInt(quantityInput.value);
-  
+
   // Kiểm tra giá trị hợp lệ trong khi nhập
   if (isNaN(value) || value < 1) {
     quantityInput.value = 1;
@@ -290,9 +291,9 @@ function handleQuantityInputChange() {
   } else if (value > 3) {
     quantityInput.value = 3;
     value = 3;
-    showToast("Maximum quantity is 3","error");
+    showToast("Maximum quantity is 3", "error");
   }
-  
+
   updateModalPrice(value);
 }
 
@@ -300,7 +301,7 @@ function handleQuantityInputChange() {
 function updateModalPrice(quantity) {
   const addButton = document.getElementById('add-to-basket-btn');
   const totalPrice = currentBasketItem.price * quantity;
-  
+
   addButton.innerHTML = `
     <div class="w-[225px] h-[27px] text-[18px] leading-[150%] font-bold text-white font-[inter] flex-none order-0 flex-grow-0">
       Add to Basket - ${formatPrice(totalPrice)} đ
@@ -312,13 +313,13 @@ function addToBasket() {
   const quantityInput = document.getElementById('modal-quantity');
   const quantity = parseInt(quantityInput.value);
   const itemData = currentBasketItem;
-  
+
   // Đảm bảo quantity hợp lệ trước khi lưu
   if (isNaN(quantity) || quantity < 1 || quantity > 3) {
     showToast("Invalid quantity", "error");
     return;
   }
-  
+
   // Tạo basket item object với quantity từ modal
   const basketItem = {
     id: itemData.id,
@@ -329,18 +330,18 @@ function addToBasket() {
     quantity: quantity,
     totalPrice: itemData.price * quantity
   };
-  
+
   // SET quantity trong session (không cộng thêm, mà thay thế)
   setBasketItemQuantity(basketItem);
-  
+
   // Đóng modal
   closeBasketPopup();
-  
+
   // Hiển thị thông báo thành công (nếu có function showToast)
   if (typeof showToast === 'function') {
     showToast(`Item quantity updated`, "success");
   }
-  
+
   // Trigger event để sync với menu (nếu cần)
   document.dispatchEvent(new CustomEvent('basketUpdated'));
 }
@@ -352,61 +353,81 @@ export function showCartModal() {
 
   // Tính tổng tiền
   const totalPrice = basket.reduce((sum, item) => sum + item.totalPrice, 0);
-  
+
   // Tạo HTML cho các items trong cart
-  const cartItemsHtml = basket.map(item => `
-    <div class="cart-item-list mb-6 relative flex flex-col items-start p-[24px_32px] gap-2 isolate w-full bg-[#F9F9F9] rounded-[16px]" data-item-id="${item.id}">
-      <button class="flex flex-row items-start p-0 gap-1 absolute w-[24px] h-[24px] right-2 top-2 rounded-[31px] z-[1] cart-item-remove">
-        <img src="/img/icon/cancel-item-icon.svg" alt="">
-      </button>
-      <div class="flex flex-row items-start p-0 gap-4 w-full">
-        <!-- Image -->
-        <div class="flex flex-col items-start p-0 w-[90px] h-[90px] rounded-[5.53846px] flex-none">
-          <div class="item-cart-image w-[90px] h-[90px] bg-no-repeat bg-cover bg-center rounded-2xl flex-none order-0 self-stretch flex-grow"
-               style="background-image: url('${item.image}');">
+  let cartItemsHtml = '';
+  let emptyCartHtml = '';
+
+  if (basket.length > 0) {
+    cartItemsHtml = basket.map(item => `
+      <div class="cart-item-list mb-6 relative flex flex-col items-start p-[24px_32px] gap-2 isolate w-full bg-[#F9F9F9] rounded-[16px]" data-item-id="${item.id}">
+        <button class="flex flex-row items-start p-0 gap-1 absolute w-[24px] h-[24px] right-2 top-2 rounded-[31px] z-[1] cart-item-remove">
+          <img src="/img/icon/cancel-item-icon.svg" alt="">
+        </button>
+        <div class="flex flex-row items-start p-0 gap-4 w-full">
+          <!-- Image -->
+          <div class="flex flex-col items-start p-0 w-[90px] h-[90px] rounded-[5.53846px] flex-none">
+            <div class="item-cart-image w-[90px] h-[90px] bg-no-repeat bg-cover bg-center rounded-2xl flex-none order-0 self-stretch flex-grow"
+                 style="background-image: url('${item.image}');">
+            </div>
           </div>
-        </div>
-        <!-- Content -->
-        <div class="cart-item-content flex-1">
-          <div class="cart-item flex flex-row items-start p-0 gap-4 w-full">
-            <!-- Title -->
-            <div class="flex flex-col items-start p-0 flex-1">
-              <!-- Name -->
-              <div class="item-cart-name text-[20px] leading-[150%] font-semibold text-[#292929] font-inter">
-                ${item.name}
+          <!-- Content -->
+          <div class="cart-item-content flex-1">
+            <div class="cart-item flex flex-row items-start p-0 gap-4 w-full">
+              <!-- Title -->
+              <div class="flex flex-col items-start p-0 flex-1">
+                <!-- Name -->
+                <div class="item-cart-name text-[20px] leading-[150%] font-semibold text-[#292929] font-inter">
+                  ${item.name}
+                </div>
+                <!-- Description -->
+                <div class="item-cart-description text-[16px] leading-[150%] font-normal text-[#656565] font-inter">
+                  ${item.description || ''}
+                </div>
               </div>
-              <!-- Description -->
-              <div class="item-cart-description text-[16px] leading-[150%] font-normal text-[#656565] font-inter">
-                ${item.description || ''}
+              <!-- Price -->
+              <div class="flex flex-col items-end px-4 py-0 w-[123px]">
+                <div class="item-cart-price text-[20px] leading-[150%] font-bold text-[#292929] font-inter">
+                  ${formatPrice(item.price)} đ
+                </div>
+                <div class="flex flex-row justify-center items-end py-[6px] px-0 gap-[10px] w-[79px]">
+                  <button class="item-cart-minus flex flex-row justify-center items-center px-2 py-1 w-[24px] h-[24px] bg-[#EFEFEF] rounded-[16px]">−</button>
+                  <input type="number"
+                         class="quantity-display w-[25px] text-center appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                         value="${item.quantity}" min="1" max="3" />
+                  <button class="item-cart-plus flex flex-row justify-center items-center px-2 py-1 w-[24px] h-[24px] bg-[#EFEFEF] rounded-[16px]">+</button>
+                </div>
               </div>
             </div>
-            <!-- Price -->
-            <div class="flex flex-col items-end px-4 py-0 w-[123px]">
-              <div class="item-cart-price text-[20px] leading-[150%] font-bold text-[#292929] font-inter">
-                ${formatPrice(item.price)} đ
-              </div>
-              <div class="flex flex-row justify-center items-end py-[6px] px-0 gap-[10px] w-[79px]">
-                <button class="item-cart-minus flex flex-row justify-center items-center px-2 py-1 w-[24px] h-[24px] bg-[#EFEFEF] rounded-[16px]">−</button>
-                <input type="number"
-                       class="quantity-display w-[25px] text-center appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                       value="${item.quantity}" min="1" max="3" />
-                <button class="item-cart-plus flex flex-row justify-center items-center px-2 py-1 w-[24px] h-[24px] bg-[#EFEFEF] rounded-[16px]">+</button>
-              </div>
+          </div>
+        </div>
+        <!-- Total item -->
+        <div class="flex flex-row justify-end items-start py-2 px-0 gap-4 w-full">
+          <div class="flex flex-row justify-end items-center p-0 gap-1">
+            <div class="item-total-price text-[20px] leading-[150%] font-bold text-[#FF6B00] font-inter">
+              ${formatPrice(item.totalPrice)} đ
             </div>
           </div>
         </div>
       </div>
-      <!-- Total item -->
-      <div class="flex flex-row justify-end items-start py-2 px-0 gap-4 w-full">
-        <div class="flex flex-row justify-end items-center p-0 gap-1">
-          <div class="item-total-price text-[20px] leading-[150%] font-bold text-[#FF6B00] font-inter">
-            ${formatPrice(item.totalPrice)} đ
-          </div>
+    `).join('');
+  } else {
+    // Giỏ hàng trống - hiển thị thông báo
+    emptyCartHtml = `
+      <div class="flex flex-col items-center justify-center py-16 px-8 text-center">
+        <div class="w-24 h-24 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+          <img src="/img/icon/basket-icon.svg" alt="empty-cart" class="w-12 h-12 opacity-50">
         </div>
+        <h3 class="text-[24px] leading-[120%] font-medium text-[#292929] font-inter mb-2">
+          Your cart is empty
+        </h3>
+        <p class="text-[16px] leading-[150%] font-normal text-[#656565] font-inter">
+          Add some delicious items to get started!
+        </p>
       </div>
-    </div>
-  `).join('');
-  
+    `;
+  }
+
   // Tạo modal HTML với data từ session
   const modalHtml = `
     <div id="modal-cart">
@@ -432,42 +453,44 @@ export function showCartModal() {
         <!-- Phần danh sách có thể cuộn -->
         <div class="flex-1 px-8 w-full overflow-hidden">
           <div class="list-cart-item h-full overflow-y-auto custom-scrollbar pr-2">
-            ${cartItemsHtml}
+            ${basket.length > 0 ? cartItemsHtml : emptyCartHtml}
           </div>
         </div>
 
-        <!-- Footer-->
-        <div class="flex flex-col items-center px-8 py-6 gap-6 w-[900px] bg-white shadow-[0px_-10px_4px_rgba(171,171,171,0.01),0px_-6px_3px_rgba(171,171,171,0.05),0px_-3px_3px_rgba(171,171,171,0.09),0px_-1px_1px_rgba(171,171,171,0.1)] flex-none z-[2]">
-          <div class="flex flex-row justify-between items-center p-0 w-[836px]">
-            <h3 class="text-[28px] leading-[120%] font-medium text-[#292929] font-inter">
-              Total
-            </h3>
-            <div class="flex items-center justify-end">
-              <div id="cart-total-price" class="text-[20px] leading-[150%] font-bold text-[#FF6B00] font-inter">
-                ${formatPrice(totalPrice)} đ
+        <!-- Footer - chỉ hiển thị khi có sản phẩm -->
+        ${basket.length > 0 ? `
+          <div class="flex flex-col items-center px-8 py-6 gap-6 w-[900px] bg-white shadow-[0px_-10px_4px_rgba(171,171,171,0.01),0px_-6px_3px_rgba(171,171,171,0.05),0px_-3px_3px_rgba(171,171,171,0.09),0px_-1px_1px_rgba(171,171,171,0.1)] flex-none z-[2]">
+            <div class="flex flex-row justify-between items-center p-0 w-[836px]">
+              <h3 class="text-[28px] leading-[120%] font-medium text-[#292929] font-inter">
+                Total
+              </h3>
+              <div class="flex items-center justify-end">
+                <div id="cart-total-price" class="text-[20px] leading-[150%] font-bold text-[#FF6B00] font-inter">
+                  ${formatPrice(totalPrice)} đ
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Place order -->
-          <button id="place-order-btn"
-                  class="box-border flex flex-row justify-center items-center px-4 py-6 gap-2 w-[836px] h-[77px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] hover:bg-orange-600 transition-colors">
-            <div class="text-[18px] leading-[150%] font-bold text-white font-inter">
-              Place Order
-            </div>
-          </button>
-        </div>
+            <!-- Place order -->
+            <button id="place-order-btn"
+                    class="box-border flex flex-row justify-center items-center px-4 py-6 gap-2 w-[836px] h-[77px] bg-[#FF6B00] border border-[#FF6B00] rounded-[4px] hover:bg-orange-600 transition-colors">
+              <div class="text-[18px] leading-[150%] font-bold text-white font-inter">
+                Place Order
+              </div>
+            </button>
+          </div>
+        ` : ''}
       </div>
 
       <!-- Backdrop overlay -->
       <div class="fixed inset-0 bg-black bg-opacity-10 z-[9998]" id="modal-backdrop"></div>
     </div>
   `;
-  
+
   // Thêm modal vào DOM
   document.body.insertAdjacentHTML('beforeend', modalHtml);
   document.body.style.overflow = 'hidden';
-  
+
   // Setup event listeners cho modal
   setupCartModalEventListeners();
 }
@@ -477,160 +500,165 @@ function setupCartModalEventListeners() {
   // Close button
   const closeBtn = document.getElementById('close-basket-btn');
   const backdrop = document.getElementById('modal-backdrop');
-  
+
   if (closeBtn) {
     closeBtn.addEventListener('click', closeCartModal);
   }
-  
+
   if (backdrop) {
     backdrop.addEventListener('click', closeCartModal);
   }
-  
-  // Remove item buttons
-  document.querySelectorAll('.cart-item-remove').forEach(removeBtn => {
-    removeBtn.addEventListener('click', function() {
-      const cartItem = this.closest('.cart-item-list');
-      const itemId = cartItem.dataset.itemId;
-      
-      // Xóa item khỏi session
-      removeItemFromBasket(itemId);
-      
-      // Xóa item khỏi DOM
-      cartItem.remove();
-      
-      // Cập nhật tổng tiền
-      updateCartModalTotal();
-      
-      // Trigger event để sync với menu
-      document.dispatchEvent(new CustomEvent('basketUpdated'));
-      
-      // Kiểm tra nếu giỏ hàng trống thì đóng modal
-      const remainingItems = document.querySelectorAll('.cart-item-list');
-      if (remainingItems.length === 0) {
-        closeCartModal();
-        showToast("Cart is now empty", "warning");
-      } else {
-        showToast("Item removed from cart", "success");
-      }
-    });
-  });
-  
-  // Plus buttons
-  document.querySelectorAll('.item-cart-plus').forEach(plusBtn => {
-    plusBtn.addEventListener('click', function() {
-      const cartItem = this.closest('.cart-item-list');
-      const itemId = cartItem.dataset.itemId;
-      const quantityInput = this.parentElement.querySelector('.quantity-display');
-      
-      let currentQuantity = parseInt(quantityInput.value);
-      
-      if (currentQuantity < 3) {
-        currentQuantity++;
-        quantityInput.value = currentQuantity;
-        
-        // Cập nhật session
-        updateBasketItemQuantity(itemId, currentQuantity);
-        
-        // Cập nhật giá item và tổng tiền
-        updateCartItemPrice(cartItem, itemId);
-        updateCartModalTotal();
-        
-        // Trigger event để sync với menu
-        document.dispatchEvent(new CustomEvent('basketUpdated'));
-      } else {
-        showToast("Maximum quantity is 3", "error");
-      }
-    });
-  });
-  
-  // Minus buttons
-  document.querySelectorAll('.item-cart-minus').forEach(minusBtn => {
-    minusBtn.addEventListener('click', function() {
-      const cartItem = this.closest('.cart-item-list');
-      const itemId = cartItem.dataset.itemId;
-      const quantityInput = this.parentElement.querySelector('.quantity-display');
-      
-      let currentQuantity = parseInt(quantityInput.value);
-      
-      if (currentQuantity > 1) {
-        currentQuantity--;
-        quantityInput.value = currentQuantity;
-        
-        // Cập nhật session
-        updateBasketItemQuantity(itemId, currentQuantity);
-        
-        // Cập nhật giá item và tổng tiền
-        updateCartItemPrice(cartItem, itemId);
-        updateCartModalTotal();
-        
-        // Trigger event để sync với menu
-        document.dispatchEvent(new CustomEvent('basketUpdated'));
-      }
-    });
-  });
-  
-  // Quantity input change
-  document.querySelectorAll('.quantity-display').forEach(quantityInput => {
-    quantityInput.addEventListener('input', function() {
-      const cartItem = this.closest('.cart-item-list');
-      const itemId = cartItem.dataset.itemId;
-      let value = parseInt(this.value);
-      
-      if (isNaN(value) || value < 1) {
-        this.value = 1;
-        value = 1;
-      } else if (value > 3) {
-        this.value = 3;
-        value = 3;
-        showToast("Maximum quantity is 3", "error");
-      }
-      
-      // Cập nhật session
-      updateBasketItemQuantity(itemId, value);
-      
-      // Cập nhật giá item và tổng tiền
-      updateCartItemPrice(cartItem, itemId);
-      updateCartModalTotal();
-      
-      // Trigger event để sync với menu
-      document.dispatchEvent(new CustomEvent('basketUpdated'));
-    });
-    
-    quantityInput.addEventListener('blur', function() {
-      let value = parseInt(this.value);
-      
-      if (isNaN(value) || value < 1) {
-        this.value = 1;
+
+  // Chỉ setup các event listeners khác nếu có sản phẩm trong giỏ hàng
+  const basket = getBasketFromSession();
+
+  if (basket.length > 0) {
+    // Remove item buttons
+    document.querySelectorAll('.cart-item-remove').forEach(removeBtn => {
+      removeBtn.addEventListener('click', function () {
         const cartItem = this.closest('.cart-item-list');
         const itemId = cartItem.dataset.itemId;
-        updateBasketItemQuantity(itemId, 1);
-        updateCartItemPrice(cartItem, itemId);
+
+        // Xóa item khỏi session
+        removeItemFromBasket(itemId);
+
+        // Xóa item khỏi DOM
+        cartItem.remove();
+
+        // Cập nhật tổng tiền
         updateCartModalTotal();
-        
+
         // Trigger event để sync với menu
         document.dispatchEvent(new CustomEvent('basketUpdated'));
-      }
+
+        // Kiểm tra nếu giỏ hàng trống thì đóng modal và mở lại
+        const remainingItems = document.querySelectorAll('.cart-item-list');
+        if (remainingItems.length === 0) {
+          closeCartModal();
+          showCartModal();
+        } else {
+          showToast("Item removed from cart", "success");
+        }
+      });
     });
-  });
-  
-  // Place order button
-  const placeOrderBtn = document.getElementById('place-order-btn');
-  if (placeOrderBtn) {
-    placeOrderBtn.addEventListener('click', function() {
-      // Kiểm tra giỏ hàng có sản phẩm không
-      const basket = getBasketFromSession();
-      
-      if (basket.length === 0) {
-        showToast("Your cart is empty!", "error");
-        return;
-      }
-      
-      // Đóng modal trước khi chuyển trang
-      closeCartModal();
-      
-      // Chuyển hướng đến trang delivery-information.html
-      window.location.href = '/delivery-information.html';
+
+    // Plus buttons
+    document.querySelectorAll('.item-cart-plus').forEach(plusBtn => {
+      plusBtn.addEventListener('click', function () {
+        const cartItem = this.closest('.cart-item-list');
+        const itemId = cartItem.dataset.itemId;
+        const quantityInput = this.parentElement.querySelector('.quantity-display');
+
+        let currentQuantity = parseInt(quantityInput.value);
+
+        if (currentQuantity < 3) {
+          currentQuantity++;
+          quantityInput.value = currentQuantity;
+
+          // Cập nhật session
+          updateBasketItemQuantity(itemId, currentQuantity);
+
+          // Cập nhật giá item và tổng tiền
+          updateCartItemPrice(cartItem, itemId);
+          updateCartModalTotal();
+
+          // Trigger event để sync với menu
+          document.dispatchEvent(new CustomEvent('basketUpdated'));
+        } else {
+          showToast("Maximum quantity is 3", "error");
+        }
+      });
     });
+
+    // Minus buttons
+    document.querySelectorAll('.item-cart-minus').forEach(minusBtn => {
+      minusBtn.addEventListener('click', function () {
+        const cartItem = this.closest('.cart-item-list');
+        const itemId = cartItem.dataset.itemId;
+        const quantityInput = this.parentElement.querySelector('.quantity-display');
+
+        let currentQuantity = parseInt(quantityInput.value);
+
+        if (currentQuantity > 1) {
+          currentQuantity--;
+          quantityInput.value = currentQuantity;
+
+          // Cập nhật session
+          updateBasketItemQuantity(itemId, currentQuantity);
+
+          // Cập nhật giá item và tổng tiền
+          updateCartItemPrice(cartItem, itemId);
+          updateCartModalTotal();
+
+          // Trigger event để sync với menu
+          document.dispatchEvent(new CustomEvent('basketUpdated'));
+        }
+      });
+    });
+
+    // Quantity input change
+    document.querySelectorAll('.quantity-display').forEach(quantityInput => {
+      quantityInput.addEventListener('input', function () {
+        const cartItem = this.closest('.cart-item-list');
+        const itemId = cartItem.dataset.itemId;
+        let value = parseInt(this.value);
+
+        if (isNaN(value) || value < 1) {
+          this.value = 1;
+          value = 1;
+        } else if (value > 3) {
+          this.value = 3;
+          value = 3;
+          showToast("Maximum quantity is 3", "error");
+        }
+
+        // Cập nhật session
+        updateBasketItemQuantity(itemId, value);
+
+        // Cập nhật giá item và tổng tiền
+        updateCartItemPrice(cartItem, itemId);
+        updateCartModalTotal();
+
+        // Trigger event để sync với menu
+        document.dispatchEvent(new CustomEvent('basketUpdated'));
+      });
+
+      quantityInput.addEventListener('blur', function () {
+        let value = parseInt(this.value);
+
+        if (isNaN(value) || value < 1) {
+          this.value = 1;
+          const cartItem = this.closest('.cart-item-list');
+          const itemId = cartItem.dataset.itemId;
+          updateBasketItemQuantity(itemId, 1);
+          updateCartItemPrice(cartItem, itemId);
+          updateCartModalTotal();
+
+          // Trigger event để sync với menu
+          document.dispatchEvent(new CustomEvent('basketUpdated'));
+        }
+      });
+    });
+
+    // Place order button
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    if (placeOrderBtn) {
+      placeOrderBtn.addEventListener('click', function () {
+        // Kiểm tra giỏ hàng có sản phẩm không
+        const basket = getBasketFromSession();
+
+        if (basket.length === 0) {
+          showToast("Your cart is empty!", "error");
+          return;
+        }
+
+        // Đóng modal trước khi chuyển trang
+        closeCartModal();
+
+        // Chuyển hướng đến trang delivery-information.html
+        window.location.href = '/delivery-information.html';
+      });
+    }
   }
 }
 
@@ -647,7 +675,7 @@ function closeCartModal() {
 function updateCartItemPrice(cartItemElement, itemId) {
   const basket = getBasketFromSession();
   const item = basket.find(basketItem => basketItem.id === itemId);
-  
+
   if (item) {
     const totalPriceElement = cartItemElement.querySelector('.item-total-price');
     if (totalPriceElement) {
@@ -660,7 +688,7 @@ function updateCartItemPrice(cartItemElement, itemId) {
 function updateCartModalTotal() {
   const basket = getBasketFromSession();
   const totalPrice = basket.reduce((sum, item) => sum + item.totalPrice, 0);
-  
+
   const totalPriceElement = document.getElementById('cart-total-price');
   if (totalPriceElement) {
     totalPriceElement.textContent = `${formatPrice(totalPrice)} đ`;
@@ -672,10 +700,21 @@ function updateCartModalTotal() {
 // Function để setup event listener cho card-detail (gọi sau khi tạo card-detail)
 export function setupCartDetailClickListener() {
   // Sử dụng event delegation để handle cả card-detail hiện tại và tương lai
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', function (e) {
     // Kiểm tra nếu element được click có class card-detail hoặc là con của card-detail
     const cardDetail = e.target.closest('.card-detail');
     if (cardDetail) {
+      e.preventDefault();
+      e.stopPropagation();
+      showCartModal();
+    }
+  });
+
+  // Thêm event listener cho cart bình thường (nếu vẫn còn hiển thị)
+  document.addEventListener('click', function (e) {
+    // Kiểm tra nếu element được click có class heading_nav-cart hoặc là con của nó
+    const normalCart = e.target.closest('.heading_nav-cart');
+    if (normalCart) {
       e.preventDefault();
       e.stopPropagation();
       showCartModal();
@@ -687,7 +726,7 @@ export function setupCartDetailClickListener() {
 
 // Function format price - cần import từ nơi khác hoặc định nghĩa lại
 function formatPrice(price) {
-  if (!price) return '0 đ';
+  if (!price) return '0';
   return parseInt(price).toLocaleString('vi-VN');
 }
 
