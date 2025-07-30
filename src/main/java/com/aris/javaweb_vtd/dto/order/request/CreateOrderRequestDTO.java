@@ -23,6 +23,5 @@ public class CreateOrderRequestDTO {
     @NotNull(message = "Shipping fee must not be null")
     private Double shippingFee;
 
-    @NotNull(message = "Order code is required")
     private String orderCode;
 }

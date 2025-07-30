@@ -39,7 +39,7 @@ public class OrderStatusUtil {
   }
 
   public void computeOrderSummary(OrderResponseDTO order) {
-    int subTotal = 0;
+    Double subTotal = 0.0;
 
     List<OrderItemResponseDTO> items = order.getItems();
     if (items != null) {

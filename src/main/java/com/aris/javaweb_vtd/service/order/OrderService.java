@@ -6,7 +6,7 @@ import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
 
 public interface OrderService {
-    void createOrder(CreateOrderRequestDTO request);
+    OrderResponseDTO createOrder(CreateOrderRequestDTO request);
 
     PageDTO<OrderResponseDTO> getOrders(OrderSearchDTO orderSearchDTO);
 

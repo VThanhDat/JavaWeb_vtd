@@ -276,24 +276,22 @@ function handlePlaceOrder() {
     method: "POST",
     contentType: "application/json",
     data: JSON.stringify(orderData),
-    success: function(response) {
-      if (response.orderCode) {
-        localStorage.setItem("orderCode", response.orderCode);
+    success: function (response) {
+      if (response.data.orderCode) {
+        sessionStorage.setItem("orderCode", response.data.orderCode);
+        localStorage.setItem("successOrder", response.message);
         window.location.href = "order-success.html";
       } else {
-        showToast("Order code not received from server","error");
+        showToast("Order code not received from server", "error");
       }
+      sessionStorage.removeItem("basket");
     },
-    error: function(xhr) {
-       const msg = xhr.responseJSON?.data;
+    error: function (xhr) {
+      const msg = xhr.responseJSON?.data;
       showToast(msg, "error");
     }
   });
-
-  sessionStorage.removeItem("basket");
 }
-
-
 
 function collectDeliveryInfo() {
   return {

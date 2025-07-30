@@ -89,10 +89,10 @@ function showSuccessLogout() {
 }
 
 function showSuccessOrder() {
-  const orderData = localStorage.getItem("orderData");
-  if (orderData === "Successfully") {
+  const successOrder = localStorage.getItem("successOrder");
+  if (successOrder === "success") {
     showToast("Order placed successfully! We're preparing your food", "success");
-    localStorage.removeItem("orderData");
+    localStorage.removeItem("successOrder");
   }
 }
 

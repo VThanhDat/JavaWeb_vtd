@@ -30,13 +30,9 @@ public class OrderController {
 
   @Operation(summary = "Create order")
   @PostMapping("/add")
-  public ResponseEntity<ApiResponseDTO<String>> createOrder(@RequestBody @Valid CreateOrderRequestDTO request) {
-    try {
-      orderService.createOrder(request);
-      return ResponseEntity.ok(ApiResponseDTO.success("Successfully"));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(ApiResponseDTO.error(e.getMessage()));
-    }
+  public ResponseEntity<ApiResponseDTO<OrderResponseDTO>> createOrder(
+      @RequestBody @Valid CreateOrderRequestDTO request) {
+    return ResponseEntity.ok(ApiResponseDTO.success(orderService.createOrder(request)));
   }
 
   @Operation(summary = "Get all orders by filters and can pagination")

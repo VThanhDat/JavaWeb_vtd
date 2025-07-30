@@ -3,6 +3,7 @@ package com.aris.javaweb_vtd.service.order;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
+import com.aris.javaweb_vtd.converter.OrderItemConverter;
 import com.aris.javaweb_vtd.dto.common.OrderSearchDTO;
 import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.order.request.CreateOrderRequestDTO;
-import com.aris.javaweb_vtd.dto.order.request.CustomerRequestDTO;
 import com.aris.javaweb_vtd.dto.order.request.OrderItemRequestDTO;
+import com.aris.javaweb_vtd.dto.order.response.OrderItemResponseDTO;
 import com.aris.javaweb_vtd.dto.order.response.OrderResponseDTO;
 import com.aris.javaweb_vtd.entity.Customer;
 import com.aris.javaweb_vtd.entity.Order;
@@ -42,41 +44,64 @@ public class OrderServiceImpl implements OrderService {
   private OrderConverter orderConverter;
 
   @Autowired
+  private OrderItemConverter orderItemConverter;
+
+  @Autowired
   private CustommerMapper customerMapper;
 
   @Autowired
   private OrderStatusUtil orderStatusUtil;
 
   @Transactional
-  public void createOrder(CreateOrderRequestDTO request) {
-    CustomerRequestDTO customerDTO = request.getCustomer();
-    Customer customer = customerConverter.toEntity(customerDTO);
-
+  public OrderResponseDTO createOrder(CreateOrderRequestDTO request) {
+    // 1. Convert và insert customer
+    Customer customer = customerConverter.toEntity(request.getCustomer());
     customerMapper.insertCustomer(customer);
     Long customerId = customer.getId();
 
-    double shippingFee = request.getShippingFee() != null ? request.getShippingFee() : 0.0;
+    // 2. Tính total
+    Double shippingFee = request.getShippingFee() != null ? request.getShippingFee() : 0.0;
+    Double subTotal = request.getItems().stream()
+        .mapToDouble(item -> item.getPrice() * item.getQuantity())
+        .sum();
 
-    double total = 0;
-    for (OrderItemRequestDTO item : request.getItems()) {
-      total += item.getPrice() * item.getQuantity();
-    }
-    total += shippingFee;
+    Double total = subTotal + shippingFee;
 
+    // 3. Tạo order
     Order order = orderConverter.toEntity(request);
     order.setCustomerId(customerId);
+    order.setTotalPrice(subTotal);
+    order.setShippingFee(shippingFee);
     order.setTotalPrice(total);
     order.setOrderCode(orderStatusUtil.generateUniqueOrderCode());
     order.setStatus("new");
-
+    order.setCreatedAt(LocalDateTime.now());
     orderMapper.insertOrder(order);
+
     Long orderId = order.getId();
 
+    // 4. Tạo và insert chi tiết đơn hàng
+    List<OrderItemResponseDTO> itemResponses = new ArrayList<>();
     for (OrderItemRequestDTO item : request.getItems()) {
       OrderDetail detail = orderConverter.toDetailEntity(item);
       detail.setOrderId(orderId);
       orderDetailMapper.insertOrderDetail(detail);
+
+      OrderItemResponseDTO itemDTO = orderItemConverter.toResponseDTO(detail);
+      itemResponses.add(itemDTO);
     }
+
+    // 5. Trả về DTO
+    return new OrderResponseDTO(
+        orderId,
+        itemResponses,
+        customerConverter.toResponseDTO(customer),
+        order.getOrderCode(),
+        order.getCreatedAt().toString(),
+        order.getStatus(),
+        shippingFee,
+        subTotal,
+        total);
   }
 
   @Override
