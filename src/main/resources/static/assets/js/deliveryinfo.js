@@ -247,71 +247,53 @@ function handleCancelOrder() {
   window.location.href = "home.html";
 }
 
-function checkOrderCodeExists(code) {
-  return $.ajax({
-    url: `/api/order/check-order-code`,
-    method: 'GET',
-    data: { code: code },
-  }).then(function(response) {
-    return response.data;
-  });
-}
-
-
-function generateUniqueOrderCode() {
-  return new Promise(function(resolve, reject) {
-    function tryGenerate() {
-      const randomNum = Math.floor(100000 + Math.random() * 900000);
-      const code = "OD" + randomNum;
-
-      checkOrderCodeExists(code)
-        .then(function(exists) {
-          if (!exists) {
-            resolve(code);
-          } else {
-            tryGenerate();
-          }
-        })
-        .catch(function(err) {
-          reject(err);
-        });
-    }
-
-    tryGenerate();
-  });
-}
-
-async function handlePlaceOrder() {
+function handlePlaceOrder() {
   const deliveryInfo = collectDeliveryInfo();
 
-  if (validateDeliveryInfo(deliveryInfo)) {
-    const basketData = getBasketFromSession();
+  if (!validateDeliveryInfo(deliveryInfo)) return;
 
-    const randomOrderCode = await generateUniqueOrderCode();
+  const basketData = getBasketFromSession();
 
-    const orderData = {
-      orderCode: randomOrderCode,
-      customer: {
-        fullName: deliveryInfo.fullName,
-        phone: deliveryInfo.phone,
-        city: deliveryInfo.city,
-        ward: deliveryInfo.ward,
-        address: deliveryInfo.address,
-        message: deliveryInfo.message
-      },
-      items: basketData.map(item => ({
-        itemId: item.id || item.itemId,
-        quantity: item.quantity,
-        price: parseInt(item.price)
-      })),
-      shippingFee: getShippingFee()
-    };
+  const orderData = {
+    customer: {
+      fullName: deliveryInfo.fullName,
+      phone: deliveryInfo.phone,
+      city: deliveryInfo.city,
+      ward: deliveryInfo.ward,
+      address: deliveryInfo.address,
+      message: deliveryInfo.message
+    },
+    items: basketData.map(item => ({
+      itemId: item.id || item.itemId,
+      quantity: item.quantity,
+      price: parseInt(item.price)
+    })),
+    shippingFee: getShippingFee()
+  };
 
-    processOrder(orderData);
+  $.ajax({
+    url: "/api/order/add",
+    method: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(orderData),
+    success: function(response) {
+      if (response.orderCode) {
+        localStorage.setItem("orderCode", response.orderCode);
+        window.location.href = "order-success.html";
+      } else {
+        showToast("Order code not received from server","error");
+      }
+    },
+    error: function(xhr) {
+       const msg = xhr.responseJSON?.data;
+      showToast(msg, "error");
+    }
+  });
 
-    sessionStorage.setItem("orderCode", randomOrderCode);
-  }
+  sessionStorage.removeItem("basket");
 }
+
+
 
 function collectDeliveryInfo() {
   return {
@@ -369,29 +351,6 @@ function validateDeliveryInfo(info) {
   }
 
   return true;
-}
-
-function callApiCreateOrder(orderData) {
-  $.ajax({
-    url: "/api/order/add",
-    method: "POST",
-    data: JSON.stringify(orderData),
-    contentType: "application/json",
-    success: function (response) {
-      localStorage.setItem("orderData", response?.data);
-      window.location.href = "order-success.html";
-    },
-    error: function (xhr) {
-      const msg = xhr.responseJSON?.data;
-      showToast(msg, "error");
-    },
-  });
-}
-
-function processOrder(orderData) {
-  console.log("Order data to send:", JSON.stringify(orderData));
-  callApiCreateOrder(orderData);
-  sessionStorage.removeItem("basket");
 }
 
 function initMap() {

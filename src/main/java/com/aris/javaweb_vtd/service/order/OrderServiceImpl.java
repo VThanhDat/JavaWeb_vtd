@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
     Order order = orderConverter.toEntity(request);
     order.setCustomerId(customerId);
     order.setTotalPrice(total);
-    order.setOrderCode(request.getOrderCode());
+    order.setOrderCode(orderStatusUtil.generateUniqueOrderCode());
     order.setStatus("new");
 
     orderMapper.insertOrder(order);
@@ -165,10 +165,5 @@ public class OrderServiceImpl implements OrderService {
     orderStatusUtil.computeOrderSummary(order);
 
     return order;
-  }
-
-  @Override
-  public boolean existsOrderCode(String orderCode) {
-    return orderMapper.existsOrderCode(orderCode);
   }
 }

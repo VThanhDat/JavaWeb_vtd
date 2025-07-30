@@ -15,7 +15,4 @@ public interface OrderService {
     void updateOrderStatus(Long orderId, String newStatus);
 
     OrderResponseDTO getOrderByOrderCode(String orderCode);
-
-    boolean existsOrderCode(String orderCode);
-
 }
