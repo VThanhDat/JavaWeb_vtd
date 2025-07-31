@@ -8,7 +8,10 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemDocumentConverter {
+
   ItemDocument toDocument(Item item);
 
   ItemDocument toDocument(ItemResponseDTO dto);
+
+  ItemResponseDTO toResponseDTO(ItemDocument document);
 }

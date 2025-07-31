@@ -3,6 +3,7 @@ package com.aris.javaweb_vtd.service.item;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.entity.Item;
+import com.aris.javaweb_vtd.event.ItemCreatedEvent;
 import com.aris.javaweb_vtd.mapper.ItemMapper;
 import com.aris.javaweb_vtd.util.FileUploadUtil;
 
@@ -23,6 +25,9 @@ public class ItemServiceImpl implements ItemService {
 
   @Autowired
   private ItemConverter itemConverter;
+
+  @Autowired
+  private ApplicationEventPublisher eventPublisher;
 
   @Transactional
   public void createItem(ItemRequestDTO dto) {
@@ -42,7 +47,10 @@ public class ItemServiceImpl implements ItemService {
 
       Item item = itemConverter.toEntity(dto, fullPath);
       itemMapper.insertItem(item);
+      Item savedItem = itemMapper.selectByNameAndType(dto.getName(), dto.getType());
 
+      ItemResponseDTO responseDTO = itemConverter.toResponseDTO(savedItem);
+      eventPublisher.publishEvent(new ItemCreatedEvent(responseDTO));
     } catch (Exception e) {
       if (fullPath != null) {
         FileUploadUtil.safeDeleteImage(fullPath);
@@ -144,4 +152,8 @@ public class ItemServiceImpl implements ItemService {
     return new PageDTO<>(items, dto.getPage(), totalPages, total);
   }
 
+  @Override
+  public List<ItemResponseDTO> getAllItems() {
+    return itemMapper.selectAllItems();
+  }
 }

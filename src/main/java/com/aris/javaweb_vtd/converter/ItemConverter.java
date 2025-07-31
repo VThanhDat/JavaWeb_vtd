@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import com.aris.javaweb_vtd.dto.item.request.ItemRequestDTO;
+import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
 import com.aris.javaweb_vtd.entity.Item;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -13,4 +14,6 @@ public interface ItemConverter {
   @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
   @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
   Item toEntity(ItemRequestDTO dto, String filename);
+
+  ItemResponseDTO toResponseDTO(Item item);
 }

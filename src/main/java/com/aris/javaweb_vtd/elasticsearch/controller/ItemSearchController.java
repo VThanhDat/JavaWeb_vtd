@@ -1,45 +1,52 @@
 package com.aris.javaweb_vtd.elasticsearch.controller;
 
+import com.aris.javaweb_vtd.dto.common.ApiResponseDTO;
+import com.aris.javaweb_vtd.dto.common.ItemSearchDTO;
+import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO;
-import com.aris.javaweb_vtd.elasticsearch.document.ItemDocument;
-import com.aris.javaweb_vtd.elasticsearch.service.ItemSearchService;
-import com.aris.javaweb_vtd.elasticsearch.repository.ItemSearchRepository;
+import com.aris.javaweb_vtd.elasticsearch.service.ItemElasticService;
 import com.aris.javaweb_vtd.service.item.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/search/items")
+@RequestMapping("/api/search/item")
 public class ItemSearchController {
+  @Autowired
+  private ItemElasticService itemSearchService;
 
-    @Autowired
-    private ItemSearchRepository itemSearchRepository;
+  @Autowired
+  private ItemService itemService;
 
-    @Autowired
-    private ItemSearchService itemSearchService;
+  @GetMapping
+  public ResponseEntity<ApiResponseDTO<PageDTO<ItemResponseDTO>>> searchItems(ItemSearchDTO searchDTO) {
+    PageDTO<ItemResponseDTO> result = itemSearchService.searchItemsAsDTO(searchDTO);
+    return ResponseEntity.ok(ApiResponseDTO.success(result));
+  }
 
-    @Autowired
-    private ItemService itemService; // Dùng nếu muốn sync 1 item từ DB lên ES
+  @PostMapping("/sync-all")
+  public ResponseEntity<ApiResponseDTO<String>> syncAllItemsToElasticsearch() {
+    try {
+      List<ItemResponseDTO> items = itemService.getAllItems();
+      System.out.println(items);
 
-    // Tìm kiếm theo tên (match)
-    @GetMapping
-    public List<ItemDocument> searchItems(@RequestParam("keyword") String keyword) {
-        return itemSearchRepository.findByNameContainingIgnoreCase(keyword);
+      if (items.isEmpty()) {
+        return ResponseEntity.ok(ApiResponseDTO.success("No items found in MySQL."));
+      }
+
+      items.forEach(itemSearchService::indexItem);
+
+      return ResponseEntity.ok(
+          ApiResponseDTO.success(items.size() + " items indexed to Elasticsearch."));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+          ApiResponseDTO.error(e.getMessage()));
     }
-
-    // (Optional) Sync thủ công 1 Item từ DB lên Elasticsearch
-    @PostMapping("/sync/{itemId}")
-    public String syncItemToElasticsearch(@PathVariable Long itemId) {
-        ItemResponseDTO itemDto = itemService.getItemById(itemId);
-        if (itemDto != null) {
-            // Chuyển đổi từ DTO sang Document để index vào ES
-            itemSearchService.indexItem(itemDto);
-            return "Item " + itemId + " indexed to Elasticsearch.";
-        } else {
-            return "Item not found in MySQL.";
-        }
-    }
+  }
 
 }

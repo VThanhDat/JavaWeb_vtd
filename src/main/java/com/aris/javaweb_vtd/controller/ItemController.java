@@ -63,6 +63,7 @@ public class ItemController {
   @Operation(summary = "Get all items")
   @GetMapping
   public ResponseEntity<ApiResponseDTO<PageDTO<ItemResponseDTO>>> getItems(ItemSearchDTO dto) {
+    System.out.println(dto.getName());
     PageDTO<ItemResponseDTO> page = itemService.searchItemsWithPaging(dto);
     return ResponseEntity.ok(ApiResponseDTO.success(page));
   }

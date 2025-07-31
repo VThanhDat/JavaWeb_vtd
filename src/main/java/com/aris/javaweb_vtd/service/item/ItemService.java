@@ -19,4 +19,6 @@ public interface ItemService {
   void deleteItem(Long id);
 
   PageDTO<ItemResponseDTO> searchItemsWithPaging(ItemSearchDTO dto);
+
+  List<ItemResponseDTO> getAllItems();
 }

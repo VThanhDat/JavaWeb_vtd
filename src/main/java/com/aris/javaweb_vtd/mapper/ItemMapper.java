@@ -14,14 +14,18 @@ public interface ItemMapper {
   void insertItem(Item item);
 
   boolean existsByNameAndType(String name, String type);
-  
+
   ItemResponseDTO getItemById(Long id);
-  
+
   int updateItem(Item item);
-  
+
   int updateStatusById(Long id, int status);
 
   List<ItemResponseDTO> getItemsWithFilters(ItemSearchDTO search);
 
   int countItemsWithFilters(ItemSearchDTO dto);
+
+  List<ItemResponseDTO> selectAllItems();
+
+  Item selectByNameAndType(String name, String type);
 }
