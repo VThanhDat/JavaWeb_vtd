@@ -26,6 +26,4 @@ public interface ItemMapper {
   int countItemsWithFilters(ItemSearchDTO dto);
 
   List<ItemResponseDTO> selectAllItems();
-
-  Item selectByNameAndType(String name, String type);
 }

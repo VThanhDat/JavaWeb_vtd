@@ -7,16 +7,16 @@ let currentPage = 1;
 let pageSize = 10;
 let lastSearchQuery = "";
 
-function callApiSearchWithPaging({ 
-  name = "", 
-  type = "food", 
-  page = 1, 
-  size = 10, 
+function callApiSearchWithPaging({
+  name = "",
+  type = "food",
+  page = 1,
+  size = 10,
 }) {
   $.ajax({
-    url: "/api/item",
+    url: "/api/search/item",
     method: "GET",
-    data: { name, type, page, size},
+    data: { name, type, page, size },
     xhrFields: { withCredentials: true },
     success: function (response) {
       const result = response?.data || {};
@@ -24,7 +24,7 @@ function callApiSearchWithPaging({
       currentPage = result.currentPage;
       currentType = type;
       lastSearchQuery = name;
-      
+
       renderItems();
       renderPaginationControls(result.totalPages, result.currentPage, result.totalItems, fetchPage);
     },
@@ -36,39 +36,39 @@ function callApiSearchWithPaging({
 }
 
 function loadItems(type = currentType) {
-  callApiSearchWithPaging({ 
-    name: lastSearchQuery, 
-    type, 
-    page: 1, 
-    size: pageSize 
+  callApiSearchWithPaging({
+    name: lastSearchQuery,
+    type,
+    page: 1,
+    size: pageSize
   });
 }
 
 function searchItems(query) {
   lastSearchQuery = query;
-  callApiSearchWithPaging({ 
-    name: query, 
-    type: currentType, 
-    page: 1, 
-    size: pageSize 
+  callApiSearchWithPaging({
+    name: query,
+    type: currentType,
+    page: 1,
+    size: pageSize
   });
 }
 
 function fetchPage(page, size = pageSize) {
-  callApiSearchWithPaging({ 
-    name: lastSearchQuery, 
-    type: currentType, 
-    page, 
-    size 
+  callApiSearchWithPaging({
+    name: lastSearchQuery,
+    type: currentType,
+    page,
+    size
   });
 }
 
 function reloadItemList() {
-  callApiSearchWithPaging({ 
-    name: lastSearchQuery, 
-    type: currentType, 
-    page: currentPage, 
-    size: pageSize 
+  callApiSearchWithPaging({
+    name: lastSearchQuery,
+    type: currentType,
+    page: currentPage,
+    size: pageSize
   });
 }
 
@@ -92,7 +92,7 @@ function renderItems() {
   items.forEach((item, index) => {
     const tr = document.createElement("tr");
     const itemNumber = startIndex + index + 1;
-    
+
     // Chỉ render nút Delete/Edit khi status = 1
     let actionButtons = '';
     if (item.status === 1) {
@@ -110,7 +110,7 @@ function renderItems() {
         </div>
       `;
     }
-    
+
     tr.innerHTML = `
       <td>${String(itemNumber).padStart(3, "0")}</td>
       <td><img src="/${item.image}"></td>
@@ -495,7 +495,7 @@ function callApiDeleteItem(id) {
 document.addEventListener("DOMContentLoaded", function () {
   setupTabToggle();
   openModalAdd();
-  handleItemFormSubmit();  
+  handleItemFormSubmit();
   setupSearchInput();
   setupPageSizeSelector(
     (newPageSize) => {

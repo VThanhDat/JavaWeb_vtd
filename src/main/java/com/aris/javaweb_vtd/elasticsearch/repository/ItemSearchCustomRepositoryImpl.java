@@ -50,9 +50,9 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
     String sortField = dto.getSortBy() != null ? dto.getSortBy() : "createdAt";
     SortOrder sortOrder = "DESC".equalsIgnoreCase(dto.getSortOrder()) ? SortOrder.Desc : SortOrder.Asc;
 
-    Pageable pageable = PageRequest.of(
-        dto.getPage() != null ? dto.getPage() : 0,
-        dto.getSize() != null ? dto.getSize() : 10);
+    int page = dto.getPage() != null && dto.getPage() > 0 ? dto.getPage() - 1 : 0;
+    int size = dto.getSize() != null ? dto.getSize() : 10;
+    Pageable pageable = PageRequest.of(page, size);
 
     NativeQuery searchQuery = NativeQuery.builder()
         .withQuery(boolQueryBuilder.build()._toQuery())
@@ -70,13 +70,12 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
         .map(hit -> hit.getContent())
         .toList();
 
-
     long totalItems = searchHits.getTotalHits();
     int totalPages = (int) Math.ceil((double) totalItems / pageable.getPageSize());
 
     return new PageDTO<>(
         documents,
-        pageable.getPageNumber(),
+        pageable.getPageNumber() + 1,
         (int) totalItems,
         totalPages);
   }

@@ -47,9 +47,8 @@ public class ItemServiceImpl implements ItemService {
 
       Item item = itemConverter.toEntity(dto, fullPath);
       itemMapper.insertItem(item);
-      Item savedItem = itemMapper.selectByNameAndType(dto.getName(), dto.getType());
 
-      ItemResponseDTO responseDTO = itemConverter.toResponseDTO(savedItem);
+      ItemResponseDTO responseDTO = itemConverter.toResponseDTO(item);
       eventPublisher.publishEvent(new ItemCreatedEvent(responseDTO));
     } catch (Exception e) {
       if (fullPath != null) {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aris.javaweb_vtd.mapper.ItemMapper">
-  <insert id="insertItem" parameterType="map"> INSERT INTO items (name ,image ,description ,price
-    ,type ,<if test="status != null">status ,</if> created_at, updated_at) VALUES (#{name} ,#{image}
-    ,#{description} ,#{price} ,#{type} ,<if test="status != null">#{status} ,</if> #{createdAt}
-    ,#{updatedAt}) </insert>
+  <insert id="insertItem" parameterType="map" useGeneratedKeys="true" keyProperty="id"> INSERT INTO
+    items (name ,image ,description ,price ,type ,<if test="status != null">status ,</if>
+    created_at, updated_at) VALUES (#{name} ,#{image} ,#{description} ,#{price} ,#{type} ,<if
+      test="status != null">#{status} ,</if> #{createdAt} ,#{updatedAt}) </insert>
 
   <select id="existsByNameAndType" resultType="boolean"> SELECT COUNT(1) > 0 FROM items WHERE name =
     #{name} AND type = #{type} </select>
@@ -67,7 +67,4 @@
   <select id="selectAllItems" resultType="com.aris.javaweb_vtd.dto.item.response.ItemResponseDTO">
     SELECT id, name, image, description, type, price, status, created_at AS createdAt, updated_at AS
     updatedAt FROM items </select>
-
-  <select id="selectByNameAndType" resultType="com.aris.javaweb_vtd.entity.Item"> SELECT * FROM
-    items WHERE name = #{name} AND type = #{type} ORDER BY created_at DESC LIMIT 1 </select>
 </mapper>
