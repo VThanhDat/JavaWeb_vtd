@@ -2,12 +2,10 @@ package com.aris.javaweb_vtd.elasticsearch.repository;
 
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.MatchPhraseQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
 import lombok.RequiredArgsConstructor;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.*;
@@ -31,10 +29,10 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
     BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
 
     if (dto.getName() != null && !dto.getName().isBlank()) {
-      boolQueryBuilder.must(MatchPhraseQuery.of(m -> m
-          .field("name")
-          .query(dto.getName()))
-          ._toQuery());
+      boolQueryBuilder.must(QueryStringQuery.of(q -> q
+          .query("*" + dto.getName().trim() + "*")
+          .fields("name", "name.keyword")
+          .defaultOperator(co.elastic.clients.elasticsearch._types.query_dsl.Operator.And))._toQuery());
     }
 
     if (dto.getType() != null && !dto.getType().isBlank()) {
@@ -66,21 +64,15 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
         .withTrackTotalHits(true)
         .build();
 
-    byte[] bytes = dto.getName().getBytes(StandardCharsets.UTF_8);
-    System.out.println("Bytes: " + Arrays.toString(bytes));
-    System.out.println("DEBUG: searchDTO = " + dto);
-    System.out.println("DEBUG: ES Query = " + searchQuery.getQuery().toString());
-    System.out.println("DEBUG Name field (UTF-8) = " + dto.getName());
-
     SearchHits<ItemDocument> searchHits = elasticsearchTemplate.search(searchQuery, ItemDocument.class);
 
     List<ItemDocument> documents = searchHits.stream()
         .map(hit -> hit.getContent())
         .toList();
 
-    // FIX: Tính toán đúng totalItems và totalPages
-    long totalItems = searchHits.getTotalHits(); // Tổng số items tìm được
-    int totalPages = (int) Math.ceil((double) totalItems / pageable.getPageSize()); // Tổng số pages
+
+    long totalItems = searchHits.getTotalHits();
+    int totalPages = (int) Math.ceil((double) totalItems / pageable.getPageSize());
 
     return new PageDTO<>(
         documents,

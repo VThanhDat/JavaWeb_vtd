@@ -272,7 +272,7 @@ function callApiSearchWithPaging({
   }
 
   $.ajax({
-    url: "/api/item",
+    url: "/api/search/item",
     method: "GET",
     data: params,
     xhrFields: { withCredentials: true },
