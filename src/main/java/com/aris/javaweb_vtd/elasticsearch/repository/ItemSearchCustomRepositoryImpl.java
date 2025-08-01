@@ -2,9 +2,11 @@ package com.aris.javaweb_vtd.elasticsearch.repository;
 
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TextQueryType;
+import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import com.aris.javaweb_vtd.dto.common.ItemSearchDTO;
 import com.aris.javaweb_vtd.dto.common.PageDTO;
 import com.aris.javaweb_vtd.elasticsearch.document.ItemDocument;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepository {
@@ -29,10 +32,13 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
     BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
 
     if (dto.getName() != null && !dto.getName().isBlank()) {
-      boolQueryBuilder.must(QueryStringQuery.of(q -> q
-          .query("*" + dto.getName().trim() + "*")
-          .fields("name", "name.keyword")
-          .defaultOperator(co.elastic.clients.elasticsearch._types.query_dsl.Operator.And))._toQuery());
+      boolQueryBuilder.must(m -> m
+          .multiMatch(mm -> mm
+              .query(dto.getName().trim())
+              .fields("name", "name.standard")
+              .type(TextQueryType.BestFields)
+              .operator(Operator.And)));
+
     }
 
     if (dto.getType() != null && !dto.getType().isBlank()) {
@@ -79,4 +85,27 @@ public class ItemSearchCustomRepositoryImpl implements ItemSearchCustomRepositor
         (int) totalItems,
         totalPages);
   }
+
+  @Override
+  public List<String> autocompleteNames(String keyword) {
+    if (keyword == null || keyword.isBlank())
+      return List.of();
+
+    NativeQuery searchQuery = NativeQuery.builder()
+        .withQuery(q -> q
+            .multiMatch(m -> m
+                .fields("name")
+                .type(TextQueryType.BoolPrefix)
+                .query(keyword)))
+        .withPageable(PageRequest.of(0, 5))
+        .build();
+
+    SearchHits<ItemDocument> searchHits = elasticsearchTemplate.search(searchQuery, ItemDocument.class);
+
+    return searchHits.stream()
+        .map(hit -> hit.getContent().getName())
+        .distinct()
+        .toList();
+  }
+
 }

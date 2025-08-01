@@ -49,4 +49,11 @@ public class ItemSearchController {
     }
   }
 
+  @GetMapping("/autocomplete-names")
+  public ResponseEntity<ApiResponseDTO<List<String>>> autocompleteNames(@RequestParam String keyword) {
+    System.out.println("Keyword: " + keyword); // kiểm tra nhận được đúng keyword chưa
+    List<String> result = itemSearchService.autocompleteNames(keyword);
+    return ResponseEntity.ok(ApiResponseDTO.success(result));
+  }
+
 }

@@ -40,4 +40,8 @@ public class ItemElasticService {
         documentPage.getTotalPages());
   }
 
+  public List<String> autocompleteNames(String keyword) {
+    return itemSearchRepository.autocompleteNames(keyword);
+  }
+
 }

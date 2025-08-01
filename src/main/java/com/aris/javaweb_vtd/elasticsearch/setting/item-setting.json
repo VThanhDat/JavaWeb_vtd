@@ -1,0 +1,28 @@
+{
+  "analysis": {
+    "filter": {
+      "vietnamese_edge_ngram": {
+        "type": "edge_ngram",
+        "min_gram": 2,
+        "max_gram": 3
+      }
+    },
+    "analyzer": {
+      "vietnamese_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase", "asciifolding"]
+      },
+      "vietnamese_autocomplete_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase", "asciifolding", "vietnamese_edge_ngram"]
+      },
+      "vietnamese_search_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase", "asciifolding"]
+      }
+    }
+  }
+}
