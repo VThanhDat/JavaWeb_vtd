@@ -32,12 +32,23 @@ function resetScrollPosition() {
   window.scrollTo(0, 0);
 }
 
+// Cập nhật hàm syncSearchInputs để thêm autocomplete
 function syncSearchInputs() {
   const navInput = document.querySelector(".heading_nav-search input");
   const mainInput = document.querySelector(".main_content-search input");
+  const navDropdown = document.querySelector(".heading_nav-search .autocomplete-dropdown");
+  const mainDropdown = document.querySelector(".main_content-search .autocomplete-dropdown");
 
   if (!navInput || !mainInput) {
     return;
+  }
+
+  // Setup autocomplete cho cả hai input
+  if (navDropdown) {
+    setupAutocomplete(navInput, navDropdown);
+  }
+  if (mainDropdown) {
+    setupAutocomplete(mainInput, mainDropdown);
   }
 
   // Restore search value if exists
@@ -50,12 +61,22 @@ function syncSearchInputs() {
   mainInput.addEventListener("input", function () {
     navInput.value = this.value;
     searchValue = this.value;
+
+    // Ẩn dropdown của nav khi đang gõ ở main
+    if (navDropdown) {
+      navDropdown.classList.remove("show");
+    }
   });
 
   // Sync from nav input to main input
   navInput.addEventListener("input", function () {
     mainInput.value = this.value;
     searchValue = this.value;
+
+    // Ẩn dropdown của main khi đang gõ ở nav
+    if (mainDropdown) {
+      mainDropdown.classList.remove("show");
+    }
   });
 
   // Focus events
@@ -73,23 +94,37 @@ function syncSearchInputs() {
   mainInput.addEventListener("blur", function () {
     navInput.value = this.value;
     searchValue = this.value;
+
+    // Delay để cho phép click vào dropdown item
+    setTimeout(() => {
+      if (mainDropdown) {
+        mainDropdown.classList.remove("show");
+      }
+    }, 150);
   });
 
   navInput.addEventListener("blur", function () {
     mainInput.value = this.value;
     searchValue = this.value;
+
+    // Delay để cho phép click vào dropdown item
+    setTimeout(() => {
+      if (navDropdown) {
+        navDropdown.classList.remove("show");
+      }
+    }, 150);
   });
 
   // Enter key events
   mainInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !mainDropdown?.classList.contains("show")) {
       e.preventDefault();
       performSearch(this.value);
     }
   });
 
   navInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !navDropdown?.classList.contains("show")) {
       e.preventDefault();
       performSearch(this.value);
     }
@@ -202,13 +237,22 @@ function handleEventType() {
     activeTab.classList.add("active");
     inactiveTab.classList.remove("active");
     currentType = type;
-    currentPage = 1; // Reset page when switching tabs
+    currentPage = 1;
+
+    // Clear autocomplete cache khi đổi loại
+    autocompleteCache.clear();
+
+    // Ẩn dropdown
+    document.querySelectorAll(".autocomplete-dropdown").forEach(dropdown => {
+      dropdown.classList.remove("show");
+    });
+
     callApiSearchWithPaging({
       type: type,
       page: 1,
       size: currentPageSize,
       status: 1,
-    }); // Load item luôn
+    });
   }
 
   foodTab.addEventListener("click", function (e) {
@@ -975,6 +1019,230 @@ function setupOrderModal() {
     });
   }
 }
+
+// Autocomplete
+let autocompleteTimeout = null;
+let autocompleteCache = new Map(); // Cache để tránh gọi API liên tục
+
+// Hàm gọi API để lấy gợi ý
+function callAutocompleteAPI(query, callback) {
+  // Kiểm tra cache trước
+  if (autocompleteCache.has(query)) {
+    callback(autocompleteCache.get(query));
+    return;
+  }
+
+  console.log("Calling autocomplete API with:", { keyword: query });
+
+  $.ajax({
+    url: "/api/search/item/autocomplete-names",
+    method: "GET",
+    data: {
+      keyword: query,
+    },
+    xhrFields: { withCredentials: true },
+    success: function (response) {
+      const rawSuggestions = response?.data || [];
+      const suggestions = rawSuggestions.map(item => ({
+        name: typeof item === 'string' ? item : (item.name || item)
+      }));
+      console.log(suggestions);
+      autocompleteCache.set(query, suggestions);
+      callback(suggestions);
+    },
+    error: function (xhr) {
+      const msg = xhr.responseJSON?.data;
+      showToast(msg, "error");
+    },
+  });
+}
+
+// Autocomplete
+function highlightText(text, query) {
+  if (!text || typeof text !== 'string') return text || '';
+  if (!query || typeof query !== 'string') return text;
+
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
+// Hàm render dropdown autocomplete (UPDATED)
+function renderAutocompleteDropdown(suggestions, dropdown, inputElement) {
+  dropdown.innerHTML = "";
+
+  if (!suggestions || suggestions.length === 0) {
+    dropdown.innerHTML = '<div class="autocomplete-empty">No suggestions found</div>';
+    dropdown.classList.add("show");
+    return;
+  }
+
+  const query = inputElement.value.trim();
+
+  suggestions.forEach((item, index) => {
+    const itemElement = document.createElement("div");
+    itemElement.className = "autocomplete-item";
+    itemElement.dataset.index = index;
+
+    // Kiểm tra item.name tồn tại trước khi highlight
+    const itemName = typeof item === 'string' ? item : (item.name || '');
+    const highlightedName = highlightText(itemName, query);
+
+    itemElement.innerHTML = `
+      <div class="item-text">${highlightedName}</div>
+    `;
+
+    // Xử lý click vào item
+    itemElement.addEventListener("click", function () {
+      inputElement.value = itemName;
+      searchValue = itemName;
+      syncSearchInputs();
+      dropdown.classList.remove("show");
+
+      // Thực hiện tìm kiếm
+      performSearch(itemName);
+
+      // Scroll đến menu section
+      const menuSection = document.querySelector(".main_content-menu");
+      if (menuSection) {
+        menuSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+
+    // Xử lý hover
+    itemElement.addEventListener("mouseenter", function () {
+      // Remove selected class from all items
+      dropdown.querySelectorAll(".autocomplete-item").forEach(el => {
+        el.classList.remove("selected");
+      });
+      // Add selected class to current item
+      this.classList.add("selected");
+    });
+
+    dropdown.appendChild(itemElement);
+  });
+
+  dropdown.classList.add("show");
+}
+
+// Hàm xử lý keyboard navigation
+function handleAutocompleteKeyboard(e, dropdown) {
+  const items = dropdown.querySelectorAll(".autocomplete-item");
+  let selectedIndex = -1;
+
+  // Tìm item đang được select
+  items.forEach((item, index) => {
+    if (item.classList.contains("selected")) {
+      selectedIndex = index;
+    }
+  });
+
+  switch (e.key) {
+    case "ArrowDown":
+      e.preventDefault();
+      if (selectedIndex < items.length - 1) {
+        if (selectedIndex >= 0) {
+          items[selectedIndex].classList.remove("selected");
+        }
+        selectedIndex++;
+        items[selectedIndex].classList.add("selected");
+      }
+      break;
+
+    case "ArrowUp":
+      e.preventDefault();
+      if (selectedIndex > 0) {
+        items[selectedIndex].classList.remove("selected");
+        selectedIndex--;
+        items[selectedIndex].classList.add("selected");
+      } else if (selectedIndex === 0) {
+        items[selectedIndex].classList.remove("selected");
+        selectedIndex = -1;
+      }
+      break;
+
+    case "Enter":
+      e.preventDefault();
+      if (selectedIndex >= 0) {
+        items[selectedIndex].click();
+      } else {
+        // Nếu không có item nào được select, thực hiện tìm kiếm bình thường
+        const query = e.target.value.trim();
+        if (query) {
+          performSearch(query);
+          dropdown.classList.remove("show");
+        }
+      }
+      break;
+
+    case "Escape":
+      dropdown.classList.remove("show");
+      e.target.blur();
+      break;
+  }
+}
+
+// Hàm setup autocomplete cho input
+function setupAutocomplete(inputElement, dropdownElement) {
+  // Xử lý input event
+  inputElement.addEventListener("input", function (e) {
+    const query = e.target.value.trim();
+
+    // Clear timeout cũ
+    if (autocompleteTimeout) {
+      clearTimeout(autocompleteTimeout);
+    }
+
+    if (query.length < 2) {
+      dropdownElement.classList.remove("show");
+      return;
+    }
+
+    // Debounce để tránh gọi API quá nhiều
+    autocompleteTimeout = setTimeout(() => {
+      callAutocompleteAPI(query, (suggestions) => {
+        renderAutocompleteDropdown(suggestions, dropdownElement, inputElement);
+      });
+    }, 300);
+  });
+
+  // Xử lý keyboard navigation
+  inputElement.addEventListener("keydown", function (e) {
+    if (dropdownElement.classList.contains("show")) {
+      handleAutocompleteKeyboard(e, dropdownElement);
+    }
+  });
+
+  // Xử lý focus
+  inputElement.addEventListener("focus", function () {
+    const query = this.value.trim();
+    if (query.length >= 2) {
+      // Hiển thị lại dropdown nếu có cache
+      if (autocompleteCache.has(query)) {
+        renderAutocompleteDropdown(
+          autocompleteCache.get(query),
+          dropdownElement,
+          inputElement
+        );
+      }
+    }
+  });
+}
+
+// Thêm event listener để ẩn dropdown khi click ra ngoài
+document.addEventListener("click", function (e) {
+  const navDropdown = document.querySelector(".heading_nav-search .autocomplete-dropdown");
+  const mainDropdown = document.querySelector(".main_content-search .autocomplete-dropdown");
+  const navSearch = document.querySelector(".heading_nav-search");
+  const mainSearch = document.querySelector(".main_content-search");
+
+  if (navDropdown && !navSearch?.contains(e.target)) {
+    navDropdown.classList.remove("show");
+  }
+
+  if (mainDropdown && !mainSearch?.contains(e.target)) {
+    mainDropdown.classList.remove("show");
+  }
+});
 
 // Event listeners
 window.addEventListener("scroll", handleScrollEffects);
