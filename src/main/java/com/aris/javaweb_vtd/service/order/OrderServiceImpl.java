@@ -10,7 +10,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
+import com.aris.javaweb_vtd.config.SessionManager;
 import com.aris.javaweb_vtd.converter.CustomerConverter;
 import com.aris.javaweb_vtd.converter.OrderConverter;
 import com.aris.javaweb_vtd.converter.OrderItemConverter;
@@ -51,6 +54,9 @@ public class OrderServiceImpl implements OrderService {
 
   @Autowired
   private OrderStatusUtil orderStatusUtil;
+
+  @Autowired
+  private SessionManager sessionManager;
 
   @Transactional
   public OrderResponseDTO createOrder(CreateOrderRequestDTO request) {
@@ -178,6 +184,48 @@ public class OrderServiceImpl implements OrderService {
     }
 
     orderMapper.updateOrderStatus(orderId, newStatus.toLowerCase());
+
+    sendOrderStatusUpdate(orderId, newStatus);
+  }
+
+  private void sendOrderStatusUpdate(Long orderId, String newStatus) {
+    try {
+      // Lấy session từ SessionManager dựa trên orderId
+      WebSocketSession session = sessionManager.get(orderId.toString());
+
+      if (session != null && session.isOpen()) {
+        // ✅ FIXED: Sử dụng StringBuilder hoặc format string đúng cách
+        String message = String.format(
+            "{\"type\":\"ORDER_STATUS_UPDATE\",\"orderId\":%d,\"status\":\"%s\",\"timestamp\":\"%s\"}",
+            orderId,
+            newStatus,
+            java.time.LocalDateTime.now().toString());
+
+        // ✅ ALTERNATIVE: Sử dụng StringBuilder để tránh lỗi format
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append("{")
+            .append("\"type\":\"ORDER_STATUS_UPDATE\",")
+            .append("\"orderId\":").append(orderId).append(",")
+            .append("\"status\":\"").append(newStatus).append("\",")
+            .append("\"timestamp\":\"").append(java.time.LocalDateTime.now().toString()).append("\"")
+            .append("}");
+
+        String finalMessage = messageBuilder.toString();
+
+        // Log message trước khi gửi để debug
+        System.out.println("Sending WebSocket message: " + finalMessage);
+
+        // Gửi message qua WebSocket
+        session.sendMessage(new TextMessage(finalMessage));
+        System.out.println("✅ Sent order status update successfully");
+
+      } else {
+        System.out.println("❌ No active WebSocket session found for order: " + orderId);
+      }
+    } catch (Exception e) {
+      System.err.println("❌ Error sending WebSocket message for order " + orderId + ": " + e.getMessage());
+      e.printStackTrace();
+    }
   }
 
   @Override

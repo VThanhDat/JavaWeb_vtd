@@ -129,6 +129,7 @@ function callApiGetOrderById(id, displayId = null) {
   });
 }
 
+// Update the existing callUpdateStatus function to remove WebSocket call since backend will handle it
 function callUpdateStatus(orderId, status) {
   $.ajax({
     url: `/api/order/${orderId}/status`,
@@ -136,15 +137,11 @@ function callUpdateStatus(orderId, status) {
     contentType: "application/json",
     data: JSON.stringify({ status: status }),
     success: function (response) {
-      showToast(response.data, "success");
+      // Remove the showToast here since WebSocket will handle the notification
+      // The order update will be handled by WebSocket message
 
-      const orderIndex = orders.findIndex(order => order.id === orderId);
-      if (orderIndex !== -1) {
-        orders[orderIndex].status = status;
-      }
-
-      callApiGetOrderById(orderId);
-      renderOrderCards();
+      // Keep the API call to get fresh data, but WebSocket will also update
+      // callApiGetOrderById(orderId);
       loadDashboardSummary();
     },
     error: function (xhr) {
@@ -229,11 +226,15 @@ function renderOrderCards() {
   });
 }
 
+// Update the existing renderOrderDetail function to establish WebSocket connection
 function renderOrderDetail(order) {
   currentOrderId = order.id;
   document.getElementById("orderModal").classList.remove("hidden");
 
-  // Update order info
+  // Establish WebSocket connection for this order
+  createWebSocketConnection(order.id);
+
+  // ... rest of your existing renderOrderDetail code remains the same ...
   document.querySelector(".detailOrder-popup-code span:nth-child(2)").innerText = " " + order.displayId;
   document.querySelector(".detailOrder-popup-date span").innerText = formatDateDisplay(order.createAt);
   document.querySelector(".detailOrder-popup-total-items").innerText = `${order.items.length} Items`;
@@ -700,6 +701,205 @@ function formatCurrency(value) {
 function getCurrentDateFilter() {
   return document.getElementById("order-status-filter").value;
 }
+
+// Websocket 
+let websocketConnections = new Map();
+let isWebSocketSupported = true;
+
+// WebSocket connection management
+function createWebSocketConnection(orderId) {
+  if (!isWebSocketSupported) return null;
+
+  try {
+    // Close existing connection if any
+    if (websocketConnections.has(orderId)) {
+      const existingWs = websocketConnections.get(orderId);
+      if (existingWs.readyState === WebSocket.OPEN) {
+        existingWs.close();
+      }
+      websocketConnections.delete(orderId);
+    }
+
+    // Create new WebSocket connection
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws?orderId=${orderId}`;
+    const ws = new WebSocket(wsUrl);
+
+    ws.onopen = function (event) {
+      console.log(`✅ WebSocket connected for order ${orderId}`);
+      logWebSocketStatus(orderId, 'connected');
+      websocketConnections.set(orderId, ws);
+    };
+
+    ws.onmessage = function (event) {
+      console.log(`📨 WebSocket message received for order ${orderId}:`, event.data);
+      try {
+        const data = JSON.parse(event.data);
+        handleWebSocketMessage(data);
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+      }
+    };
+
+    ws.onclose = function (event) {
+      console.log(`🔌 WebSocket closed for order ${orderId}. Code: ${event.code}, Reason: ${event.reason}`);
+      logWebSocketStatus(orderId, 'disconnected');
+      websocketConnections.delete(orderId);
+
+      // Attempt to reconnect after 3 seconds if not closed intentionally
+      if (event.code !== 1000 && currentOrderId === orderId) {
+        setTimeout(() => {
+          console.log(`🔄 Attempting to reconnect WebSocket for order ${orderId}`);
+          logWebSocketStatus(orderId, 'connecting');
+          createWebSocketConnection(orderId);
+        }, 3000);
+      }
+    };
+
+    ws.onerror = function (error) {
+      console.error(`❌ WebSocket error for order ${orderId}:`, error);
+      logWebSocketStatus(orderId, 'error');
+      showToast(`Connection error for order ${orderId}`, "error");
+    };
+
+    return ws;
+
+  } catch (error) {
+    console.error('Failed to create WebSocket connection:', error);
+    isWebSocketSupported = false;
+    return null;
+  }
+}
+
+// Handle incoming WebSocket messages
+function handleWebSocketMessage(data) {
+  console.log('📥 Processing WebSocket message:', data);
+
+  if (data.type === 'ORDER_STATUS_UPDATE') {
+    const { orderId, status, timestamp } = data;
+
+    console.log(`🔄 Order #${orderId} status changed to: ${status} at ${timestamp}`);
+
+    // Show notification toast
+    showToast(`Order #${getDisplayIdByOrderId(orderId)} status updated to ${capitalizeFirstLetter(status)}`, "success");
+
+    // Update the order in the orders array
+    const orderIndex = orders.findIndex(order => order.id == orderId);
+    if (orderIndex !== -1) {
+      console.log(`📝 Updating order #${orderId} in orders array`);
+      orders[orderIndex].status = status;
+      renderOrderCards(); // Re-render order cards to show updated status
+    }
+
+    // If the order detail modal is open for this order, update it
+    if (currentOrderId == orderId) {
+      console.log(`🔄 Updating order detail modal UI for order #${orderId}`);
+      setOrderStatusUI(status.toLowerCase());
+    }
+
+    // Update dashboard summary
+    loadDashboardSummary();
+
+    // Play notification sound (optional)
+    playNotificationSound();
+  }
+}
+
+// Helper function to get display ID by order ID
+function getDisplayIdByOrderId(orderId) {
+  const orderIndex = orders.findIndex(order => order.id == orderId);
+  if (orderIndex !== -1) {
+    return ((currentPage - 1) * pageSize + orderIndex + 1).toString().padStart(3, "0");
+  }
+  return orderId; // fallback to actual ID
+}
+
+// Close WebSocket connection for specific order
+function closeWebSocketConnection(orderId) {
+  if (websocketConnections.has(orderId)) {
+    const ws = websocketConnections.get(orderId);
+    ws.close(1000, 'Closing connection'); // 1000 = normal closure
+    websocketConnections.delete(orderId);
+  }
+}
+
+// Close all WebSocket connections
+function closeAllWebSocketConnections() {
+  websocketConnections.forEach((ws, orderId) => {
+    ws.close(1000, 'Closing all connections');
+  });
+  websocketConnections.clear();
+}
+
+// Optional: Play notification sound
+function playNotificationSound() {
+  try {
+    // Create a simple notification sound
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = 800;
+    oscillator.type = 'sine';
+
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (error) {
+    console.log('Could not play notification sound:', error);
+  }
+}
+
+// Console logging for WebSocket status (perfect for backend admin)
+function logWebSocketStatus(orderId, status) {
+  const timestamp = new Date().toLocaleTimeString();
+  switch (status) {
+    case 'connected':
+      console.log(`%c[${timestamp}] WebSocket CONNECTED for Order #${orderId}`, 'color: green; font-weight: bold');
+      break;
+    case 'disconnected':
+      console.log(`%c[${timestamp}] WebSocket DISCONNECTED for Order #${orderId}`, 'color: red; font-weight: bold');
+      break;
+    case 'connecting':
+      console.log(`%c[${timestamp}] WebSocket CONNECTING for Order #${orderId}`, 'color: orange; font-weight: bold');
+      break;
+    case 'error':
+      console.error(`%c[${timestamp}] WebSocket ERROR for Order #${orderId}`, 'color: red; font-weight: bold');
+      break;
+  }
+}
+
+document.getElementById("closeModalBtn").addEventListener("click", function () {
+  document.getElementById("orderModal").classList.add("hidden");
+
+  // Close WebSocket connection when modal is closed
+  if (currentOrderId) {
+    closeWebSocketConnection(currentOrderId);
+    currentOrderId = null;
+  }
+});
+
+// Close WebSocket connections when page is unloaded
+window.addEventListener('beforeunload', function () {
+  closeAllWebSocketConnections();
+});
+
+// Optional: Add reconnection logic for page visibility changes
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'visible' && currentOrderId) {
+    // Reconnect if page becomes visible again
+    if (!websocketConnections.has(currentOrderId)) {
+      createWebSocketConnection(currentOrderId);
+    }
+  } else if (document.visibilityState === 'hidden') {
+    // Optionally close connections when page is hidden to save resources
+    // closeAllWebSocketConnections();
+  }
+});
 
 // Event listeners setup
 document.addEventListener("DOMContentLoaded", function () {

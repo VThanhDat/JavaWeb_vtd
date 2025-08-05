@@ -896,6 +896,7 @@ function generateProgressHTML(statuses) {
   `;
 }
 
+// Updated callApiOrderByOrderCode function with WebSocket integration
 function callApiOrderByOrderCode(orderCode) {
   $.ajax({
     url: `/api/order/ordercode/${orderCode}`,
@@ -905,6 +906,9 @@ function callApiOrderByOrderCode(orderCode) {
       const order = response.data;
       renderOrderCard(order);
       setupScrollModalOrder(order.status || 'new');
+
+      // ✅ NEW: Establish WebSocket connection for real-time updates
+      createOrderWebSocketConnection(orderCode);
     },
     error: function (xhr) {
       const msg = xhr.responseJSON?.data;
@@ -987,6 +991,7 @@ function updatePricingDisplay(subTotal, shippingFee, totalPrice) {
   }
 }
 
+// Updated showModalOrder function
 function showModalOrder(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
@@ -996,15 +1001,23 @@ function showModalOrder(modalId) {
     const orderCode = sessionStorage.getItem("orderCode");
     if (orderCode) {
       callApiOrderByOrderCode(orderCode);
+      // WebSocket connection will be established in callApiOrderByOrderCode
     }
   }
 }
 
+// Updated hideModalOrder function
 function hideModalOrder(modalId) {
   const modal = document.getElementById(modalId);
-  if (modal) modal.style.display = "none";
+  if (modal) {
+    modal.style.display = "none";
+
+    // ✅ NEW: Close WebSocket connection when modal is closed
+    closeOrderWebSocketConnection();
+  }
 }
 
+// Updated setupOrderModal function
 function setupOrderModal() {
   const openBtn = document.querySelector(".heading_nav-order");
   const closeBtn = document.getElementById("close-order-btn");
@@ -1016,6 +1029,16 @@ function setupOrderModal() {
   if (closeBtn) {
     closeBtn.addEventListener("click", () => {
       hideModalOrder("modal-order");
+    });
+  }
+
+  // ✅ NEW: Close WebSocket when clicking outside modal
+  const modal = document.getElementById("modal-order");
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        hideModalOrder("modal-order");
+      }
     });
   }
 }
@@ -1244,8 +1267,184 @@ document.addEventListener("click", function (e) {
   }
 });
 
+// Websocket
+let orderWebSocket = null;
+let currentOrderCode = null;
+let isWebSocketEnabled = true;
+
+// WebSocket connection management for customer orders
+function createOrderWebSocketConnection(orderCode) {
+  if (!isWebSocketEnabled || !orderCode) return null;
+
+  try {
+    // Close existing connection if any
+    if (orderWebSocket && orderWebSocket.readyState === WebSocket.OPEN) {
+      orderWebSocket.close();
+    }
+
+    // Create new WebSocket connection using orderCode instead of orderId
+    const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws?orderId=${orderCode}`;
+    const ws = new WebSocket(wsUrl);
+
+    ws.onopen = function (event) {
+      console.log(`🔗 WebSocket connected for order ${orderCode}`);
+      orderWebSocket = ws;
+      currentOrderCode = orderCode;
+    };
+
+    ws.onmessage = function (event) {
+      console.log(`📨 Order status update received:`, event.data);
+
+      try {
+        const data = JSON.parse(event.data);
+        handleOrderStatusUpdate(data);
+      } catch (error) {
+        console.error('❌ Error parsing WebSocket message:', error);
+        console.error('Raw message:', event.data);
+      }
+    };
+
+    ws.onclose = function (event) {
+      console.log(`🔌 WebSocket closed for order ${orderCode}. Code: ${event.code}`);
+      orderWebSocket = null;
+
+      // Auto-reconnect if connection lost unexpectedly and modal is still open
+      if (event.code !== 1000 && currentOrderCode === orderCode) {
+        const modal = document.getElementById("modal-order");
+        if (modal && !modal.classList.contains("hidden")) {
+          setTimeout(() => {
+            console.log(`🔄 Reconnecting WebSocket for order ${orderCode}`);
+            createOrderWebSocketConnection(orderCode);
+          }, 3000);
+        }
+      }
+    };
+
+    ws.onerror = function (error) {
+      console.error(`❌ WebSocket error for order ${orderCode}:`, error);
+    };
+
+    return ws;
+
+  } catch (error) {
+    console.error('Failed to create WebSocket connection:', error);
+    isWebSocketEnabled = false;
+    return null;
+  }
+}
+
+// Handle incoming order status updates
+function handleOrderStatusUpdate(data) {
+  if (data.type === 'ORDER_STATUS_UPDATE') {
+    const { orderId, status, timestamp } = data;
+
+    console.log(`🔄 Order status updated: ${status} at ${timestamp}`);
+
+    // Show notification to customer
+    showToast(`Your order status has been updated to: ${capitalizeFirstLetter(status)}`, "success");
+
+    // Update the progress bar and status display
+    updateOrderStatusDisplay(status.toLowerCase());
+
+    // Play notification sound for customer
+    playCustomerNotificationSound();
+  }
+}
+
+// Update order status display in the modal
+function updateOrderStatusDisplay(newStatus) {
+  const statusContainer = document.querySelector(".status-container");
+  if (!statusContainer) return;
+
+  // Update the status display using existing function
+  updateStatusDisplay(newStatus, statusContainer);
+
+  // Re-setup the scroll modal with new status
+  setupScrollModalOrder(newStatus);
+
+  console.log(`✅ Order status display updated to: ${newStatus}`);
+}
+
+// Play notification sound for customer (softer than admin)
+function playCustomerNotificationSound() {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = 600; // Softer tone for customer
+    oscillator.type = 'sine';
+
+    gainNode.gain.setValueAtTime(0.05, audioContext.currentTime); // Lower volume
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.5);
+  } catch (error) {
+    console.log('Could not play notification sound:', error);
+  }
+}
+
+// Helper function to capitalize status
+function capitalizeFirstLetter(status) {
+  if (!status) return "";
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
+// Close WebSocket connection
+function closeOrderWebSocketConnection() {
+  if (orderWebSocket && orderWebSocket.readyState === WebSocket.OPEN) {
+    orderWebSocket.close(1000, 'Modal closed');
+    orderWebSocket = null;
+    currentOrderCode = null;
+    console.log('🔌 WebSocket connection closed');
+  }
+}
+
+// Add visual indicator for WebSocket connection status (optional)
+function updateConnectionStatus(status) {
+  // You can add a small indicator in the modal to show connection status
+  const existingIndicator = document.querySelector('.websocket-indicator');
+  if (existingIndicator) {
+    existingIndicator.remove();
+  }
+
+  if (status === 'connected') {
+    const indicator = document.createElement('div');
+    indicator.className = 'websocket-indicator';
+    indicator.innerHTML = '<span style="color: green; font-size: 12px;">● Live updates enabled</span>';
+
+    const modal = document.querySelector('.modal-order-content');
+    if (modal) {
+      modal.appendChild(indicator);
+    }
+  }
+}
+
 // Event listeners
 window.addEventListener("scroll", handleScrollEffects);
+
+// ✅ NEW: Close WebSocket connection when page is unloaded
+window.addEventListener('beforeunload', function () {
+  closeOrderWebSocketConnection();
+});
+
+// ✅ NEW: Handle page visibility changes
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'visible' && currentOrderCode) {
+    // Reconnect if page becomes visible again and modal is open
+    const modal = document.getElementById("modal-order");
+    if (modal && !modal.classList.contains("hidden") && !orderWebSocket) {
+      createOrderWebSocketConnection(currentOrderCode);
+    }
+  } else if (document.visibilityState === 'hidden') {
+    // Optionally close connection when page is hidden to save resources
+    // closeOrderWebSocketConnection();
+  }
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("loading").style.display = "block";
